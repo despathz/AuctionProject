@@ -1,4 +1,4 @@
-package Auction_Project.auctionPr;
+package Auction_Project.AuctionProject;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
