@@ -1,0 +1,71 @@
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+  background-color: rgb(163, 159, 153);
+  border-color: rgb(251, 130, 13);
+  text: black;
+}
+
+/*Override bootstrap's active class*/
+.highlight {
+      color: rgb(251, 130, 13);
+      background: rgb(251, 130, 13);
+ }
+
+ .nav.navbar-nav li a,
+ .nav.navbar-nav:visited li a
+{
+    color: black;
+}
+
+/*Set logo image size*/
+#logo_img {
+  max-height: 180px;
+  max-width: auto;
+}
+
+/*Set a page's element margin*/
+.element_margin {
+  margin: 20px;
+}
+
+/*Override bootstrap's primary button color */
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited, .btn-primary:focus {
+    background-color: rgb(251, 130, 13)   !important;
+    border-color: rgb(251, 130, 13)       !important;
+    outline: none                         !important;
+}
+
+/*Override bootstrap's form colors and behavior*/
+.form-control:focus {
+  border-color: rgb(251, 130, 13);
+  box-shadow: none;
+}
+
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+.row.content {height: 450px}
+
+/* Set gray background color and 100% height */
+.sidenav {
+  padding-top: 20px;
+  background-color: #f1f1f1;
+  height: 100%;
+}
+
+/* Set black background color, white text and some padding */
+footer {
+  background-color: rgb(163, 159, 153);
+  border-color: rgb(251, 130, 13);
+  color: black;
+  padding: 15px;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+  .sidenav {
+    height: auto;
+    padding: 15px;
+  }
+  .row.content {height:auto;}
+}
