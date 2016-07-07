@@ -1,17 +1,25 @@
 var myApp = angular.module('myApp', ['ngRoute']);
 
-myApp.config(function ($stateProvider) {
+myApp.config(function ($routeProvider) {
 
-	$stateProvider
+	$routeProvider
 
-	.state('index', {
-		url = '/'.
-		templateUrl: './index.html',
+	.when('/', {
+		templateUrl: './views/welcome.html',
 		controller: 'mainController'
 	})
+    
+    .when('/login', {
+        templateUrl: './views/login.html',
+        controller: 'loginController'
+    })
 
 });
 
-myApp.controller('mainController', ['$scope', '$log', function($scope, $http) {
-	$http.get("http://localhost:8080/");
+myApp.controller('mainController', ['$scope', function($scope) {
+    
+}]);
+
+myApp.controller('loginController', ['$scope', function($scope) {
+    
 }]);

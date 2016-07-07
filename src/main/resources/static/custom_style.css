@@ -1,33 +1,36 @@
 /* Remove the navbar's default margin-bottom and rounded borders */
 .navbar {
-  margin-bottom: 0;
-  border-radius: 0;
-  background-color: rgb(163, 159, 153);
-  border-color: rgb(251, 130, 13);
-  text: black;
+    margin-bottom: 0;
+    border-radius: 0;
+    background-color: rgb(163, 159, 153);
+    border-left-color: rgb(163, 159, 153);
+    border-right-color: rgb(163, 159, 153);
+    border-bottom-color: rgb(251, 130, 13);
+    border-top-color: rgb(251, 130, 13);
+    color: black;
 }
 
 /*Override bootstrap's active class*/
 .highlight {
-      color: rgb(251, 130, 13);
-      background: rgb(251, 130, 13);
+    color: rgb(251, 130, 13);
+    background: rgb(251, 130, 13);
+    border-radius: 5px;
  }
 
- .nav.navbar-nav li a,
- .nav.navbar-nav:visited li a
-{
+.nav.navbar-nav li a {
     color: black;
+    outline: none;
 }
 
 /*Set logo image size*/
 #logo_img {
-  max-height: 180px;
-  max-width: auto;
+    max-height: 180px;
+    max-width: auto;
 }
 
 /*Set a page's element margin*/
 .element_margin {
-  margin: 20px;
+    margin: 20px;
 }
 
 /*Override bootstrap's primary button color */
@@ -39,8 +42,8 @@
 
 /*Override bootstrap's form colors and behavior*/
 .form-control:focus {
-  border-color: rgb(251, 130, 13);
-  box-shadow: none;
+    border-color: rgb(251, 130, 13);
+    box-shadow: none;
 }
 
 /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
@@ -48,24 +51,24 @@
 
 /* Set gray background color and 100% height */
 .sidenav {
-  padding-top: 20px;
-  background-color: #f1f1f1;
-  height: 100%;
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
 }
 
 /* Set black background color, white text and some padding */
 footer {
-  background-color: rgb(163, 159, 153);
-  border-color: rgb(251, 130, 13);
-  color: black;
-  padding: 15px;
+    border-radius: 0;
+    background-color: rgb(163, 159, 153);
+    color: black;
+    padding: 15px;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
-  .sidenav {
-    height: auto;
-    padding: 15px;
-  }
-  .row.content {height:auto;}
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+    .row.content {height:auto;}
 }
