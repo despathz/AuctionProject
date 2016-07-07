@@ -21,7 +21,8 @@ myApp.controller('mainController', ['$scope', function($scope) {
 }]);
 
 myApp.controller('loginController', ['$scope', '$http', function($scope, $http) {
-	$http.get('ws/login').then(function(response) {
-		$scope.user = response.data;
+	$http.get('ws/login').success(function(response) {
+		$scope.user = response;
 	});
+	
 }]);
