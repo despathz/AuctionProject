@@ -28,7 +28,7 @@ myApp.controller('mainController', ['$scope', function($scope) {
     
 }]);
 
-myApp.controller('loginController', ['$scope', function($scope) {
+myApp.controller('loginController', ['$scope', '$http', function($scope, $http) {
     $scope.user = {remember: false};
     $scope.tryLogin = function() {
         $scope.usernameError = false;
@@ -42,5 +42,12 @@ myApp.controller('loginController', ['$scope', function($scope) {
         else if ($scope.user.password.length < 5) {
             $scope.passwordError = true;
         }
+        if (!$scope.passwordError && !$scope.usernameError) {
+        	console.log($scope.user);
+        	var res = $http.post('/ws/login', $scope.user);
+        	res.success(function(response) {
+        		console.log(response);
+        	});
+       }
     };
 }]);
