@@ -3,7 +3,7 @@
 <html lang="en-US" ng-app="myApp">
 
 	<head>
-		<title>Welcome</title>
+		<title ng-bind="title">myApp</title>
         <!-- Browser icon -->
         <link rel="shortcut icon" href="./img/logo.ico" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,7 +20,7 @@
 		<!-- Load AngularJS and Dependencies -->
 		<script src="http://code.angularjs.org/1.5.0-rc.2/angular.min.js"></script>
 		<script src="http://code.angularjs.org/1.5.0-rc.2/angular-route.min.js"></script>
-		<script src="http://code.angularjs.org/1.5.0-rc.2/angular-resource.min.js"></script>
+        <script src="http://code.angularjs.org/1.5.0-rc.2/angular-resource.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="custom_style.css">
 		<script src="app.js"></script>
 	</head>
@@ -37,7 +37,7 @@
 		    </div>
 		    <div class="collapse navbar-collapse" id="myNavbar">
 		      <ul class="nav navbar-nav">
-		        <li class="highlight"><a href="#/">Home</a></li>
+		        <li><a href="#/">Home</a></li>
 		        <li><a href="#">About</a></li>
 		        <li><a href="#">Contact</a></li>
 		      </ul>
