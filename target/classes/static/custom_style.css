@@ -10,16 +10,17 @@
     color: black;
 }
 
-/*Override bootstrap's active class*/
-.highlight {
-    color: rgb(251, 130, 13);
+/*HighLight current tab*/
+.highlight,
+.nav.navbar-nav li a:focus {
+    color: black;
     background: rgb(251, 130, 13);
     border-radius: 5px;
  }
 
-.nav.navbar-nav li a {
+.nav.navbar-nav li a
+{
     color: black;
-    outline: none;
 }
 
 /*Set logo image size*/

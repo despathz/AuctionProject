@@ -5,7 +5,7 @@ myApp.config(function ($routeProvider) {
 	$routeProvider
 
 	.when('/', {
-        title: 'welcome',
+        title: 'Welcome',
 		templateUrl: './views/welcome.html',
 		controller: 'mainController'
 	})
@@ -18,9 +18,10 @@ myApp.config(function ($routeProvider) {
 
 });
 
-myApp.run(['$rootScope', function($rootScope) {
+myApp.run(['$rootScope', '$location', function($rootScope, $location) {
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
         $rootScope.title = current.$$route.title;
+        $rootScope.location = $location.path();
     });
 }]);
 
