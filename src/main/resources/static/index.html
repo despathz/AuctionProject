@@ -23,6 +23,7 @@
         <script src="http://code.angularjs.org/1.5.0-rc.2/angular-resource.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="custom_style.css">
 		<script src="app.js"></script>
+        <script src="controllers.js"></script>
 	</head>
 
 	<body>
@@ -43,7 +44,7 @@
 		      </ul>
 		      <ul class="nav navbar-nav navbar-right">
 		        <li><a ng-class="{'highlight':location === '/login'}" href="#/login"><i class="fa fa-sign-in"></i> Login</a></li>
-		        <li><a href="#"><i class="fa fa-user-plus"></i> Register</a></li>
+		        <li><a ng-class="{'highlight':location === '/register'}" href="#/register"><i class="fa fa-user-plus"></i> Register</a></li>
 		      </ul>
 		    </div>
 		  </div>
@@ -53,25 +54,24 @@
 		  <div class="row content">
 
 		    <div class="col-sm-2 sidenav">
-		      <p><a href="#">Link</a></p>
-		      <p><a href="#">Link</a></p>
-		      <p><a href="#">Link</a></p>
-		    </div>
+		      <div class="well">
+		        <p>ADS</p>
+		      </div>
+		      <div class="well">
+		        <p>ADS</p>
+		      </div>
+            </div>
 
 		    <div class="col-sm-8" ng-view></div>
 
 		    <div class="col-sm-2 sidenav">
-		      <div class="well">
-		        <p>ADS</p>
-		      </div>
-		      <div class="well">
-		        <p>ADS</p>
-		      </div>
+                <p>Registration on our website comes at no cost.</p>
+                <p>Sign up now to get the full benefits of our services.</p>
+                <p>If you dont create an account you can still view on-going auctions but you wont be able to bid on any of them neither create your own.</p>
 		    </div>
 
 		  </div>
 		</div>
-
 		<footer class="container-fluid text-center">
 		  <p>Copyright &copy BID 'n' WIN&trade; 2016 - All rights reserved.</p>
 		</footer>
