@@ -18,7 +18,7 @@ myApp.controller('loginController', ['$scope', '$http', function($scope, $http) 
         }
         if (!$scope.passwordError && !$scope.usernameError) {
             console.log($scope.user);
-            var res = $http.post('/ws/login', $scope.user);
+            var res = $http.post('/ws/user/login', $scope.user);
             res.success(function(response) {
                 console.log(response);
             });
