@@ -3,11 +3,23 @@
     margin-bottom: 0;
     border-radius: 0;
     background-color: rgb(163, 159, 153);
-    border-left-color: rgb(163, 159, 153);
-    border-right-color: rgb(163, 159, 153);
-    border-bottom-color: rgb(251, 130, 13);
-    border-top-color: rgb(251, 130, 13);
+    border-color: transparent;
     color: black;
+}
+
+.panel-default {
+    border-radius: 10px !important;
+    background-color: white !important;
+    margin-bottom: 26px !important;
+    margin-top: 0px !important;
+}
+
+#mainPage {
+    background-color: #E1E1E1;
+}
+
+.navbar-brand {
+    padding: 10px !important;
 }
 
 /*HighLight current tab*/
@@ -57,7 +69,7 @@
     height: 100%;
 }
 
-/* Set black background color, white text and some padding */
+/* Set background color, text color and some padding */
 footer {
     border-radius: 0;
     background-color: rgb(163, 159, 153);
