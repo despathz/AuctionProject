@@ -1,32 +1,58 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ngResource']);
+var myApp = angular.module('myApp', ['ui.router', 'ngResource', 'ngCookies']);
 
-myApp.config(function ($routeProvider) {
+myApp.config(function ($stateProvider) {
 
-	$routeProvider
-
-	.when('/', {
-        title: 'Welcome',
-		templateUrl: './views/welcome.html',
-		controller: 'mainController'
-	})
+	$stateProvider
     
-    .when('/login', {
-        title: 'Log in',
-        templateUrl: './views/login.html',
-        controller: 'loginController'
+    .state('app', {
+        abstract: true,
+        views: {
+            'nav': {
+                templateUrl: './views/nav.html',
+                controller: 'navCtrl'
+            },
+            '': {
+                templateUrl: './views/body.html'
+            }
+        }
     })
 
-    .when('/register', {
-    title: 'Register',
-    templateUrl: './views/register.html',
-    controller: 'registerController'
+	.state('app.welcome', {
+        url: '/' ,
+        templateUrl: './views/welcome.html',
+        controller: 'mainCtrl',
+        params: { 
+           title: 'Home',
+        }
+	})
+    
+    .state('app.login', {
+        url: '/login',
+        templateUrl: './views/login.html',
+        controller: 'loginCtrl',
+        params: { 
+           title: 'Log in',
+        }
+    })
+    
+    .state('app.logout', {
+        url: '/logout',
+        controller: 'logoutCtrl'
+    })
+    
+    .state('app.register', {
+        url: '/register',
+        templateUrl: './views/register.html',
+        controller: 'registerCtrl',
+        params: { 
+           title: 'Register',
+        }
     })
 
 });
 
-myApp.run(['$rootScope', '$location', function($rootScope, $location) {
-    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-        $rootScope.title = current.$$route.title;
-        $rootScope.location = $location.path();
+myApp.run(['$rootScope', function($rootScope) {
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        $rootScope.title = toParams.title;
     });
 }]);

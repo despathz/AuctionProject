@@ -1,0 +1,28 @@
+<nav class="navbar navbar-inverse">
+    <div class="col-sm-10 col-sm-offset-1">
+      <div class="container-fluid">   
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+           <img class="navbar-brand" src="./img/navlogo.png" alt="navlogo">
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li><a ui-sref-active="highlight" ui-sref="app.welcome">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+          <ul class="nav navbar-nav pull-right" ng-hide="navPref.loggedIn">
+            <li><a ui-sref-active="highlight" ui-sref="app.login"><i class="fa fa-sign-in"></i> Login</a></li>
+            <li><a ui-sref-active="highlight" ui-sref="app.register"><i class="fa fa-user-plus"></i> Register</a></li>
+          </ul>
+          <ul class="nav navbar-nav pull-right" ng-show="navPref.loggedIn">
+            <li><a ui-sref-active="highlight" ui-sref="app.logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+</nav>

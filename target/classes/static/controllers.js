@@ -1,8 +1,12 @@
-myApp.controller('mainController', ['$scope', function($scope) {
+myApp.controller('navCtrl', ['$rootScope', function($rootScope) {
+    $rootScope.navPref = {username: "none", loggedIn: false};
+}]);
+
+myApp.controller('mainCtrl', ['$scope', function($scope) {
     
 }]);
 
-myApp.controller('loginController', ['$scope', '$http', function($scope, $http) {
+myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cookies', function($rootScope, $scope, $state, $http, $cookies) {
     $scope.user = {remember: false};
     $scope.tryLogin = function() {
         $scope.usernameError = false;
@@ -16,16 +20,30 @@ myApp.controller('loginController', ['$scope', '$http', function($scope, $http) 
         else if ($scope.user.password.length < 5) {
             $scope.passwordError = true;
         }
-        if (!$scope.passwordError && !$scope.usernameError) {
+        if (!$scope.usernameError && !$scope.passwordError) {
             console.log($scope.user);
             var res = $http.post('/ws/user/login', $scope.user);
             res.success(function(response) {
                 console.log(response);
+                if (response.username === $scope.user.username && response.password === $scope.user.password) {
+                    $rootScope.navPref = {username: $scope.user.username, loggedIn: true};
+                    $state.go('app.welcome');
+                }
+                else {
+                    $scope.usernameError = true;
+                    $scope.passwordError = true;
+                }
             });
-       }
+
+        }
     };
 }]);
 
-myApp.controller('registerController', ['$scope', function($scope) {
+myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $state) {
+    $rootScope.navPref = {username: "none", loggedIn: false};
+    $state.go('app.welcome');
+}]);
+
+myApp.controller('registerCtrl', ['$scope', function($scope) {
     
 }]);
