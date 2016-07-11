@@ -23,7 +23,7 @@ public class UserController {
 			user = userDAO.findByUsernameAndPassword(input_user.getUsername(), input_user.getPassword());
 		}
 		catch (Exception ex){
-			user.setUsername("afafafa");
+			System.out.println(ex.getMessage());
 		}
 		return user;
 	}
@@ -34,7 +34,7 @@ public class UserController {
 			userDAO.save(input_user);
 		}
 		catch (Exception ex) {
-			System.out.println("Could not register user.");
+			System.out.println(ex.getMessage());
 			return false;
 		}
 		return true;

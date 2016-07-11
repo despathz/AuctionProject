@@ -14,12 +14,8 @@ public class User {
 	private long id;
 
 	@NotNull
-	private String username;
-	@NotNull
-	private String password;
-	@NotNull
-	private String email;
-	@NotNull
+	private String username, password, email;
+	
 	private Boolean remember, superuser;
 	private String name, surname, address, country, telephone, trn;
 	
@@ -101,6 +97,14 @@ public class User {
 
 	public void setTrn(String trn) {
 		this.trn = trn;
+	}
+
+	public Boolean getSuperuser() {
+		return superuser;
+	}
+
+	public void setSuperuser(Boolean superuser) {
+		this.superuser = superuser;
 	}
 	
 	
