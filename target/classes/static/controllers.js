@@ -46,11 +46,12 @@ myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $st
 
 myApp.controller('registerCtrl', ['$scope', '$http', function($scope, $http) {
 	$scope.user = {remember: false, superuser: false};
-	$scope.accept = false;
+	$scope.prop.accept = false;
 	$scope.tryRegister = function() {
-        console.log($scope.user.accept);
+        console.log($scope.prop.accept);
         $scope.errors = {acceptError: false, usernameError: false, registerError: false};
-        if (!$scope.accept) {
+        if (!$scope.prop.accept) {
+            console.log('accept error');
             $scope.errors.acceptError = true;
         }
         else {
