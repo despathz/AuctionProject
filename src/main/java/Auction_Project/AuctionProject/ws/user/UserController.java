@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import Auction_Project.AuctionProject.dao.UserDAO;;
 
 @RestController
@@ -25,5 +26,17 @@ public class UserController {
 			user.setUsername("afafafa");
 		}
 		return user;
+	}
+	
+	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Boolean registerUser( @RequestBody User input_user) {
+		try {
+			userDAO.save(input_user);
+		}
+		catch (Exception ex) {
+			System.out.println("Could not register user.");
+			return false;
+		}
+		return true;
 	}
 }

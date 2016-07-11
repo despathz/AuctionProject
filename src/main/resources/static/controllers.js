@@ -44,6 +44,22 @@ myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $st
     $state.go('app.welcome');
 }]);
 
-myApp.controller('registerCtrl', ['$scope', function($scope) {
-    
+myApp.controller('registerCtrl', ['$scope', '$http', function($scope, $http) {
+	$scope.user = {remember: false, superuser: false};
+	$scope.accept = false;
+	$scope.tryRegister = function() {
+        console.log($scope.accept);
+        $scope.errors = {acceptError: false, usernameError: false, registerError: false};
+        if (!$scope.accept) {
+            $scope.errors.acceptError = true;
+        }
+        else {
+            var res = $http.post('/ws/user/register', $scope.user);
+            res.success(function(response) {
+                if (!response) {
+                    $scope.errors.registerError = true;
+                }
+            });
+        }
+	}
 }]);
