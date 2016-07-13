@@ -1,5 +1,8 @@
 package Auction_Project.AuctionProject.ws.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,4 +56,17 @@ public class UserController {
 		}
 		return user;
 	}
+	
+	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<User> getUsers() {
+		List<User> userList = new ArrayList<User>();
+		try {
+			userList = userDAO.getUsers();
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return userList;
+	}
+	
 }

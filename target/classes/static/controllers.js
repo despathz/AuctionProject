@@ -1,5 +1,5 @@
 myApp.controller('navCtrl', ['$rootScope', function($rootScope) {
-    $rootScope.navPref = {username: "none", loggedIn: false};
+
 }]);
 
 myApp.controller('mainCtrl', ['$scope', function($scope) {
@@ -11,6 +11,7 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
     $scope.tryLogin = function() {
         $scope.usernameError = false;
         $scope.passwordError = false;
+        $scope.activationError = false;
         if (angular.isUndefined($scope.user.username)) {
             $scope.usernameError = true;
         }
@@ -21,13 +22,18 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
             $scope.passwordError = true;
         }
         if (!$scope.usernameError && !$scope.passwordError) {
-            console.log($scope.user);
             var res = $http.post('/ws/user/login', $scope.user);
             res.success(function(response) {
-                console.log(response);
                 if (response.username === $scope.user.username && response.password === $scope.user.password) {
-                    $rootScope.navPref = {username: $scope.user.username, loggedIn: true};
-                    $state.go('app.welcome');
+                    if (response.activation) {
+                        $rootScope.navPref = {username: $scope.user.username, loggedIn: true};
+                        if (response.superuser)
+                            $state.go('app.adminPage');
+                        else
+                            $state.go('app.welcome');
+                    }
+                    else
+                        $scope.activationError = true;
                 }
                 else {
                     $scope.usernameError = true;
@@ -45,7 +51,7 @@ myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $st
 }]);
 
 myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state) {
-	$scope.user = {remember: false, superuser: false};
+	$scope.user = {remember: false, superuser: false, activation: false};
 	$scope.prop = {accept: false};
 	$scope.tryRegister = function() {
 		$scope.basicFieldsError = false; //these fields must be filled
@@ -87,4 +93,11 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 			});
 		}
 	};
+}]);
+
+myApp.controller('adminPageCtrl', ['$scope', '$http', function($scope, $http) {
+    var res = $http.get('/ws/user/getAll');
+    res.success(function(response) {
+        $scope.userList = response;
+    })
 }]);

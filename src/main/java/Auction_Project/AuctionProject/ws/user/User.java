@@ -16,7 +16,7 @@ public class User {
 	@NotNull
 	private String username, password, email;
 	
-	private Boolean remember, superuser;
+	private Boolean remember, superuser, activation;
 	private String name, surname, address, country, telephone, trn;
 	
 	public String getUsername() {
@@ -105,6 +105,14 @@ public class User {
 
 	public void setSuperuser(Boolean superuser) {
 		this.superuser = superuser;
+	}
+
+	public Boolean getActivation() {
+		return activation;
+	}
+
+	public void setActivation(Boolean activation) {
+		this.activation = activation;
 	}
 	
 	
