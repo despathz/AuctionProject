@@ -56,5 +56,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </div>
+	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
+	<div class="text-danger" ng-show="missmatchPassError">Passwords don't match!</div>
+	<div class="text-danger" ng-show="acceptTermsError">Please accept the terms!</div>
+	<div class="text-danger" ng-show="userExists">This username is already used!</div>
 </form>
 

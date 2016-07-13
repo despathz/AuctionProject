@@ -29,14 +29,28 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean registerUser( @RequestBody User input_user) {
+	public User registerUser( @RequestBody UserPostParams params) {
+		User user = new User();
+		System.out.println("!!! " + params.getUserExists());
+
 		try {
-			userDAO.save(input_user);
+			user = userDAO.findByUsername(params.getFindUser().getUsername());
+			System.out.println("Found the user!!");
 		}
-		catch (Exception ex) {
+		catch (Exception ex){
+			System.out.println("caught an error!!");
 			System.out.println(ex.getMessage());
-			return false;
 		}
-		return true;
+		if (params.getUserExists() == false) {
+			System.out.println("will store the new user!");
+			try {
+				userDAO.save(params.getFindUser());
+				System.out.println("Saved the user!!");
+			}
+			catch (Exception ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		return user;
 	}
 }
