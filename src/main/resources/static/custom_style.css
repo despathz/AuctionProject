@@ -53,6 +53,11 @@
     outline: none                         !important;
 }
 
+.btn-danger, .btn-danger:hover, .btn-danger:active, .btn-danger:visited, .btn-danger:focus {
+    border-color: transparent             !important;
+    outline: none                         !important;
+}
+
 /*Override bootstrap's form colors and behavior*/
 .form-control:focus {
     border-color: rgb(251, 130, 13);
