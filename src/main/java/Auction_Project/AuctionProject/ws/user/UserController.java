@@ -31,30 +31,40 @@ public class UserController {
 		return user;
 	}
 	
-	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public User registerUser( @RequestBody UserPostParams params) {
+	@RequestMapping(value = "/register/checkUsername", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public User registerCheckUsername( @RequestBody User input_user) {
 		User user = new User();
-		System.out.println("!!! " + params.getUserExists());
-
 		try {
-			user = userDAO.findByUsername(params.getFindUser().getUsername());
-			System.out.println("Found the user!!");
+			user = userDAO.findByUsername(input_user.getUsername());
 		}
 		catch (Exception ex){
-			System.out.println("caught an error!!");
 			System.out.println(ex.getMessage());
 		}
-		if (params.getUserExists() == false) {
-			System.out.println("will store the new user!");
-			try {
-				userDAO.save(params.getFindUser());
-				System.out.println("Saved the user!!");
-			}
-			catch (Exception ex) {
-				System.out.println(ex.getMessage());
-			}
+		return user;
+	}
+	
+	@RequestMapping(value = "/register/checkEmail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public User registerCheckEmail( @RequestBody User input_user) {
+		User user = new User();
+		try {
+			user = userDAO.findByEmail(input_user.getEmail());
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
 		}
 		return user;
+	}		
+		
+	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Boolean registerUser( @RequestBody User input_user) {	
+		try {
+			userDAO.save(input_user);
+		}
+		catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
 	@RequestMapping(value = "/getAll", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

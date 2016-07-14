@@ -51,9 +51,9 @@ myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $st
 }]);
 
 myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state) {
-	$scope.user = {remember: false, superuser: false, activation: false};
-	$scope.prop = {accept: false};
 	$scope.tryRegister = function() {
+		$scope.user = {remember: false, superuser: false, activation: false};
+		$scope.prop = {accept: false};
 		$scope.basicFieldsError = false; //these fields must be filled
 		$scope.missmatchPassError = false;
 		$scope.acceptTermsError = false;
@@ -72,27 +72,35 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 		}
 			
 		if (!$scope.acceptTermsError && !$scope.basicFieldsError && !$scope.missmatchPassError) {
-			console.log($scope.prop); //for debugging
-			var data = {
-                "user": $scope.user,
-                "userExists": !$scope.userExists
-            };
-
-			console.log(data.userExists);
-			var res = $http.post('/ws/user/register', data);
+			var res = $http.post('/ws/user/register/checkUsername', $scope.user);
 			res.success(function(response) {
 				if (response.username === $scope.user.username) {
                     $scope.userExists = true;
-					console.log($scope.userExists);
                 }
 				else {
-					$scope.userExists = false;
-					$rootScope.navPref = {username: $scope.user.username, loggedIn: true};
-					$state.go('app.welcome');
-				}	
+					var res = $http.post('/ws/user/register/checkEmail', $scope.user);
+					res.success(function(response) {
+					if (response.email === $scope.user.email) {
+						$scope.userExists = true;
+					}
+					else {
+						var res = $http.post('/ws/user/register', $scope.user);
+						res.success(function(response) {
+						if (!response) {
+							$scope.userExists = true;
+						}
+						else {
+							$scope.userExists = false;
+							$rootScope.navPref = {username: $scope.user.username, loggedIn: true};
+							$state.go('app.welcome');
+							}
+						});
+						}	
+					});
+				}
 			});
 		}
-	};
+	}
 }]);
 
 myApp.controller('adminPageCtrl', ['$scope', '$http', function($scope, $http) {

@@ -16,6 +16,7 @@ public interface UserDAO extends CrudRepository<User, Long>{
 
 	public User findByUsernameAndPassword(String username, String password);
 	public User findByUsername(String username);
+	public User findByEmail(String email);
 	
 	@Query("select u from User u where u.superuser = false")
 	public  List<User> getUsers();
