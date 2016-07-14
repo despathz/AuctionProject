@@ -11,20 +11,18 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li><a ui-sref-active="highlight" ui-sref="app.welcome">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a ui-sref-active="highlight" ui-sref="app.welcome"><i class="fa fa-home"></i> Home</a></li>
           </ul>
-          <ul class="nav navbar-nav pull-right" ng-hide="navPref.loggedIn">
+          <ul class="nav navbar-nav navbar-right" ng-hide="navPref.loggedIn">
             <li><a ui-sref-active="highlight" ui-sref="app.login"><i class="fa fa-sign-in"></i> Login</a></li>
             <li><a ui-sref-active="highlight" ui-sref="app.register"><i class="fa fa-user-plus"></i> Register</a></li>
           </ul>
-          <ul class="nav navbar-nav pull-right" ng-show="navPref.loggedIn">
+          <ul class="nav navbar-nav navbar-right" ng-show="navPref.loggedIn">
             <li class="dropdown"><a data-toggle="dropdown">Welcome, {{navPref.username}} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#" class="dropdown-item-text"><i class="fa fa-user"></i> Profile</a></li>
-                    <li><a href="#" class="dropdown-item-text"><i class="fa fa-envelope"></i> Private Messages</a></li>
-                   <li><a ui-sref="app.logout" class="dropdown-item-text"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="fa fa-envelope"></i> Private Messages</a></li>
+                   <li><a ui-sref="app.logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
             </li>       
           </ul>

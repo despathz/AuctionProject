@@ -1,5 +1,5 @@
 /* Remove the navbar's default margin-bottom and rounded borders */
-.navbar {
+.navbar, .navbar-inverse {
     margin-bottom: 0;
     border-radius: 0;
     background-color: rgb(163, 159, 153);
@@ -12,14 +12,20 @@
     color: black    !important;
     background-color: rgb(251, 130, 13) !important;
     border-radius: 5px  !important;
+    cursor: pointer !important;
 }
 
-.navbar-inverse .navbar-nav>li>a:hover {
-    cursor: hand    !important;
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover {
+    color: #fff;
+    cursor: pointer    !important;
 }
 
-.dropdown-item-text {
-    color: black !important;
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+    color: black;
+}
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: rgb(251, 130, 13) !important;
 }
 
 .panel-default {
@@ -99,6 +105,15 @@ footer {
     background-color: rgb(163, 159, 153);
     color: black;
     padding: 15px;
+}
+
+footer a {
+    color: black;
+}
+
+footer a:hover, footer a:focus {
+    text-decoration: none;
+    color: white;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
