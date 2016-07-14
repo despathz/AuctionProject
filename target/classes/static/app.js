@@ -66,7 +66,7 @@ myApp.config(function ($stateProvider) {
 });
 
 myApp.run(['$rootScope', '$state', function($rootScope, $state) {
-    $rootScope.navPref = {username: "none", loggedIn: true};
+    $rootScope.navPref = {username: "none", loggedIn: false};
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         $rootScope.title = toParams.title;
         console.log(toState.name);
