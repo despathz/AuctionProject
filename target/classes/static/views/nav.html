@@ -20,7 +20,13 @@
             <li><a ui-sref-active="highlight" ui-sref="app.register"><i class="fa fa-user-plus"></i> Register</a></li>
           </ul>
           <ul class="nav navbar-nav pull-right" ng-show="navPref.loggedIn">
-            <li><a ui-sref-active="highlight" ui-sref="app.logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+            <li class="dropdown" ui-sref-active="highlight"><a class="dropdown-toggle" data-toggle="dropdown">Welcome, {{navPref.username}} <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="fa fa-envelope"></i> Private Messages</a></li>
+                   <li><a ui-sref="app.logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                </ul>
+            </li>       
           </ul>
         </div>
       </div>

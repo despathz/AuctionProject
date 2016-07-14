@@ -74,6 +74,16 @@
     height: 100%;
 }
 
+.dropdown:hover {
+    cursor: hand    !important;
+}
+
+
+.li.dropdown.open {
+    background: rgb(251, 130, 13)   !important;
+    border-radius: 5px  !important;
+}
+
 /* Set background color, text color and some padding */
 footer {
     border-radius: 0;
