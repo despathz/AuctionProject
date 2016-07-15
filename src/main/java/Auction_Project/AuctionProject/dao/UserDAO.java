@@ -15,6 +15,7 @@ import Auction_Project.AuctionProject.ws.user.User;
 public interface UserDAO extends CrudRepository<User, Long>{
 
 	public User findByUsernameAndPassword(String username, String password);
+	public User findById(long id);
 	public User findByUsername(String username);
 	public User findByEmail(String email);
 	

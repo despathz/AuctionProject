@@ -6,16 +6,17 @@ myApp.controller('mainCtrl', ['$scope', function($scope) {
     
 }]);
 
-myApp.controller('adminPageCtrl', ['$scope', '$http', 'state', function($scope, $http, $state) {
+myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     var res = $http.get('/ws/user/getAll');
     res.success(function(response) {
         $scope.userList = response;
     });
-//    $scope.viewProfile = function(userid) {
-//        $state.go('app.adminPage.profile');
-//    };
+    $scope.viewProfile = function(userid) {
+        console.log(userid);
+        $state.go('app.profile', {id: userid});
+    };
 }]);
 
-myApp.controller('profileCtrl', ['$scope', '$http', function($scope, $http) {
-    console.log($scope.userid);
+myApp.controller('profileCtrl', ['$scope', '$http', '$stateParams', function($scope, $http, $stateParams) {
+    $scope.user = {username: $stateParams.id};
 }]);
