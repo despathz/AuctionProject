@@ -71,7 +71,7 @@ public class UserController {
 	public List<User> getUsers() {
 		List<User> userList = new ArrayList<User>();
 		try {
-			userList = userDAO.getUsers();
+			userList = userDAO.findBySuperuser(false);
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());

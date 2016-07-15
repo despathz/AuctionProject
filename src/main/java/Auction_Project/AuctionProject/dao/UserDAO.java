@@ -3,8 +3,6 @@ package Auction_Project.AuctionProject.dao;
 import java.util.List;
 
 import javax.transaction.Transactional;
-
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import Auction_Project.AuctionProject.ws.user.User;
@@ -18,7 +16,5 @@ public interface UserDAO extends CrudRepository<User, Long>{
 	public User findById(long id);
 	public User findByUsername(String username);
 	public User findByEmail(String email);
-	
-	@Query("select u from User u where u.superuser = false")
-	public  List<User> getUsers();
+	public List<User> findBySuperuser(boolean superuser);
 }
