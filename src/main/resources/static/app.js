@@ -62,6 +62,16 @@ myApp.config(function ($stateProvider) {
             requireLogin: 1
         }
     })
+    
+    .state('app.adminPage.profile', {
+        url: '/profile',
+        templateUrl: './views/profile.html',
+        controller: 'profileCtrl',
+        params: {
+            title: 'Profile',
+            requireLogin: 1
+        }
+    })
 
 });
 
