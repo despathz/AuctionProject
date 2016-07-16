@@ -91,12 +91,12 @@ public class UserController {
 		return userResponseList;
 	}
 	
-	@RequestMapping(value = "/getProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserProfileResponse getUserProfile(long user_id) {
+	@RequestMapping(value = "/getProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserProfileResponse getUserProfile(@RequestBody User input_user) {
 		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false);
 		User user = new User();
 		try {
-			user = userDAO.findById(user_id);
+			user = userDAO.findById(input_user.getId());
 			responseUser = new UserProfileResponse(user.getUsername(), user.getEmail(), user.getName(), user.getSurname(), user.getAddress(),
 												user.getCountry(), user.getTelephone(), user.getTrn(), user.getSuperuser(), user.getActivation());
 		}
@@ -104,6 +104,36 @@ public class UserController {
 			System.out.println(ex.getMessage());
 		}
 		return responseUser;
+	}
+	
+	@RequestMapping(value = "/activate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean activateUser(@RequestBody User input_user) {
+		User user = new User();
+		try {
+			user = userDAO.findById(input_user.getId());
+			user.setActivation(true);
+			userDAO.save(user);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "/ban", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean banUser(@RequestBody User input_user) {
+		User user = new User();
+		try {
+			user = userDAO.findById(input_user.getId());
+			user.setActivation(false);
+			userDAO.save(user);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
 }

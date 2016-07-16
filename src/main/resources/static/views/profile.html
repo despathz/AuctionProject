@@ -1,54 +1,69 @@
-<div class="row">
-    <div class="col-sm-8 col-sm-offset-2 text-left">
-        <legend>User {{user.id}}</legend>
-    </div>
-</div>
-
 <div ng-show="navPref.id == 1">
-    <form role="form" ng-submit="tryRegister()">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-left">
+            <legend>User {{user.username}}</legend>
+        </div>
+    </div>
+    <form role="form">
         <div class="row">
             <div class="col-sm-4 col-sm-offset-2">
                 <div class="form-group">
                     <label for="username">Username:</label>
-                    <input type="text" class="form-control" ng-model="user.username">
+                    <input type="text" class="form-control" ng-model="user.username" ng-readonly="settings.edit">
                 </div>
                 <div class="form-group">
                     <label for="username">Name:</label>
-                    <input type="text" class="form-control" ng-model="user.name">
+                    <input type="text" class="form-control" ng-model="user.name" ng-readonly="settings.edit">
                 </div>
                 <div class="form-group">
                     <label for="username">Surname:</label>
-                    <input type="text" class="form-control" ng-model="user.surname">
+                    <input type="text" class="form-control" ng-model="user.surname" ng-readonly="settings.edit">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="text" class="form-control" ng-model="user.email">
+                    <input type="text" class="form-control" ng-model="user.email" ng-readonly="settings.edit">
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="form-group">
                     <label for="email">Phone number:</label>
-                    <input type="text" class="form-control" ng-model="user.telephone">
+                    <input type="text" class="form-control" ng-model="user.telephone" ng-readonly="settings.edit">
                 </div>
                 <div class="form-group">
                     <label for="email">Address:</label>
-                    <input type="text" class="form-control" ng-model="user.address">
+                    <input type="text" class="form-control" ng-model="user.address" ng-readonly="settings.edit">
                 </div>
                 <div class="form-group">
                     <label for="email">Country:</label>
-                    <input type="text" class="form-control" ng-model="user.country">
+                    <input type="text" class="form-control" ng-model="user.country" ng-readonly="settings.edit">
                 </div>
                 <div class="form-group">
                     <label for="email">Tax Registration Number:</label>
-                    <input type="text" class="form-control" ng-model="user.trn">
+                    <input type="text" class="form-control" ng-model="user.trn" ng-readonly="settings.edit">
                 </div>
             </div>
         </div>
         <div class="row">
-            <button type="submit" class="btn btn-primary">Edit User Profile</button>
+            <button ng-click="settings.edit = false" ng-show="settings.edit" class="btn btn-primary">Edit User Profile</button>
+            <button ng-show="settings.edit" class="btn btn-primary">Promote to Admin</button>
+            <button ng-show="settings.edit" ng-hide="user.activation" ng-click="activateUser()" class="btn btn-primary">Activate Account</button>
+            <button ng-show="settings.edit" ng-show="user.activation" ng-click="banUser()" class="btn btn-danger">Ban User</button>
+            <button ng-click="settings.edit = true" ng-hide="settings.edit" class="btn btn-primary">Save Changes</button>
         </div>
     </form>
 </div>
 
 <div ng-hide="navPref.id == 1">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-left">
+            <legend>User {{user.username}}</legend>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-2">
+            <div class="list-group">
+                <button class="list-group-item">Username: {{user.username}}</button>
+            </div>
+        </div>
+    </div>
 </div>
