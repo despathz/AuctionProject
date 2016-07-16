@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.user.UserListResponse;
-import Auction_Project.AuctionProject.dto.user.UserLoginResponse;;
+import Auction_Project.AuctionProject.dto.user.UserLoginResponse;
+import Auction_Project.AuctionProject.dto.user.UserProfileResponse;;
 
 @RestController
 @RequestMapping("/ws/user")
@@ -88,6 +89,21 @@ public class UserController {
 			System.out.println(ex.getMessage());
 		}
 		return userResponseList;
+	}
+	
+	@RequestMapping(value = "/getProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserProfileResponse getUserProfile(long user_id) {
+		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false);
+		User user = new User();
+		try {
+			user = userDAO.findById(user_id);
+			responseUser = new UserProfileResponse(user.getUsername(), user.getEmail(), user.getName(), user.getSurname(), user.getAddress(),
+												user.getCountry(), user.getTelephone(), user.getTrn(), user.getSuperuser(), user.getActivation());
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return responseUser;
 	}
 	
 }

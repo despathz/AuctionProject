@@ -17,5 +17,11 @@ myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope,
 }]);
 
 myApp.controller('profileCtrl', ['$scope', '$http', '$stateParams', function($scope, $http, $stateParams) {
-    $scope.user = {id: $stateParams.id};
+    $scope.user = {id: parseInt($stateParams.id)};
+    console.log($scope.user);
+    var res = $http.get('/ws/user/getProfile', $scope.user.id);
+     res.success(function(response) {
+        $scope.user = response;
+        console.log(response); 
+    });
 }]);
