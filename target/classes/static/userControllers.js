@@ -43,7 +43,7 @@ myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $st
 }]);
 
 myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state) {
-    $scope.user = {remember: false, superuser: false, activation: false};
+    $scope.user = {remember: false, superuser: false, activation: false, username: "", password: "", email: "", name: "", surname: ""};
     $scope.prop = {accept: false, verifyPassword: ""};
 	$scope.tryRegister = function() {
 		$scope.basicFieldsError = false; //these fields must be filled
@@ -52,10 +52,11 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 		$scope.userExists = false;
         $scope.emailExists = false;
         $scope.passwordError = false;
+		$scope.databaseError = false;
 
-		if ((angular.isUndefined($scope.user.username)) || (angular.isUndefined($scope.user.password)) 
-			|| ($scope.prop.verifyPassword.length == 0) || (angular.isUndefined($scope.user.email)) 
-			|| (angular.isUndefined($scope.user.name)) || (angular.isUndefined($scope.user.surname))) {
+		if (($scope.user.username.length == 0) || ($scope.user.password.length == 0)
+			|| ($scope.prop.verifyPassword.length == 0) || ($scope.user.email.length == 0)
+			|| ($scope.user.name.length == 0) || ($scope.user.surname.length == 0)) {
 				$scope.basicFieldsError = true;
         }
         
@@ -85,7 +86,7 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
                             var res = $http.post('/ws/user/register', $scope.user);
                             res.success(function(response) {
                                 if (!response) {
-                                    $scope.userExists = true;
+                                    $scope.databaseError = true;
                                 }
                                 else {
                                     $rootScope.navPref = {username: $scope.user.username, loggedIn: true};
