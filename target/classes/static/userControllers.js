@@ -16,9 +16,10 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
         if (!$scope.usernameError && !$scope.passwordError) {
             var res = $http.post('/ws/user/login', $scope.user);
             res.success(function(response) {
-                if (response.username === $scope.user.username && response.password === $scope.user.password) {
+                console.log(response);
+                if (response.username === $scope.user.username) {
                     if (response.activation) {
-                        $rootScope.navPref = {username: $scope.user.username, loggedIn: true};
+                        $rootScope.navPref = {username: $scope.user.username, id: response.id ,loggedIn: true};
                         if (response.superuser)
                             $state.go('app.adminPage');
                         else

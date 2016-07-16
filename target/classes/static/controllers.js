@@ -12,11 +12,10 @@ myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope,
         $scope.userList = response;
     });
     $scope.viewProfile = function(userid) {
-        console.log(userid);
         $state.go('app.profile', {id: userid});
     };
 }]);
 
 myApp.controller('profileCtrl', ['$scope', '$http', '$stateParams', function($scope, $http, $stateParams) {
-    $scope.user = {username: $stateParams.id};
+    $scope.user = {id: $stateParams.id};
 }]);
