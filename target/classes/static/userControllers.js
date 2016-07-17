@@ -74,13 +74,13 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 		if (!$scope.acceptTermsError && !$scope.basicFieldsError && !$scope.missmatchPassError && !$scope.passwordError) {
 			var res = $http.post('/ws/user/register/checkUsername', $scope.user);
 			res.success(function(response) {
-				if (response.username === $scope.user.username) {
+				if (response) {
                     $scope.userExists = true;
                 }
 				else {
 					var res = $http.post('/ws/user/register/checkEmail', $scope.user);
 					res.success(function(response) {
-                        if (response.email === $scope.user.email) {
+                        if (response) {
                             $scope.emailExists = true;
                         }
                         else {

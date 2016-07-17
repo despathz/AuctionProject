@@ -38,27 +38,31 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/register/checkUsername", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public User registerCheckUsername( @RequestBody User input_user) {
-		User user = new User();
+	public Boolean registerCheckUsername( @RequestBody User input_user) {
+		Long numOfUsernames = (long) -1;
 		try {
-			user = userDAO.findByUsername(input_user.getUsername());
+			numOfUsernames = userDAO.countByUsername(input_user.getUsername());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
 		}
-		return user;
+		if (numOfUsernames != 0)
+			return true;
+		return false;
 	}
 	
 	@RequestMapping(value = "/register/checkEmail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public User registerCheckEmail( @RequestBody User input_user) {
-		User user = new User();
+	public Boolean registerCheckEmail( @RequestBody User input_user) {
+		Long numOfEmails = (long) -1;
 		try {
-			user = userDAO.findByEmail(input_user.getEmail());
+			numOfEmails = userDAO.countByEmail(input_user.getEmail());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
 		}
-		return user;
+		if (numOfEmails != 0)
+			return true;
+		return false;
 	}		
 		
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -46,8 +46,8 @@
         <div class="row">
             <button ng-click="settings.edit = false" ng-show="settings.edit" class="btn btn-primary">Edit User Profile</button>
             <button ng-show="settings.edit" class="btn btn-primary">Promote to Admin</button>
-            <button ng-show="settings.edit" ng-hide="user.activation" ng-click="activateUser()" class="btn btn-primary">Activate Account</button>
-            <button ng-show="settings.edit" ng-show="user.activation" ng-click="banUser()" class="btn btn-danger">Ban User</button>
+            <button ng-show="settings.edit && !user.activation" ng-hide="user.activation" ng-click="activateUser()" class="btn btn-primary">Activate Account</button>
+            <button  ng-show="settings.edit && user.activation" ng-click="banUser()" class="btn btn-danger">Ban User</button>
             <button ng-click="settings.edit = true" ng-hide="settings.edit" class="btn btn-primary">Save Changes</button>
         </div>
     </form>
@@ -55,14 +55,16 @@
 
 <div ng-hide="navPref.id == 1">
     <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 text-left">
+        <div class="col-sm-8 col-sm-offset-2 text-left" class="fa fa-info">
             <legend>User {{user.username}}</legend>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4 col-sm-offset-2">
+        <div class="col-sm-4 col-sm-offset-2 text-left">
             <div class="list-group">
-                <button class="list-group-item">Username: {{user.username}}</button>
+				<div class="list-group-item"><b>Name:</b> <centered>{{user.name}}</centered></div>
+				<div class="list-group-item"><b>Surname:</b> <centered>{{user.surname}}</centered></div>
+				<div class="list-group-item"><b>Email:</b> <centered>{{user.email}}</centered></div>
             </div>
         </div>
     </div>
