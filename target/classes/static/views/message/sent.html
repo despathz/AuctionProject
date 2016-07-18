@@ -12,11 +12,11 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr ng-repeat="message in sent">
             <td><input type="checkbox"></td>
-            <td>despina</td>
-            <td>Rolex watch</td>
-            <td>Wed 11:15am</td>
+            <td>{{message.to}}</td>
+            <td>{{message.title}}</td>
+            <td>{{message.date}}</td>
         </tr>
     </tbody>
 </table>

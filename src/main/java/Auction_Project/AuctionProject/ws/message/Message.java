@@ -31,6 +31,10 @@ public class Message {
 	@ManyToOne
 	@JoinColumn(name = "receiveUser_id")
 	private User receiveUser;
+	
+	public Message() {
+		
+	}
 
 	public Message(String title, String text, String date, Boolean isRead, User sentUser, User receiveUser) {
 		this.title = title;

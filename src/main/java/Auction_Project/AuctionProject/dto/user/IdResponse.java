@@ -12,6 +12,10 @@ public class IdResponse {
 		this.id = id;
 	}
 
+	public IdResponse() {
+		
+	}
+	
 	public IdResponse(long id) {
 		super();
 		this.id = id;

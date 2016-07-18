@@ -1,13 +1,18 @@
 myApp.controller('messageCtrl', ["$rootScope", '$scope', function($rootScope, $scope) {
-
 }]);
 
-myApp.controller('inboxCtrl', ["$rootScope", '$scope', function($rootScope, $scope) {
-    
+myApp.controller('inboxCtrl', ["$rootScope", '$scope', '$http', function($rootScope, $scope, $http) {
+    var res = $http.post('/ws/message/inbox', {id: $rootScope.navPref.id});
+    res.success(function(response) {
+        $scope.inbox = response;
+    });
 }]);
 
-myApp.controller('sentCtrl', ["$rootScope", '$scope', function($rootScope, $scope) {
-    
+myApp.controller('sentCtrl', ["$rootScope", '$scope', '$http', function($rootScope, $scope, $http) {
+    var res = $http.post('/ws/message/sent', {id: $rootScope.navPref.id});
+    res.success(function(response) {
+        $scope.sent = response;
+    });
 }]);
 
 myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', function($rootScope, $scope, $http) {
