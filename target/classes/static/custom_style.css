@@ -62,6 +62,26 @@
     max-width: auto;
 }
 
+.message_action a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: black;
+}
+
+.message_action a:hover {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+.badge {
+    background-color: rgb(163, 159, 153) !important;
+}
+
+.list-group-item>.badge {
+    float: none;
+}
+
 /*Set a page's element margin*/
 .element_margin {
     margin: 20px;
