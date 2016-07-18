@@ -32,6 +32,15 @@ public class Message {
 	@JoinColumn(name = "receiveUser_id")
 	private User receiveUser;
 
+	public Message(String title, String text, String date, Boolean isRead, User sentUser, User receiveUser) {
+		this.title = title;
+		this.text = text;
+		this.date = date;
+		this.isRead = isRead;
+		this.sentUser = sentUser;
+		this.receiveUser = receiveUser;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -78,6 +87,14 @@ public class Message {
 
 	public void setSentUser(User sentUser) {
 		this.sentUser = sentUser;
+	}
+
+	public User getReceiveUser() {
+		return receiveUser;
+	}
+
+	public void setReceiveUser(User receiveUser) {
+		this.receiveUser = receiveUser;
 	}
 	
 	

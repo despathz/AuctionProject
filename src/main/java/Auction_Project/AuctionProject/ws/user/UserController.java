@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import Auction_Project.AuctionProject.dao.UserDAO;
+import Auction_Project.AuctionProject.dto.user.IdResponse;
 import Auction_Project.AuctionProject.dto.user.UserListResponse;
 import Auction_Project.AuctionProject.dto.user.UserLoginResponse;
-import Auction_Project.AuctionProject.dto.user.UserProfileResponse;;
+import Auction_Project.AuctionProject.dto.user.UserProfileResponse;
+import Auction_Project.AuctionProject.dto.user.UsernameResponse;
 
 @RestController
 @RequestMapping("/ws/user")
@@ -138,6 +140,20 @@ public class UserController {
 			return false;
 		}
 		return true;
+	}
+	
+	@RequestMapping(value = "/getIDbyUsername", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public IdResponse getUserID(@RequestBody UsernameResponse input) {
+		User user = new User();
+		IdResponse responseUser = new IdResponse(0);
+		try {
+			user = userDAO.findByUsername(input.getUsername());
+			responseUser.setId(user.getId());
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return responseUser;
 	}
 	
 }
