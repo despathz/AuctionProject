@@ -85,16 +85,8 @@ myApp.config(function ($stateProvider) {
     
     .state('app.message.inbox', {
         url: '/inbox',
-        views: {
-            'messageToolbar': {
-                templateUrl: './views/message/inboxToolbar.html',
-                controller: 'inboxCtrl'
-            },
-            '': {
-                templateUrl: './views/message/inbox.html',
-                controller: 'inboxCtrl'
-            }  
-        },
+        templateUrl: './views/message/inbox.html',
+        controller: 'inboxCtrl',
         params: {
             title: 'Messages - Inbox',
             requireLogin: 1
@@ -103,16 +95,8 @@ myApp.config(function ($stateProvider) {
     
     .state('app.message.sent', {
         url: '/sent',
-        views: {
-            'messageToolbar': {
-                templateUrl: './views/message/sentToolbar.html',
-                controller: 'sentCtrl'
-            },
-            '': {
-                templateUrl: './views/message/sent.html',
-                controller: 'sentCtrl'
-            }  
-        },
+        templateUrl: './views/message/sent.html',
+        controller: 'sentCtrl',
         params: {
             title: 'Messages - Sent',
             requireLogin: 1
@@ -121,16 +105,8 @@ myApp.config(function ($stateProvider) {
     
     .state('app.message.compose', {
         url: '/compose',
-        views: {
-            'messageToolbar': {
-                templateUrl: './views/message/composeToolbar.html',
-                controller: 'composeCtrl'
-            },
-            '': {
-                templateUrl: './views/message/compose.html',
-                controller: 'composeCtrl'
-            }  
-        },
+        templateUrl: './views/message/compose.html',
+        controller: 'composeCtrl',
         params: {
             title: 'Messages - Compose',
             requireLogin: 1

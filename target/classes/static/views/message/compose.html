@@ -1,8 +1,12 @@
-<div class="form-group text-left">
+<div class="list-group-item message_action" style="background-color: rgb(163, 159, 153)">
+    <a><i class="fa fa-reply"></i> Send</a>
+    <a ng-click="eraseText()"><i class="fa fa-eraser"></i> Clear</a>
+</div>
+<div class="form-group text-left" style="margin-top: 20px">
     <label>To:</label>
-    <input type="text" class="form-control">
+    <input type="text" class="form-control" ng-model="compose.sentUsername">
 </div>
 <div class="form-group text-left">
     <label>Message:</label>
-    <textarea class="form-control" rows="5"></textarea>
+    <textarea class="form-control" rows="5" ng-model="compose.textbody"></textarea>
 </div>
