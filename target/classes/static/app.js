@@ -73,6 +73,17 @@ myApp.config(function ($stateProvider) {
             id: "0"
         }
     })
+    
+    .state('app.message', {
+        url: '/messages/:id',
+        templateUrl: './views/message.html',
+        controller: 'messageCtrl',
+        params: {
+            title: 'Messages',
+            requireLogin: 1,
+            id: "0"
+        }
+    })
 
 });
 
