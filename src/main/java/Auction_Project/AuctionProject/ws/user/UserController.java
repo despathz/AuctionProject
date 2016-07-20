@@ -145,6 +145,7 @@ public class UserController {
 	@RequestMapping(value = "/getIDbyUsername", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public IdResponse getUserID(@RequestBody UsernameResponse input) {
 		User user = new User();
+		System.out.println("HELLOOO" + input.getUsername());
 		IdResponse responseUser = new IdResponse(0);
 		try {
 			user = userDAO.findByUsername(input.getUsername());
@@ -153,7 +154,28 @@ public class UserController {
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
 		}
+		System.out.println("HO " + responseUser.getId());
 		return responseUser;
+	}
+	
+	@RequestMapping(value = "/updateProfileInfo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean updateProfileInfo(@RequestBody User input_user) {
+		User user = new User();
+		try {
+			user = userDAO.findById(input_user.getId());
+			System.out.println(input_user.getId());
+			user.setAddress(input_user.getAddress());
+			user.setCountry(input_user.getCountry());
+			user.setName(input_user.getName());
+			user.setSurname(input_user.getSurname());
+			user.setTelephone(input_user.getTelephone());
+			userDAO.save(user);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
 }
