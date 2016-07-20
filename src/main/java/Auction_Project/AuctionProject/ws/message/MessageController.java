@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.MessageDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.message.InboxResponse;
+import Auction_Project.AuctionProject.dto.message.MessageListResponse;
 import Auction_Project.AuctionProject.dto.message.SendMessageResponse;
 import Auction_Project.AuctionProject.dto.message.SentResponse;
 import Auction_Project.AuctionProject.dto.user.IdResponse;
@@ -37,13 +38,13 @@ public class MessageController {
 	public boolean sendMessage(@RequestBody SendMessageResponse input) {
 		User sentUser = new User();
 		User receiveUser = new User();
-		sentUser = userDAO.findById(input.getFrom());
-		receiveUser = userDAO.findById(input.getTo());
 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Date date = new Date();
-		String msgDate = dateFormat.format(date);
-		Message msg = new Message(input.getTitle(), input.getText(), msgDate, false, sentUser, receiveUser);
+		String msgDate = dateFormat.format(date);		
 		try {
+			sentUser = userDAO.findById(input.getFrom());
+			receiveUser = userDAO.findById(input.getTo());
+			Message msg = new Message(input.getTitle(), input.getText(), msgDate, false, false, false, sentUser, receiveUser);
 			messageDAO.save(msg);
 		}
 		catch (Exception ex){
@@ -59,10 +60,10 @@ public class MessageController {
 		List<Message> messageList = new ArrayList<Message>();
 		try {
 			User user = userDAO.findById(input_user.getId());
-			messageList = messageDAO.findByReceiveUser(user);
+			messageList = messageDAO.findByReceiveUserAndInboxDelete(user, false);
 			for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
 				Message msg = iterator.next();
-				InboxResponse response = new InboxResponse(msg.getId(), msg.getSentUser().getUsername(), msg.getTitle(), msg.getDate());
+				InboxResponse response = new InboxResponse(msg.getId(), msg.getSentUser().getUsername(), msg.getTitle(), msg.getDate(), msg.getIsRead());
 				responseList.add(response);
 			}
 		}
@@ -78,7 +79,7 @@ public class MessageController {
 		List<Message> messageList = new ArrayList<Message>();
 		try {
 			User user = userDAO.findById(input_user.getId());
-			messageList = messageDAO.findBySentUser(user);
+			messageList = messageDAO.findBySentUserAndSentDelete(user, false);
 			for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
 				Message msg = iterator.next();
 				SentResponse response = new SentResponse(msg.getId(), msg.getReceiveUser().getUsername(), msg.getTitle(), msg.getDate());
@@ -91,4 +92,105 @@ public class MessageController {
 		return responseList;
 	}
 	
+	@RequestMapping(value = "inbox/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean inboxDelete(@RequestBody MessageListResponse messages) {
+		Long[] ids = messages.getIds();
+		try {
+			for (int i = 0; i < ids.length; i++) {
+				Message msg = messageDAO.findById(ids[i]);
+				if (msg.getSentDelete() == true)
+					messageDAO.delete(msg);
+				else {
+					msg.setInboxDelete(true);
+					messageDAO.save(msg);
+				}
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "sent/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean SentDelete(@RequestBody MessageListResponse messages) {
+		Long[] ids = messages.getIds();
+		try {
+			for (int i = 0; i < ids.length; i++) {
+				Message msg = messageDAO.findById(ids[i]);
+				if (msg.getInboxDelete() == true)
+					messageDAO.delete(msg);
+				else {
+					msg.setSentDelete(true);
+					messageDAO.save(msg);
+				}
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "markRead", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean markRead(@RequestBody MessageListResponse messages) {
+		Long[] ids = messages.getIds();
+		try {
+			for (int i = 0; i < ids.length; i++) {
+				Message msg = messageDAO.findById(ids[i]);
+				msg.setIsRead(true);
+				messageDAO.save(msg);
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "markUnRead", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean markUnRead(@RequestBody MessageListResponse messages) {
+		Long[] ids = messages.getIds();
+		try {
+			for (int i = 0; i < ids.length; i++) {
+				Message msg = messageDAO.findById(ids[i]);
+				msg.setIsRead(false);
+				messageDAO.save(msg);
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "inbox/count", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Long inboxCount(@RequestBody IdResponse input_user) {
+		Long c = new Long(0);
+		try {
+			User user = userDAO.findById(input_user.getId());
+			c = messageDAO.countByReceiveUserAndInboxDelete(user, false);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return c;
+	}
+	
+	@RequestMapping(value = "sent/count", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Long sentCount(@RequestBody IdResponse input_user) {
+		Long c = new Long(0);
+		try {
+			User user = userDAO.findById(input_user.getId());
+			c = messageDAO.countBySentUserAndSentDelete(user, false);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return c;
+	}
 }

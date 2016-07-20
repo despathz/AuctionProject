@@ -4,17 +4,19 @@ public class InboxResponse {
 	
 	private long id;
 	private String from, title, date;
+	private Boolean isRead;
 	
 	
 	public InboxResponse() {
 	}
 	
-	public InboxResponse(long id, String from, String title, String date) {
+	public InboxResponse(long id, String from, String title, String date, Boolean isRead) {
 		super();
 		this.id = id;
 		this.from = from;
 		this.title = title;
 		this.date = date;
+		this.isRead = isRead;
 	}
 	
 	public long getId() {
@@ -40,6 +42,14 @@ public class InboxResponse {
 	}
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public boolean isRead() {
+		return isRead;
+	}
+
+	public void setRead(boolean isRead) {
+		this.isRead = isRead;
 	}
 	
 	

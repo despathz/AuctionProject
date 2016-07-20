@@ -12,6 +12,11 @@ import Auction_Project.AuctionProject.ws.user.User;
 @Transactional
 public interface MessageDAO extends CrudRepository<Message, Long>{
 
-	public List<Message> findByReceiveUser(User receiveUser);
-	public List<Message> findBySentUser(User sentUser);
+	public List<Message> findByReceiveUserAndInboxDelete(User receiveUser, boolean inboxDelete);
+	public Long countByReceiveUserAndInboxDelete(User receiveUser, boolean inboxDelete);
+	
+	public List<Message> findBySentUserAndSentDelete(User sentUser, boolean sentDelete);
+	public Long countBySentUserAndSentDelete(User sentUser, boolean sentDelete);
+	
+	public Message findById(long id);
 }

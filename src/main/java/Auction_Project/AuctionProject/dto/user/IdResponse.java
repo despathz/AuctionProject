@@ -17,7 +17,6 @@ public class IdResponse {
 	}
 	
 	public IdResponse(long id) {
-		super();
 		this.id = id;
 	}
 	

@@ -20,7 +20,7 @@ public class Message {
 	@NotNull
 	private String title, text, date;
 	
-	private Boolean isRead;
+	private Boolean isRead, inboxDelete, sentDelete;
 	
 	@NotNull
 	@ManyToOne
@@ -36,13 +36,15 @@ public class Message {
 		
 	}
 
-	public Message(String title, String text, String date, Boolean isRead, User sentUser, User receiveUser) {
+	public Message(String title, String text, String date, Boolean isRead, Boolean inboxDelete, Boolean sentDelete, User sentUser, User receiveUser) {
 		this.title = title;
 		this.text = text;
 		this.date = date;
 		this.isRead = isRead;
 		this.sentUser = sentUser;
 		this.receiveUser = receiveUser;
+		this.sentDelete = sentDelete;
+		this.inboxDelete = inboxDelete;
 	}
 
 	public long getId() {
@@ -100,6 +102,23 @@ public class Message {
 	public void setReceiveUser(User receiveUser) {
 		this.receiveUser = receiveUser;
 	}
+
+	public Boolean getInboxDelete() {
+		return inboxDelete;
+	}
+
+	public void setInboxDelete(Boolean inboxDelete) {
+		this.inboxDelete = inboxDelete;
+	}
+
+	public Boolean getSentDelete() {
+		return sentDelete;
+	}
+
+	public void setSentDelete(Boolean sentDelete) {
+		this.sentDelete = sentDelete;
+	}
+	
 	
 	
 }
