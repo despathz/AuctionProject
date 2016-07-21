@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.MessageDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.message.InboxResponse;
+import Auction_Project.AuctionProject.dto.message.MessageIDResponse;
 import Auction_Project.AuctionProject.dto.message.MessageListResponse;
 import Auction_Project.AuctionProject.dto.message.SendMessageResponse;
 import Auction_Project.AuctionProject.dto.message.SentResponse;
+import Auction_Project.AuctionProject.dto.message.ViewMessageResponse;
 import Auction_Project.AuctionProject.dto.user.IdResponse;
 import Auction_Project.AuctionProject.ws.user.User;
 
@@ -192,5 +194,18 @@ public class MessageController {
 			System.out.println(ex.getMessage());
 		}
 		return c;
+	}
+	
+	@RequestMapping(value = "view", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ViewMessageResponse viewMessage(@RequestBody MessageIDResponse messageID) {
+		ViewMessageResponse responseMessage = new ViewMessageResponse();
+		try {
+			Message msg = messageDAO.findById(messageID.getId());
+			responseMessage = new ViewMessageResponse(msg.getTitle(), msg.getReceiveUser().getUsername(), msg.getSentUser().getUsername(), msg.getText());
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return responseMessage;
 	}
 }

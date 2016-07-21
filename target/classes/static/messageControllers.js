@@ -71,6 +71,10 @@ myApp.controller('inboxCtrl', ["$rootScope", '$scope', '$http', '$state', functi
         for (m in $scope.inbox)
             $scope.inbox[m]['selected'] = false;
     };
+    
+    $scope.viewMessage = function(message_id) {
+      $state.go('app.message.view', {id: message_id});  
+    };
 }]);
 
 myApp.controller('sentCtrl', ["$rootScope", '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
@@ -106,10 +110,14 @@ myApp.controller('sentCtrl', ["$rootScope", '$scope', '$http', '$state', functio
         for (m in $scope.sent)
             $scope.sent[m]['selected'] = false;
     };
+    
+    $scope.viewMessage = function(message_id) {
+      $state.go('app.message.view', {id: message_id});  
+    };
 }]);
 
-myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
-    $scope.compose = {text: "", username: "", title: ""};
+myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
+    $scope.compose = {text: "", username: $stateParams.to, title: ""};
     
     $scope.eraseText = function() {
         $scope.compose.text = ""; 
@@ -136,4 +144,36 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', func
             }
         });
     }
+}]);
+
+myApp.controller('viewCtrl', ["$rootScope", '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
+    var res = $http.post('/ws/message/view', {id: parseInt($stateParams.id)});
+    res.success(function(response) {
+        if (response.to === $rootScope.navPref.username) {
+            $scope.message = {text: response.text, title: response.title, from: response.from, type: "inbox"};
+            var res = $http.post('/ws/message/markRead', {ids: [parseInt($stateParams.id)]});
+            res.success(function(response) {});
+        }
+        else if (response.from === $rootScope.navPref.username)
+            $scope.message = {text: response.text, title: response.title, to: response.to, type: "sent"};
+        else
+            $scope.message = {text: "", title: "", to: "", from: ""};
+    });
+    
+    $scope.reply = function() {
+        $state.go('app.message.compose', {to: $scope.message.from});
+    };
+    
+    $scope.delete = function() {
+        if ($scope.message.type === "inbox")
+            var res = $http.post('/ws/message/inbox/delete', {ids: [parseInt($stateParams.id)]});
+        else if ($scope.message.type === "sent")
+            var res = $http.post('/ws/message/sent/delete', {ids: [parseInt($stateParams.id)]});
+        res.success(function(response) {
+            if ($scope.message.type === "inbox")
+                $state.go('app.message.inbox', {}, {reload: true});
+            else if ($scope.message.type === "sent")
+                $state.go('app.message.sent', {}, {reload: true});
+        });
+    };
 }]);

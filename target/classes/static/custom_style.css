@@ -82,6 +82,10 @@
     float: none;
 }
 
+.clickable-row td {
+    cursor: pointer !important;
+}
+
 /*Set a page's element margin*/
 .element_margin {
     margin: 20px;

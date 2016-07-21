@@ -104,12 +104,24 @@ myApp.config(function ($stateProvider) {
     })
     
     .state('app.message.compose', {
-        url: '/compose',
+        url: '/compose/:to',
         templateUrl: './views/message/compose.html',
         controller: 'composeCtrl',
         params: {
             title: 'Messages - Compose',
-            requireLogin: 1
+            requireLogin: 1,
+            to: ""
+        }
+    })
+    
+    .state('app.message.view', {
+        url: '/view/:id',
+        templateUrl: './views/message/view.html',
+        controller: 'viewCtrl',
+        params: {
+            title: 'Messages - View',
+            requireLogin: 1,
+            id: ""
         }
     })
 

@@ -29,7 +29,6 @@ myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$stateParams'
     });
     
 	$scope.editInfo = function() {
-		console.log("MAOUUU");
 		console.log($scope.user);
 		$scope.basicFieldsError = false;
 		$scope.successfulUpdate = false;
@@ -41,9 +40,7 @@ myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$stateParams'
 		if (!$scope.basicFieldsError) {
 			var res = $http.post('/ws/user/getIDbyUsername', {username: $scope.user.username});
         	res.success(function(response) {
-				console.log("done!");
 				$scope.user.id = response.id;
-				console.log($scope.user.id);
 				var res = $http.post('/ws/user/updateProfileInfo', $scope.user);
 				res.success(function(response) {
 					if (response) {
