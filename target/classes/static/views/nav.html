@@ -20,6 +20,7 @@
           <ul class="nav navbar-nav navbar-right" ng-show="navPref.loggedIn">
             <li class="dropdown"><a data-toggle="dropdown">Welcome, {{navPref.username}} <span class="caret"></span></a>
                 <ul class="dropdown-menu">
+					<li ng-show="navPref.isAdmin"><a ui-sref="app.adminPage"><i class="fa fa-cogs"></i> Admin Page</a></li>
                     <li><a ui-sref="app.profile"><i class="fa fa-user"></i> Profile</a></li>
                     <li><a ui-sref="app.message.inbox"><i class="fa fa-envelope"></i> Private Messages</a></li>
                    <li><a ui-sref="app.logout"><i class="fa fa-sign-out"></i> Logout</a></li>

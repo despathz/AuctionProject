@@ -159,10 +159,46 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/updateProfileInfo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public boolean updateProfileInfo(@RequestBody User input_user) {
+	public Integer updateProfileInfo(@RequestBody User input_user) {
 		User user = new User();
 		try {
 			user = userDAO.findById(input_user.getId());
+			//if the username changes -> check if the new username exists
+			//	if it exists check if it's the same user -> successful update
+			System.out.println("ID " + input_user.getId() + " ~ " + user.getEmail() + " - " + input_user.getEmail());
+			System.out.println(user.getUsername() + " - " + input_user.getUsername());
+			if (!(user.getUsername().equals(input_user.getUsername()))) {
+				Long numOfUsernames = (long) -1;
+				try {
+					numOfUsernames = userDAO.countByUsername(input_user.getUsername());
+					System.out.println("Found usernames " + numOfUsernames);
+				}
+				catch (Exception ex){
+					System.out.println(ex.getMessage());
+					return 0;
+				}
+				if (numOfUsernames != 0)
+					return 2;
+				else 
+					user.setUsername(input_user.getUsername());
+			}
+			
+			if (!(user.getEmail().equals(input_user.getEmail()))) {
+				Long numOfEmails = (long) -1;
+				try {
+					numOfEmails = userDAO.countByEmail(input_user.getEmail());
+					System.out.println("Found emails " + numOfEmails);
+				}
+				catch (Exception ex){
+					System.out.println(ex.getMessage());
+					return 0;
+				}
+				if (numOfEmails != 0)
+					return 3;
+				else
+					user.setEmail(input_user.getEmail());
+			}
+			
 			System.out.println(input_user.getId());
 			user.setAddress(input_user.getAddress());
 			user.setCountry(input_user.getCountry());
@@ -173,9 +209,9 @@ public class UserController {
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
-			return false;
+			return 0;
 		}
-		return true;
+		return 1;
 	}
 	
 }

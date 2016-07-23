@@ -1,103 +1,34 @@
-<div ng-show="navPref.id == 1">
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 text-left">
-            <legend>User {{user.username}}</legend>
-        </div>
-    </div>
-    <form role="form">
-        <div class="row">
-            <div class="col-sm-4 col-sm-offset-2">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" class="form-control" ng-model="user.username" ng-readonly="settings.edit">
-                </div>
-                <div class="form-group">
-                    <label for="username">Name:</label>
-                    <input type="text" class="form-control" ng-model="user.name" ng-readonly="settings.edit">
-                </div>
-                <div class="form-group">
-                    <label for="username">Surname:</label>
-                    <input type="text" class="form-control" ng-model="user.surname" ng-readonly="settings.edit">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="text" class="form-control" ng-model="user.email" ng-readonly="settings.edit">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                    <label for="email">Phone number:</label>
-                    <input type="text" class="form-control" ng-model="user.telephone" ng-readonly="settings.edit">
-                </div>
-                <div class="form-group">
-                    <label for="email">Address:</label>
-                    <input type="text" class="form-control" ng-model="user.address" ng-readonly="settings.edit">
-                </div>
-                <div class="form-group">
-                    <label for="email">Country:</label>
-                    <input type="text" class="form-control" ng-model="user.country" ng-readonly="settings.edit">
-                </div>
-                <div class="form-group">
-                    <label for="email">Tax Registration Number:</label>
-                    <input type="text" class="form-control" ng-model="user.trn" ng-readonly="settings.edit">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <button ng-click="settings.edit = false" ng-show="settings.edit" class="btn btn-primary">Edit User Profile</button>
-            <button ng-show="settings.edit" class="btn btn-primary">Promote to Admin</button>
-            <button ng-show="settings.edit && !user.activation" ng-hide="user.activation" ng-click="activateUser()" class="btn btn-primary">Activate Account</button>
-            <button  ng-show="settings.edit && user.activation" ng-click="banUser()" class="btn btn-danger">Ban User</button>
-            <button ng-click="editInfo()" ng-hide="settings.edit" class="btn btn-primary">Save Changes</button>
-        </div>
-		<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
-		<div class="text-success" ng-show="successfulUpdate">Your profile was updated succssfully!</div>
-    </form>
-</div>
-
-<div ng-hide="navPref.id == 1">
-	<div class="col-sm-8 col-sm-offset-2">
-		<div class="row">
-			<div class=" panel panel-default">
-				<div class="panel-heading">
-					<b>User: {{user.username}} - Profile Information</b>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="panel-body">
-		<div class="row">
-			<div class="col-sm-4 col-sm-offset-2">
-				<div class="list-group" style="text-align:left">
-					<div class="list-group-item"><b>Name: </b>{{user.name}}</div>
-					<div class="list-group-item"><b>Surname: </b>{{user.surname}}</div>
-					<div class="list-group-item"><b>Email: </b>{{user.email}}</div>
-					<div class="list-group-item"><b>Address: </b>{{user.address}}</div>
-					<div class="list-group-item"><b>Country: </b>{{user.country}}</div>
-					<div class="list-group-item"><b>Phone Number: </b>{{user.telephone}}</div>
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<img id="profile_photo" src="./img/profilephoto.png"></img>
-				<div><button class="btn btn-primary">Change Avatar</button></div>
-			</div>
-		</div>
-<!--
-		<div class="col-sm-4">
-			<div class="list-group" style="text-align:center">
-				<div class="list-group-item"><b>Previous Password: </b><input type="text" class="form-control" ng-model="settings.edit" ng-readonly="settings.edit"></div>
-				<div class="list-group-item"><b>New Password: </b><input type="text" class="form-control" ng-model="settings.edit" ng-readonly="settings.edit"></div>
-				<div class="list-group-item"><b>Verify Password: </b><input type="text" class="form-control" ng-model="settings.edit" ng-readonly="settings.edit"></div>
-
-			</div>
-		</div>
--->
-	</div>
+<div class="col-sm-8 col-sm-offset-2">
 	<div class="row">
-		<button class="btn btn-primary">Edit Profile</button>
-		<button class="btn btn-primary">Change Password</button>
-		<button class="btn btn-primary">Send Message</button>
+		<div class=" panel panel-default">
+			<div class="panel-heading">
+				<b>User: {{user.username}} - Profile Information</b>
+			</div>
+		</div>
 	</div>
+</div>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-sm-4 col-sm-offset-2">
+			<div class="list-group" style="text-align:left">
+				<div class="list-group-item"><b>Name: </b>{{user.name}}</div>
+				<div class="list-group-item"><b>Surname: </b>{{user.surname}}</div>
+				<div class="list-group-item"><b>Email: </b>{{user.email}}</div>
+				<div class="list-group-item"><b>Address: </b>{{user.address}}</div>
+				<div class="list-group-item"><b>Country: </b>{{user.country}}</div>
+				<div class="list-group-item"><b>Phone Number: </b>{{user.telephone}}</div>
+			</div>
+		</div>
+		<div class="col-sm-2 col-sm-offset-1">
+			<img id="profile_photo" src="./img/profilephoto.png"></img>
+			<button class="btn btn-primary" style="margin-top:10px">Change Avatar</button>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<button class="btn btn-primary"  ui-sref="app.editprofile">Edit User Profile</button>
+	<button class="btn btn-primary">Change Password</button>
+	<button class="btn btn-primary">Send Message</button>
 </div>
 
 

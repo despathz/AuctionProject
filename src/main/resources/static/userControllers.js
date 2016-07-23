@@ -19,7 +19,7 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
                 console.log(response);
                 if (response.username === $scope.user.username) {
                     if (response.activation) {
-                        $rootScope.navPref = {username: $scope.user.username, id: response.id ,loggedIn: true};
+                        $rootScope.navPref = {username: $scope.user.username, id: response.id, isAdmin: response.superuser, loggedIn: true};
                         if (response.superuser)
                             $state.go('app.adminPage');
                         else

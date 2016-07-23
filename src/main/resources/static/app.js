@@ -73,6 +73,17 @@ myApp.config(function ($stateProvider) {
             id: "0"
         }
     })
+	
+	.state('app.editprofile', {
+        url: '/editprofile/:id',
+        templateUrl: './views/editprofile.html',
+        controller: 'editprofileCtrl',
+        params: {
+            title: 'Edit Profile',
+            requireLogin: 1,
+            id: "0"
+        }
+    })
     
     .state('app.message', {
         url: '/messages',
@@ -128,7 +139,7 @@ myApp.config(function ($stateProvider) {
 });
 
 myApp.run(['$rootScope', '$state', function($rootScope, $state) {
-    $rootScope.navPref = {username: "none", loggedIn: false};
+    $rootScope.navPref = {username: "none", loggedIn: false, isAdmin: false, id: 0};
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         $rootScope.title = toParams.title;
         console.log(toState.name);
