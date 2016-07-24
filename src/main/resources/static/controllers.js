@@ -58,9 +58,8 @@ myApp.controller('editprofileCtrl', ['$rootScope', '$scope', '$http', '$statePar
 		$scope.successfulUpdate = false;
 		$scope.usernameExists = false; $scope.emailExists = false;
 		
-		if  (($scope.user.address.length == 0) || ($scope.user.telephone.length == 0) || ($scope.user.email.length == 0) 
-			|| ($scope.user.country.length == 0) || ($scope.user.name.length == 0) || ($scope.user.surname.length == 0)
-			|| ($scope.user.trn.length == 0) || ($scope.user.username.length == 0)) {
+		if  (($scope.user.email.length == 0) || ($scope.user.name.length == 0) || ($scope.user.surname.length == 0)
+			|| ($scope.user.username.length == 0)) {
 				$scope.basicFieldsError = true;
         }
 		

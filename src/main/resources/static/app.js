@@ -28,7 +28,7 @@ myApp.config(function ($stateProvider) {
 	})
     
     .state('app.login', {
-        url: '/login',
+        url: '/login/:activation',
         templateUrl: './views/login.html',
         controller: 'loginCtrl',
         params: { 

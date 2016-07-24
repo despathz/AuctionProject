@@ -205,6 +205,7 @@ public class UserController {
 			user.setName(input_user.getName());
 			user.setSurname(input_user.getSurname());
 			user.setTelephone(input_user.getTelephone());
+			user.setTrn(input_user.getTrn());
 			userDAO.save(user);
 		}
 		catch (Exception ex){

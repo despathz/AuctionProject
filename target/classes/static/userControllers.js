@@ -1,9 +1,11 @@
 myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cookies', function($rootScope, $scope, $state, $http, $cookies) {
     $scope.user = {remember: false};
+	console.log($scope.activationError);
     $scope.tryLogin = function() {
         $scope.usernameError = false;
         $scope.passwordError = false;
         $scope.activationError = false;
+		console.log($scope.activationError);
         if (angular.isUndefined($scope.user.username)) {
             $scope.usernameError = true;
         }
@@ -54,6 +56,7 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
         $scope.emailExists = false;
         $scope.passwordError = false;
 		$scope.databaseError = false;
+		$scope.activationError = false;
 
 		if (($scope.user.username.length == 0) || ($scope.user.password.length == 0)
 			|| ($scope.prop.verifyPassword.length == 0) || ($scope.user.email.length == 0)
@@ -90,8 +93,8 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
                                     $scope.databaseError = true;
                                 }
                                 else {
-                                    $rootScope.navPref = {username: $scope.user.username, loggedIn: true};
-                                    $state.go('app.welcome');
+                                    $scope.activationError = false;
+                                    $state.go('app.login');
                                 }
                             });
                         }	
