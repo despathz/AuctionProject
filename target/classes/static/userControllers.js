@@ -48,7 +48,7 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
         $scope.emailExists = false;
         $scope.passwordError = false;
 		$scope.databaseError = false;
-		$scope.activationError = false;
+		$scope.registerComplete = false;
 
 		if (($scope.user.username.length == 0) || ($scope.user.password.length == 0)
 			|| ($scope.prop.verifyPassword.length == 0) || ($scope.user.email.length == 0)
@@ -81,13 +81,10 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
                         else {
                             var res = $http.post('/ws/user/register', $scope.user);
                             res.success(function(response) {
-                                if (!response) {
+                                if (!response) 
                                     $scope.databaseError = true;
-                                }
-                                else {
-                                    $scope.activationError = false;
-                                    $state.go('app.login');
-                                }
+                                else 
+                                    $scope.registerComplete = true;
                             });
                         }	
 					});

@@ -57,7 +57,7 @@
 }
 
 /*Set logo image size*/
-#logo_img {
+.edit_img {
     max-height: 180px;
     max-width: auto;
 }

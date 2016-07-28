@@ -1,9 +1,9 @@
-<div class="row">
+<div class="row" ng-hide="registerComplete">
     <div class="col-sm-8 col-sm-offset-2 text-left">
         <legend>Create your account</legend>
     </div>
 </div>
-<form role="form" ng-submit="tryRegister()">
+<form role="form" ng-submit="tryRegister()" ng-hide="registerComplete">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-2">
             <div class="form-group">
@@ -64,4 +64,10 @@
     <div class="text-danger" ng-show="acceptTermsError">Please accept the terms!</div>
 	<div class="text-danger" ng-show="databaseError">An error occured in the database!</div>
 </form>
+<div class="col-sm-8 col-sm-offset-2" ng-show="registerComplete">
+    <div class="row">
+        <p>Your account has been created successfully. <br>Please wait until the admin activate your account.</p>
+		<img class="edit_img" src="./img/tick.png" alt="tick"></img>
+    </div>
+</div>
 

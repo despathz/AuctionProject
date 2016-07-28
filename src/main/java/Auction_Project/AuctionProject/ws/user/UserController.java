@@ -161,10 +161,11 @@ public class UserController {
 	@RequestMapping(value = "/updateProfileInfo", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Integer updateProfileInfo(@RequestBody User input_user) {
 		User user = new User();
+		System.out.println(input_user.getName());
 		try {
 			user = userDAO.findById(input_user.getId());
 			//if the username changes -> check if the new username exists
-			//	if it exists check if it's the same user -> successful update
+			//if it exists check if it's the same user -> successful update
 			System.out.println("ID " + input_user.getId() + " ~ " + user.getEmail() + " - " + input_user.getEmail());
 			System.out.println(user.getUsername() + " - " + input_user.getUsername());
 			if (!(user.getUsername().equals(input_user.getUsername()))) {
