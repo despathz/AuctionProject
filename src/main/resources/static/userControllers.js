@@ -1,25 +1,18 @@
 myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cookies', function($rootScope, $scope, $state, $http, $cookies) {
-    $scope.user = {remember: false};
-	console.log($scope.activationError);
+    $scope.user = {username: "", password: "", remember: false};
     $scope.tryLogin = function() {
-        $scope.usernameError = false;
-        $scope.passwordError = false;
+        $scope.error = false;
         $scope.activationError = false;
-		console.log($scope.activationError);
-        if (angular.isUndefined($scope.user.username)) {
-            $scope.usernameError = true;
+        if ($scope.user.username.length == 0 || $scope.user.password.length == 0)  {
+            $scope.error = true;
         }
-        if (angular.isUndefined($scope.user.password)) {
-            $scope.passwordError = true;
+        if ($scope.user.password.length < 5) {
+            $scope.error = true;
         }
-        else if ($scope.user.password.length < 5) {
-            $scope.passwordError = true;
-        }
-        if (!$scope.usernameError && !$scope.passwordError) {
+        if (!$scope.error) {
             var res = $http.post('/ws/user/login', $scope.user);
             res.success(function(response) {
-                console.log(response);
-                if (response.username === $scope.user.username) {
+                if (response.id != 0) {
                     if (response.activation) {
                         $rootScope.navPref = {username: $scope.user.username, id: response.id, isAdmin: response.superuser, loggedIn: true};
                         if (response.superuser)
@@ -31,8 +24,7 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
                         $scope.activationError = true;
                 }
                 else {
-                    $scope.usernameError = true;
-                    $scope.passwordError = true;
+                    $scope.error = true;
                 }
             });
 
