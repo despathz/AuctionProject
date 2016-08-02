@@ -1,10 +1,10 @@
 myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
-    var res = $http.post('/ws/message/inbox/count', {id: $rootScope.navPref.id});
+    var res = $http.post('/ws/message/inbox/count', {id: $rootScope.session.id});
     res.success(function(response) {
         $scope.inboxCount = response;
     });
     
-    var res = $http.post('/ws/message/sent/count', {id: $rootScope.navPref.id});
+    var res = $http.post('/ws/message/sent/count', {id: $rootScope.session.id});
     res.success(function(response) {
         $scope.sentCount = response;
     });
@@ -13,7 +13,7 @@ myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($root
 myApp.controller('inboxCtrl', ['$rootScope', '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
     $scope.prop = {selectAll: false};
     
-    var res = $http.post('/ws/message/inbox', {id: $rootScope.navPref.id});
+    var res = $http.post('/ws/message/inbox', {id: $rootScope.session.id});
     res.success(function(response) {
         $scope.inbox = response;
         for (m in $scope.inbox)
@@ -80,7 +80,7 @@ myApp.controller('inboxCtrl', ['$rootScope', '$scope', '$http', '$state', functi
 myApp.controller('sentCtrl', ["$rootScope", '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
     $scope.prop = {selectAll: false};
     
-    var res = $http.post('/ws/message/sent', {id: $rootScope.navPref.id});
+    var res = $http.post('/ws/message/sent', {id: $rootScope.session.id});
     res.success(function(response) {
         $scope.sent = response;
         for (m in $scope.sent)
@@ -133,10 +133,10 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
             $scope.errors.titleError = true;
         var res = $http.post('/ws/user/getIDbyUsername', {username: $scope.compose.username});
         res.success(function(response) {
-            if (response.id == 0 || response.id == $rootScope.navPref.id)
+            if (response.id == 0 || response.id == $rootScope.session.id)
                 $scope.errors.usernameError = true;
             if (!$scope.errors.usernameError && !$scope.errors.textError && !$scope.errors.titleError) {
-                var res = $http.post('/ws/message/send', {text: $scope.compose.text, title: $scope.compose.title, from: $rootScope.navPref.id, to: response.id});
+                var res = $http.post('/ws/message/send', {text: $scope.compose.text, title: $scope.compose.title, from: $rootScope.session.id, to: response.id});
                 res.success(function(response) {
                     if (response)
                         $state.go($state.current, {}, {reload: true});
@@ -149,12 +149,12 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
 myApp.controller('viewCtrl', ["$rootScope", '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
     var res = $http.post('/ws/message/view', {id: parseInt($stateParams.id)});
     res.success(function(response) {
-        if (response.to === $rootScope.navPref.username) {
+        if (response.to === $rootScope.session.username) {
             $scope.message = {text: response.text, title: response.title, from: response.from, type: "inbox"};
             var res = $http.post('/ws/message/markRead', {ids: [parseInt($stateParams.id)]});
             res.success(function(response) {});
         }
-        else if (response.from === $rootScope.navPref.username)
+        else if (response.from === $rootScope.session.username)
             $scope.message = {text: response.text, title: response.title, to: response.to, type: "sent"};
         else
             $scope.message = {text: "", title: "", to: "", from: ""};

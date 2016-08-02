@@ -7,11 +7,8 @@ myApp.controller('navCtrl', ['$rootScope', '$scope', '$stateParams', 'notify', '
 myApp.controller('mainCtrl', ['$rootScope', '$scope', '$stateParams', function($rootScope, $scope, $stateParams) {
     $scope.isAdmin = false;
 	$scope.user_id = parseInt($stateParams.id);
-	console.log($scope.user_id);
-	console.log($scope.user_id);
 	if ($scope.user_id == 1)
 		$scope.isAdmin = true;
-	console.log($scope.isAdmin);
 }]);
 
 myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {

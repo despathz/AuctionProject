@@ -138,14 +138,25 @@ myApp.config(function ($stateProvider) {
 
 });
 
-myApp.run(['$rootScope', '$state', function($rootScope, $state) {
-    $rootScope.navPref = {username: "none", loggedIn: false, isAdmin: false, id: 0};
+myApp.run(['$rootScope', '$state', '$cookies', function($rootScope, $state, $cookies) {
+	$rootScope.session = {username: 'none', loggedIn: false, isAdmin: false, id: 0};
+	if (angular.isUndefined($cookies.get('loggedIn'))) {
+		$cookies.putObject('username', 'none');
+		$cookies.putObject('loggedIn', false);
+		$cookies.putObject('isAdmin', false);
+		$cookies.putObject('id', 0);
+	}
+	else {
+		$rootScope.session.username = $cookies.getObject('username');
+		$rootScope.session.loggedIn = $cookies.getObject('loggedIn');
+		$rootScope.session.isAdmin = $cookies.getObject('isAdmin');
+		$rootScope.session.id = $cookies.getObject('id');
+	}
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         $rootScope.title = toParams.title;
-        console.log(toState.name);
-        if (toParams.requireLogin == 0 && $rootScope.navPref.loggedIn)
+        if (toParams.requireLogin == 0 && $rootScope.session.loggedIn)
             $state.go('app.welcome');
-        else if (toParams.requireLogin == 1 && !$rootScope.navPref.loggedIn)
+        else if (toParams.requireLogin == 1 && !$rootScope.session.loggedIn)
             $state.go('app.welcome');
     });
 }]);
@@ -153,8 +164,8 @@ myApp.run(['$rootScope', '$state', function($rootScope, $state) {
 myApp.factory("notify", ['$rootScope', '$http', function ($rootScope, $http) {
 
     function callServer() {
-        if ($rootScope.navPref.id != 0) {
-            var res = $http.post('/ws/message/notify', {id: $rootScope.navPref.id});   
+        if ($rootScope.session.id != 0) {
+            var res = $http.post('/ws/message/notify', {id: $rootScope.session.id});   
             res.success(function(response) {
                 $rootScope.newMsg = response;
             });

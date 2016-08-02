@@ -8,7 +8,7 @@
 		<div class="col-sm-4 col-sm-offset-2">
 			<div class="form-group">
 				<label for="username">Username:</label>
-				<input type="text" class="form-control" ng-model="user.username" ng-readonly="!navPref.isAdmin">
+				<input type="text" class="form-control" ng-model="user.username" ng-readonly="!session.isAdmin">
 			</div>
 			<div class="form-group">
 				<label for="username">Name:</label>
@@ -20,7 +20,7 @@
 			</div>
 			<div class="form-group">
 				<label for="email">Email:</label>
-				<input type="text" class="form-control" ng-model="user.email" ng-readonly="!navPref.isAdmin">
+				<input type="text" class="form-control" ng-model="user.email" ng-readonly="!session.isAdmin">
 			</div>
 		</div>
 		<div class="col-sm-4">
@@ -44,9 +44,9 @@
 	</div>
 	<div class="row">
 		<button ng-click="editInfo()" class="btn btn-primary">Save Changes</button>
-		<button ng-show="navPref.isAdmin && !settings.isAdmin" class="btn btn-primary">Promote to Admin</button>
-		<button ng-show="!user.activation && navPref.isAdmin && !settings.isAdmin" ng-click="activateUser()" class="btn btn-primary">Activate Account</button>
-		<button ng-show="navPref.isAdmin && user.activation && !settings.isAdmin" ng-click="banUser()" class="btn btn-danger">Ban User</button>
+		<button ng-show="session.isAdmin && !settings.isAdmin" class="btn btn-primary">Promote to Admin</button>
+		<button ng-show="!user.activation && session.isAdmin && !settings.isAdmin" ng-click="activateUser()" class="btn btn-primary">Activate Account</button>
+		<button ng-show="session.isAdmin && user.activation && !settings.isAdmin" ng-click="banUser()" class="btn btn-danger">Ban User</button>
 	</div>
 	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
 	<div class="text-danger" ng-show="usernameExists">This username is already in use!</div>

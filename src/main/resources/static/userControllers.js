@@ -14,7 +14,11 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
             res.success(function(response) {
                 if (response.id != 0) {
                     if (response.activation) {
-                        $rootScope.navPref = {username: $scope.user.username, id: response.id, isAdmin: response.superuser, loggedIn: true};
+                        $rootScope.session = {username: $scope.user.username, id: response.id, isAdmin: response.superuser, loggedIn: true};
+						$cookies.putObject('username', $rootScope.session.username);
+						$cookies.putObject('loggedIn', $rootScope.session.loggedIn);
+						$cookies.putObject('isAdmin', $rootScope.session.isAdmin);
+						$cookies.putObject('id', $rootScope.session.id);
                         if (response.superuser)
                             $state.go('app.adminPage');
                         else
@@ -32,8 +36,12 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
     };
 }]);
 
-myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $state) {
-    $rootScope.navPref = {username: "none", loggedIn: false, isAdmin: false, id: 0};
+myApp.controller('logoutCtrl', ['$rootScope', '$state', '$cookies', function($rootScope, $state, $cookies) {
+    $rootScope.session = {username: "none", loggedIn: false, isAdmin: false, id: 0};
+	$cookies.putObject('username', 'none');
+	$cookies.putObject('loggedIn', false);
+	$cookies.putObject('isAdmin', false);
+	$cookies.putObject('id', 0);
     $state.go('app.welcome');
 }]);
 
@@ -98,7 +106,7 @@ myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$stateParams'
     $scope.user_id = parseInt($stateParams.id);
 	
     if ($scope.user_id == 0) {   //user views his OWN profile
-        $scope.user_id = $rootScope.navPref.id;
+        $scope.user_id = $rootScope.session.id;
 	}
     $scope.sentID = {id: $scope.user_id};
     var res = $http.post('/ws/user/getProfile', $scope.sentID);
@@ -114,7 +122,7 @@ myApp.controller('editprofileCtrl', ['$rootScope', '$scope', '$http', '$statePar
 	
 	$scope.settings = {save: false, edit: true, isAdmin: false, showBanner: false};
     if ($scope.user_id == 0) {   //user views his OWN profile
-        $scope.user_id = $rootScope.navPref.id;
+        $scope.user_id = $rootScope.session.id;
 		$scope.settings.isAdmin = true;
 	}
     $scope.sentID = {id: $scope.user_id};
@@ -154,11 +162,6 @@ myApp.controller('editprofileCtrl', ['$rootScope', '$scope', '$http', '$statePar
 				});
 			});
 		}
-		
-		var res = $http.post('/ws/user/getIDbyUsername', {username: $scope.user.username});
-        res.success(function(response) {
-			console.log("done!");
-		});
 	};
 	
     $scope.activateUser = function() {
