@@ -18,5 +18,7 @@ public interface MessageDAO extends CrudRepository<Message, Long>{
 	public List<Message> findBySentUserAndSentDelete(User sentUser, boolean sentDelete);
 	public Long countBySentUserAndSentDelete(User sentUser, boolean sentDelete);
 	
+	public Long countByReceiveUserAndInboxDeleteAndIsRead(User receiveUser, boolean inboxDelete, boolean isRead);
+	
 	public Message findById(long id);
 }

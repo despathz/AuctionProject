@@ -208,4 +208,18 @@ public class MessageController {
 		}
 		return responseMessage;
 	}
+	
+	@RequestMapping(value = "notify", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Long Notify(@RequestBody IdResponse input_user) {
+		Long count = new Long(0);
+		try {
+			User user = userDAO.findById(input_user.getId());
+			count = messageDAO.countByReceiveUserAndInboxDeleteAndIsRead(user, false, false);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		System.out.println("notify " + count);
+		return count;
+	}
 }

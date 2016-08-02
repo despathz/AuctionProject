@@ -1,5 +1,21 @@
-myApp.controller('navCtrl', ['$rootScope', '$scope', '$stateParams', function($rootScope, $scope, $stateParams) {
-	
+myApp.factory('notify', ['$rootScope', '$http', function ($rootScope, $http) {
+
+    function callServer() {
+        var res = $http.post('/ws/message/notify', {id: $rootScope.navPref.id});
+        res.success(function(response) {
+            return response;
+        });
+    }
+
+    return {
+        callServer: callServer
+    };
+}]);
+
+myApp.controller('navCtrl', ['$rootScope', '$scope', '$stateParams', 'pollingFactory', 'notify', function($rootScope, $scope, $stateParams, pollingFactory, notify) {
+	pollingFactory.callFnOnInterval(function () {
+        console.log(notify.callServer());
+    }, 5);
 }]);
 
 myApp.controller('mainCtrl', ['$rootScope', '$scope', '$stateParams', function($rootScope, $scope, $stateParams) {

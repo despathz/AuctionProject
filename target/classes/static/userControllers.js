@@ -33,7 +33,7 @@ myApp.controller('loginCtrl', ['$rootScope', '$scope', '$state', '$http', '$cook
 }]);
 
 myApp.controller('logoutCtrl', ['$rootScope', '$state', function($rootScope, $state) {
-    $rootScope.navPref = {username: "none", loggedIn: false};
+    $rootScope.navPref = {username: "none", loggedIn: false, isAdmin: false, id: 0};
     $state.go('app.welcome');
 }]);
 

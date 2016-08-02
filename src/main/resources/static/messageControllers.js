@@ -1,4 +1,5 @@
-myApp.controller('messageCtrl', ["$rootScope", '$scope', '$http', function($rootScope, $scope, $http) {
+
+myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
     var res = $http.post('/ws/message/inbox/count', {id: $rootScope.navPref.id});
     res.success(function(response) {
         $scope.inboxCount = response;
@@ -10,7 +11,7 @@ myApp.controller('messageCtrl', ["$rootScope", '$scope', '$http', function($root
     });
 }]);
 
-myApp.controller('inboxCtrl', ["$rootScope", '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
+myApp.controller('inboxCtrl', ['$rootScope', '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
     $scope.prop = {selectAll: false};
     
     var res = $http.post('/ws/message/inbox', {id: $rootScope.navPref.id});

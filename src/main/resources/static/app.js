@@ -149,3 +149,21 @@ myApp.run(['$rootScope', '$state', function($rootScope, $state) {
             $state.go('app.welcome');
     });
 }]);
+
+myApp.factory("pollingFactory", function ($timeout) {
+
+    var timeIntervalInSec = 5;
+
+    function callFnOnInterval(fn, timeInterval) {
+
+        var promise = $timeout(fn, 1000 * timeInterval);
+
+        return promise.then(function(){
+            callFnOnInterval(fn, timeInterval);
+        });
+    };
+
+    return {
+        callFnOnInterval: callFnOnInterval
+    };
+});
