@@ -150,9 +150,24 @@ myApp.run(['$rootScope', '$state', function($rootScope, $state) {
     });
 }]);
 
-myApp.factory("pollingFactory", function ($timeout) {
+myApp.factory("notify", ['$rootScope', '$http', function ($rootScope, $http) {
 
-    var timeIntervalInSec = 5;
+    function callServer() {
+        if ($rootScope.navPref.id != 0) {
+            var res = $http.post('/ws/message/notify', {id: $rootScope.navPref.id});   
+            res.success(function(response) {
+                $rootScope.newMsg = response;
+            });
+        }
+        return (new Date());
+    }
+
+    return {
+        callServer: callServer
+    };
+}]);
+
+myApp.factory("pollingFactory", ['$timeout', function ($timeout) {
 
     function callFnOnInterval(fn, timeInterval) {
 
@@ -166,4 +181,4 @@ myApp.factory("pollingFactory", function ($timeout) {
     return {
         callFnOnInterval: callFnOnInterval
     };
-});
+}]);

@@ -1,4 +1,3 @@
-
 myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
     var res = $http.post('/ws/message/inbox/count', {id: $rootScope.navPref.id});
     res.success(function(response) {
