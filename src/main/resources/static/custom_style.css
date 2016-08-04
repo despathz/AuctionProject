@@ -140,6 +140,23 @@ footer a:hover, footer a:focus {
     color: white;
 }
 
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    color: #555;
+    cursor: default;
+    background-color: rgb(163, 159, 153);
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    color: black;
+}
+
+.nav-tabs>li>a {
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    color: rgb(251, 130, 13);
+}
+
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
     .sidenav {

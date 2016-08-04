@@ -135,26 +135,34 @@ myApp.config(function ($stateProvider) {
             id: ""
         }
     })
+    
+    .state('app.auction', {
+        url: '/auction/:id',
+        templateUrl: './views/auction/auction.html',
+        controller: 'auctionCtrl',
+        params: {
+            title: 'Auction',
+            requireLogin: 2,
+            id: ""
+        }
+    })
 
 });
 
 myApp.run(['$rootScope', '$state', '$cookies', function($rootScope, $state, $cookies) {
 	$rootScope.session = {username: 'none', loggedIn: false, isAdmin: false, id: 0};
 	if (angular.isUndefined($cookies.get('loggedIn'))) {
-		console.log("if");
 		$cookies.putObject('username', 'none');
 		$cookies.putObject('loggedIn', false);
 		$cookies.putObject('isAdmin', false);
 		$cookies.putObject('id', 0);
 	}
 	else {
-		console.log("else");
 		$rootScope.session.username = $cookies.getObject('username');
 		$rootScope.session.loggedIn = $cookies.getObject('loggedIn');
 		$rootScope.session.isAdmin = $cookies.getObject('isAdmin');
 		$rootScope.session.id = $cookies.getObject('id');
 	}
-	console.log($rootScope.session);
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
         $rootScope.title = toParams.title;
         if (toParams.requireLogin == 0 && $rootScope.session.loggedIn)

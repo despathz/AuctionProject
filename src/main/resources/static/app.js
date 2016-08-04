@@ -135,6 +135,17 @@ myApp.config(function ($stateProvider) {
             id: ""
         }
     })
+    
+    .state('app.auction', {
+        url: '/auction/:id',
+        templateUrl: './views/auction/auction.html',
+        controller: 'auctionCtrl',
+        params: {
+            title: 'Auction',
+            requireLogin: 2,
+            id: ""
+        }
+    })
 
 });
 
