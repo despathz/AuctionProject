@@ -9,50 +9,47 @@
 </div>
 
 <div class="row">
-	<div class="col-sm-4 col-sm-offset-2">
-        <img id="profile_photo" src="./img/profilephoto.png" alt="profile photo"></img>
+    <div class="col-sm-4 col-sm-offset-2">
+        <img src="https://psmedia.playstation.com/is/image/psmedia/ps4-buy-unboxed-two-column-01-ps4-eu-03aug15?$TwoColumn_Image$" alt="profile photo"
+             class="img-responsive"></img>
     </div>
-    <div class="col-sm-3 col-sm-pull-right-1">
-        <legend>Recent bids:</legend>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th style="text-align: center">4/8/16 14:30 - User: 42$</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>4/8/16 14:30 - User: 42$</td>
-              </tr>
-              <tr>
-                <td>4/8/16 14:30 - User: 42$</td>
-              </tr>
-              <tr>
-                <td>4/8/16 14:30 - User: 42$</td>
-              </tr>
-            </tbody>
-        </table>
+    <div class="col-sm-3 col-sm-offset-1">
+        <legend class="text-left">Recent bids:</legend>
+        <ul class="bid-list">
+            <li>12:45 User 1: 30$</li>
+            <li>12:45 User 1: 30$</li>
+            <li>12:45 User 1: 30$</li>
+            <li>12:45 User 1: 30$</li>
+            <li>12:45 User 1: 30$</li>
+        </ul>
+        <br>
+        <div class="input-group" style="width: 30%;">
+            <input type="text" class="form-control" placeholder="$">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">Bid</button>
+            </span>
+        </div>
     </div>
 </div>
 
 <br><br>
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
-        <h2>Information</h2>
-          <ul class="nav nav-tabs" ng-init="currentTab='desc'">
+        <h3>Item information</h3>
+        <ul class="nav nav-tabs" ng-init="currentTab='desc'">
             <li class="active"><a data-toggle="tab" ng-click = "currentTab='desc'" href="">Description</a></li>
             <li><a data-toggle="tab" ng-click = "currentTab='location'" href="">Location</a></li>
-          </ul>
+        </ul>
 
-          <div class="tab-content">
+        <div class="tab-content">
             <div ng-show="currentTab==='desc'" class="tab-pane fade in active">
-              <h3>Description</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <br>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             </div>
             <div ng-show="currentTab==='location'" class="tab-pane fade in active">
-              <h3>Location</h3>
-              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <br>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
             </div>
-          </div>
+        </div>
     </div>
 </div>

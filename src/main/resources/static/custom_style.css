@@ -141,20 +141,26 @@ footer a:hover, footer a:focus {
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-    color: #555;
-    cursor: default;
     background-color: rgb(163, 159, 153);
-    border: 1px solid #ddd;
-    border-bottom-color: transparent;
     color: black;
 }
 
 .nav-tabs>li>a {
-    margin-right: 2px;
-    line-height: 1.42857143;
-    border: 1px solid transparent;
-    border-radius: 4px 4px 0 0;
     color: rgb(251, 130, 13);
+}
+
+.bid-list {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(163, 159, 153);
+    border-radius: 5px;
+}
+
+.bid-list li {
+    margin: 5px;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
