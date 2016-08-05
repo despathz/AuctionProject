@@ -160,7 +160,8 @@ footer a:hover, footer a:focus {
 }
 
 .bid-list li {
-    margin: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */

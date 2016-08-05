@@ -8,22 +8,28 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="row" ng-init="showImageA=true">
     <div class="col-sm-4 col-sm-offset-2">
-        <img src="https://psmedia.playstation.com/is/image/psmedia/ps4-buy-unboxed-two-column-01-ps4-eu-03aug15?$TwoColumn_Image$" alt="profile photo"
-             class="img-responsive"></img>
-    </div>
+        <img ng-show="showImageA" src="./img/ps4A.png" alt="auction photo" class="img-responsive"></img>
+		<img ng-show="!showImageA" src="./img/ps4B.png" alt="auction photo" class="img-responsive"></img>
+		<div class="col-sm-3 col-sm-offset-3">
+			<img src="./img/ps4A.png" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=true"></img>
+		</div>
+		<div class="col-sm-3">
+			<img src="./img/ps4B.png" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=false"></img>
+		</div>
+	</div>
     <div class="col-sm-3 col-sm-offset-1">
         <legend class="text-left">Recent bids:</legend>
         <ul class="bid-list">
             <li>12:45 User 1: 30$</li>
+            <li style="background: rgb(163, 159, 153)">12:45 User 1: 30$</li>
             <li>12:45 User 1: 30$</li>
-            <li>12:45 User 1: 30$</li>
-            <li>12:45 User 1: 30$</li>
+            <li style="background: rgb(163, 159, 153)">12:45 User 1: 30$</li>
             <li>12:45 User 1: 30$</li>
         </ul>
         <br>
-        <div class="input-group" style="width: 30%;">
+        <div class="input-group col-sm-7">
             <input type="text" class="form-control" placeholder="$">
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="button">Bid</button>
@@ -31,8 +37,7 @@
         </div>
     </div>
 </div>
-
-<br><br>
+<br>
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
         <h3>Item information</h3>
