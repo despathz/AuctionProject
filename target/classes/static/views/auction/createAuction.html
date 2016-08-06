@@ -1,0 +1,68 @@
+<div class="row" ng-hide="registerComplete">
+    <div class="col-sm-8 col-sm-offset-2 text-left">
+        <legend>Create a new auction</legend>
+    </div>
+</div>
+<form role="form" ng-submit="submitAuction()">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-2">
+            <div class="form-group">
+                <label for="username">Name:</label>
+                <input type="text" class="form-control" ng-model="auction.name">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Buy Price:</label>
+				<input type="text" class="form-control" ng-model="auction.buyPrice" placeholder="$">
+            </div>
+            <div class="form-group">
+                <label for="pwd">First Bid:</label>
+                <input type="text" class="form-control" ng-model="auction.firstBid" placeholder="$">
+            </div>
+            <div class="form-group">
+				<label for="username">Start Date:</label>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" ng-model="user.startDate">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username">End Date:</label>
+                <div class='input-group date' id='datetimepicker1'>
+                    <input type='text' class="form-control" ng-model="user.endDate">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+			<div class="form-group">
+				<label for="username">Select Category/ Catecories:</label>
+                <div class="dropdown">
+				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categories
+				  <span class="caret"></span></button>
+				  <ul class="dropdown-menu">
+					<li><a href="#">HTML</a></li>
+					<li><a href="#">CSS</a></li>
+					<li><a href="#">JavaScript</a></li>
+				  </ul>
+				</div>
+<!--                <input type="password" class="form-control" ng-model="user.password">-->
+            </div>
+			<div class="form-group">
+                <label for="email">Upload an image:</label>
+<!--                <input type="text" class="form-control" ng-model="user.telephone">-->
+            </div>
+            <div class="form-group">
+                <label for="email">Description:</label>
+				<textarea type="text" class="form-control" rows="4" ng-model="user.description"></textarea>
+            </div>
+        </div>
+    </div>
+	<br>
+	<div class="row">
+        <button type="submit" class="btn btn-primary">Submit auction</button>
+    </div>
+</form>

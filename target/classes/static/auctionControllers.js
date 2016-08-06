@@ -46,3 +46,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     };
     
 }]);
+
+myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+	$scope.auction = {name: "", firstBid: "", startDate: "", endDate: "", description: "", buyPrice:""};
+}]);
