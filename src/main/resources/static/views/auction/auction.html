@@ -21,19 +21,17 @@
 	</div>
     <div class="col-sm-3 col-sm-offset-1">
         <legend class="text-left">Recent bids:</legend>
-        <ul class="bid-list">
-            <li>12:45 User 1: 30$</li>
-            <li style="background: rgb(163, 159, 153)">12:45 User 1: 30$</li>
-            <li>12:45 User 1: 30$</li>
-            <li style="background: rgb(163, 159, 153)">12:45 User 1: 30$</li>
-            <li>12:45 User 1: 30$</li>
-        </ul>
+        <div class="bid-list" ng-init="counter = 0">
+            <ul style="list-style-type: none; margin: 0px; padding: 0px;" ng-repeat="bid in bidList">
+                <li>{{bid.bid_time}} - {{bid.bidder_username}}: {{bid.amount}}$</li>
+            </ul>
+        </div>
         <br>
         <div class="input-group col-sm-7" ng-show="session.loggedIn">
-            <input ng-hide="hasEnded" type="text" class="form-control" placeholder="$">
+            <input ng-hide="hasEnded" type="text" class="form-control" placeholder="$" ng-model="bidAmount">
             <input ng-show="hasEnded" type="text" class="form-control" placeholder="$" disabled>
             <span class="input-group-btn">
-                <button ng-hide="hasEnded" class="btn btn-primary" type="button">Bid</button>
+                <button ng-hide="hasEnded" class="btn btn-primary" type="button" ng-click="bid()">Bid</button>
                 <button ng-show="hasEnded" class="btn btn-primary" type="button" disabled="disabled">Bid</button>
             </span>
         </div>

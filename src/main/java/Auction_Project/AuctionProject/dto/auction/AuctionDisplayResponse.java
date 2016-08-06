@@ -1,19 +1,12 @@
 package Auction_Project.AuctionProject.dto.auction;
 
 import java.util.Date;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 public class AuctionDisplayResponse {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@NotNull
 	private String name, description;
 	
 	private float currently, first_bid;
@@ -22,9 +15,9 @@ public class AuctionDisplayResponse {
 	
 	private Date started, ends;
 	
-	@NotNull
 	private String creator;
 	private long user_id;
+	
 	public long getId() {
 		return id;
 	}

@@ -23,7 +23,6 @@ public class Bid {
 	@NotNull
 	private float amount;
 	
-	@NotNull
 	private Date bid_time;
 	
 	@NotNull
@@ -34,7 +33,7 @@ public class Bid {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "auction_id")
-	private Auction auction_id;
+	private Auction auctionId;
 
 	public long getId() {
 		return id;
@@ -68,12 +67,12 @@ public class Bid {
 		this.bidder = bidder;
 	}
 
-	public Auction getAuction_id() {
-		return auction_id;
+	public Auction getAuctionId() {
+		return auctionId;
 	}
 
-	public void setAuction_id(Auction auction_id) {
-		this.auction_id = auction_id;
+	public void setAuctionId(Auction auctionId) {
+		this.auctionId = auctionId;
 	}
 
 	public Bid(long id, float amount, Date bid_time, User bidder, Auction auction_id) {
@@ -81,7 +80,7 @@ public class Bid {
 		this.amount = amount;
 		this.bid_time = bid_time;
 		this.bidder = bidder;
-		this.auction_id = auction_id;
+		this.auctionId = auction_id;
 	}
 
 	public Bid() {
