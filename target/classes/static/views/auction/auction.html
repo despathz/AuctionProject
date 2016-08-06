@@ -29,21 +29,26 @@
             <li>12:45 User 1: 30$</li>
         </ul>
         <br>
-        <div class="input-group col-sm-7">
-            <input type="text" class="form-control" placeholder="$">
+        <div class="input-group col-sm-7" ng-show="session.loggedIn">
+            <input ng-hide="hasEnded" type="text" class="form-control" placeholder="$">
+            <input ng-show="hasEnded" type="text" class="form-control" placeholder="$" disabled>
             <span class="input-group-btn">
-                <button class="btn btn-primary" type="button">Bid</button>
+                <button ng-hide="hasEnded" class="btn btn-primary" type="button">Bid</button>
+                <button ng-show="hasEnded" class="btn btn-primary" type="button" disabled="disabled">Bid</button>
             </span>
         </div>
+        <br>
+        <b ng-show="hasEnded">This auction is over.</b>
     </div>
 </div>
+
 <br>
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
-        <h4>By: <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a></h4>
+        <h4>By <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a>, on {{startDate}} at {{startTime}}</h4>
     </div>
 </div>
-<br>
+
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
         <h3>Item information</h3>
