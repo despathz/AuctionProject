@@ -102,7 +102,7 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 	}
 }]);
 
-myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$stateParams', function($rootScope, $scope, $http, $stateParams) {
+myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
     $scope.user_id = parseInt($stateParams.id);
 	
     if ($scope.user_id == 0) {   //user views his OWN profile
@@ -113,6 +113,10 @@ myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$stateParams'
      res.success(function(response) {
         $scope.user = response;
     });
+    
+    $scope.sendMsg = function() {
+        $state.go("app.message.compose", {to: $scope.user.username});
+    }
 
 }]);
 

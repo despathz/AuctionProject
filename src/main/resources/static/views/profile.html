@@ -21,14 +21,14 @@
 		</div>
 		<div class="col-sm-2 col-sm-offset-1">
 			<img id="profile_photo" src="./img/profilephoto.png" alt="profile photo"></img>
-			<button class="btn btn-primary" style="margin-top:10px">Change Avatar</button>
+			<button class="btn btn-primary" style="margin-top:10px" ng-show="session.id == user_id">Change Avatar</button>
 		</div>
 	</div>
 </div>
 <div class="row">
-	<button class="btn btn-primary"  ui-sref="app.editprofile">Edit User Profile</button>
-	<button class="btn btn-primary">Change Password</button>
-	<button class="btn btn-primary">Send Message</button>
+	<button class="btn btn-primary" ui-sref="app.editprofile" ng-show="session.id == user_id">Edit User Profile</button>
+	<button class="btn btn-primary" ng-show="session.id == user_id">Change Password</button>
+	<button class="btn btn-primary" ng-hide="session.id == user_id" ng-click="sendMsg()">Send Message</button>
 </div>
 
 

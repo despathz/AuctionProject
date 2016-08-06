@@ -2,7 +2,7 @@
 	<div class="col-sm-8 col-sm-offset-2">
 		<div class=" panel panel-default">
 			<div class="panel-heading">
-				<b>PS4 500GB</b>
+				<b>{{auction.name}}</b>
 			</div>
 		</div>
 	</div>
@@ -40,6 +40,12 @@
 <br>
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
+        <h4>By: <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a></h4>
+    </div>
+</div>
+<br>
+<div class="row text-left">
+    <div class="col-sm-8 col-sm-offset-2">
         <h3>Item information</h3>
         <ul class="nav nav-tabs" ng-init="currentTab='desc'">
             <li class="active"><a data-toggle="tab" ng-click = "currentTab='desc'" href="">Description</a></li>
@@ -49,7 +55,7 @@
         <div class="tab-content">
             <div ng-show="currentTab==='desc'" class="tab-pane fade in active">
                 <br>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>{{auction.description}}</p>
             </div>
             <div ng-show="currentTab==='location'" class="tab-pane fade in active">
                 <br>
