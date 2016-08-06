@@ -1,4 +1,4 @@
-myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', 'stopwatch', 'pollingFactory', function($rootScope, $scope, $state, $stateParams, $http, $cookies, stopwatch, pollingFactory) {
     $scope.hasEnded = false;
     $scope.bidAmount = "";
     $scope.servicePath = '/ws/auction/' + $stateParams.id;
@@ -15,6 +15,11 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         var today = new Date();
         if (today > ends)
             $scope.hasEnded = true;
+        else {
+            pollingFactory.callFnOnInterval(function () {
+                $scope.countDown = stopwatch.calc(ends);
+            }, 1);
+        }
     });
     
     $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
@@ -35,14 +40,22 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     };
     
     $scope.bid = function() {
-        var toSent = {amount: $scope.bidAmount, bidder: $rootScope.session.id, auction: $scope.auction.id};
-        var res = $http.post('/ws/bid/add', toSent);
-        res.success(function(response) {
-            if (response == false)
-                console.log('error');
-            else
-                $scope.bidAmount = "";
-        });
+        $scope.bidMsg = "";
+        if (!isNaN($scope.bidAmount)) {
+            var toSent = {amount: $scope.bidAmount, bidder: $rootScope.session.id, auction: $scope.auction.id};
+            var res = $http.post('/ws/bid/add', toSent);
+            res.success(function(response) {
+                if (response == false)
+                    console.log('error');
+            });
+        }
+        else 
+            $scope.bidMsg = "Please type a valid amount of money";
+        $scope.bidAmount = "";
+    };
+    
+    $scope.bidderProfile = function(user_id) {
+        $state.go("app.profile", {id: user_id});
     };
     
 }]);

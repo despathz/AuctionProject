@@ -21,9 +21,10 @@
 	</div>
     <div class="col-sm-3 col-sm-offset-1">
         <legend class="text-left">Recent bids:</legend>
-        <div class="bid-list" ng-init="counter = 0">
+        <div class="bid-list">
             <ul style="list-style-type: none; margin: 0px; padding: 0px;" ng-repeat="bid in bidList">
-                <li>{{bid.bid_time}} - {{bid.bidder_username}}: {{bid.amount}}$</li>
+                <li ng-show="bid.bid_id%2==0" style="background: rgb(163, 159, 153)"><b>{{bid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: black">{{bid.bidder_username}}</a> - {{bid.bid_time}}</li>
+                <li ng-hide="bid.bid_id%2==0"><b>{{bid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: black">{{bid.bidder_username}}</a> - {{bid.bid_time}}</li>
             </ul>
         </div>
         <br>
@@ -37,6 +38,7 @@
         </div>
         <br>
         <b ng-show="hasEnded">This auction is over.</b>
+        <span class="text-danger" ng-hide='bidMsg===""'>{{bidMsg}}</span>
     </div>
 </div>
 
@@ -44,6 +46,7 @@
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
         <h4>By <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a>, on {{startDate}} at {{startTime}}</h4>
+        <h4 ng-hide="hasEnded">{{countDown}}</h4>
     </div>
 </div>
 

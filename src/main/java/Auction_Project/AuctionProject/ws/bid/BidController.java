@@ -61,7 +61,7 @@ public class BidController {
 			for (Iterator<Bid> iterator = bidList.iterator(); iterator.hasNext();) {
 				Bid bid = iterator.next();
 				User user = bid.getBidder();
-				BidListResponse bidResponse = new BidListResponse(user.getId(), user.getUsername(), bid.getBid_time(), bid.getAmount());
+				BidListResponse bidResponse = new BidListResponse(user.getId(), bid.getId(), user.getUsername(), bid.getBid_time(), bid.getAmount());
 				responseList.add(bidResponse);
 			}
 		}

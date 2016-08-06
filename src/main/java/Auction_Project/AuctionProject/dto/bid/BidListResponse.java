@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class BidListResponse {
 	
-	private long bidder_id;
+	private long bidder_id, bid_id;
 	
 	private String bidder_username;
 	
@@ -44,8 +44,17 @@ public class BidListResponse {
 		this.amount = amount;
 	}
 
-	public BidListResponse(long bidder_id, String bidder_username, Date bid_time, float amount) {
+	public long getBid_id() {
+		return bid_id;
+	}
+
+	public void setBid_id(long bid_id) {
+		this.bid_id = bid_id;
+	}
+
+	public BidListResponse(long bidder_id, long bid_id, String bidder_username, Date bid_time, float amount) {
 		this.bidder_id = bidder_id;
+		this.bid_id = bid_id;
 		this.bidder_username = bidder_username;
 		this.bid_time = bid_time;
 		this.amount = amount;

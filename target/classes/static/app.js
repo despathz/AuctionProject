@@ -182,6 +182,27 @@ myApp.run(['$rootScope', '$state', '$cookies', function($rootScope, $state, $coo
     });
 }]);
 
+myApp.factory("stopwatch", [function () {
+    function calc(ends) {
+        var today = new Date();
+        var sec = 0, min = 0, hour = 0;
+        sec = ~~((ends - today)/1000);
+        if (sec > 60) {
+            min = ~~(sec / 60);
+            sec = sec - 60 * min;
+            if (min > 60) {
+                hour = ~~(min / 60);
+                min = min - 60 * hour;
+            }
+        }
+        return "Ends in " + hour + " hours, " + min + " minutes and " + sec + " seconds";
+    }
+    
+    return {
+        calc: calc
+    };
+}]);
+
 myApp.factory("notify", ['$rootScope', '$http', function ($rootScope, $http) {
 
     function callServer() {

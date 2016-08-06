@@ -158,10 +158,12 @@ footer a:hover, footer a:focus {
     border-radius: 5px;
 }
 
+/*
 .bid-list li {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+*/
 
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
