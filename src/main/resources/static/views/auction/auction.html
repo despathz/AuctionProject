@@ -20,11 +20,10 @@
 		</div>
 	</div>
     <div class="col-sm-3 col-sm-offset-1">
-        <legend class="text-left">Recent bids:</legend>
+        <legend class="text-left">Current bid:</legend>
         <div class="bid-list">
             <ul style="list-style-type: none; margin: 0px; padding: 0px;" ng-repeat="bid in bidList">
-                <li ng-show="bid.bid_id%2==0" style="background: rgb(163, 159, 153)"><b>{{bid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: black">{{bid.bidder_username}}</a> - {{bid.bid_time}}</li>
-                <li ng-hide="bid.bid_id%2==0"><b>{{bid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: black">{{bid.bidder_username}}</a> - {{bid.bid_time}}</li>
+                <li><b>{{bid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: rgb(251, 130, 13)">{{bid.bidder_username}}</a> - {{bid.bid_time}}</li>
             </ul>
         </div>
         <br>

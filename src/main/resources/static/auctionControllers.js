@@ -26,11 +26,24 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     var res2 = $http.get($scope.servicePath);
     res2.success(function(response) {
         var i;
+        var today = new Date();
         for (i in response) {
-            response[i].bid_time = new Date(response[i].bid_time);
-            var bidDate = response[i].bid_time.getFullYear() + "-" + ('0' + (response[i].bid_time.getMonth()+1)).slice(-2) + "-" + ('0' + response[i].bid_time.getDate()).slice(-2);
-            var bidTime = ('0' + response[i].bid_time.getHours()).slice(-2) + ":" + ('0' + response[i].bid_time.getMinutes()).slice(-2) + ":" + ('0' + response[i].bid_time.getSeconds()).slice(-2);
-            response[i].bid_time = bidDate + " " + bidTime;
+            var sec = 0, min = 0, hour = 0;
+            sec = ~~((today - response[i].bid_time)/1000);
+            if (sec > 60) {
+                min = ~~(sec / 60);
+                sec = sec - 60 * min;
+                if (min > 60) {
+                    hour = ~~(min / 60);
+                    min = min - 60 * hour;
+                }
+            }
+            if (hour >= 1)
+                response[i].bid_time = hour + " hours ago";
+            else if (min >= 1)
+                response[i].bid_time = min + " minutes ago";
+            else if (sec >= 1)
+                response[i].bid_time = sec + " seconds ago";
         }
         $scope.bidList = response;
     });

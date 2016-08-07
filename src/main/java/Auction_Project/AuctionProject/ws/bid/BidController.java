@@ -1,11 +1,15 @@
 package Auction_Project.AuctionProject.ws.bid;
 
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +61,8 @@ public class BidController {
 		List<Bid> bidList = new ArrayList<Bid>();
 		try {
 			Auction auction = auctionDAO.findById(auctionID);
-			bidList = bidDAO.findByAuctionId(auction);
+			Pageable top = new PageRequest(0, 1);
+			bidList = bidDAO.findByAuctionIdOrderByAmountDesc(auction, top);
 			for (Iterator<Bid> iterator = bidList.iterator(); iterator.hasNext();) {
 				Bid bid = iterator.next();
 				User user = bid.getBidder();
