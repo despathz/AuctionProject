@@ -78,7 +78,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 	$scope.tempDate = {selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: "",
 					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	
-	$scope.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
 	
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
@@ -92,9 +92,8 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
         }
 		
 //		if (!isNaN($scope.auction.))parseInt(
-		$scope.auction.started = new Date(parseInt($scope.tempDate.selectYear), 1, parseInt($scope.tempDate.selectDay), parseInt($scope.tempDate.selectHour), parseInt($scope.tempDate.selectMinute), parseInt($scope.tempDate.selectSecond), 0).getTime();
-		console.log(new Date(2016, 2, 3, 4, 5, 6, 0).getTime());
-		$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+		$scope.auction.started = new Date(parseInt($scope.tempDate.selectYear), parseInt($scope.tempDate.selectMonth.number) - 1, parseInt($scope.tempDate.selectDay), parseInt($scope.tempDate.selectHour), parseInt($scope.tempDate.selectMinute), parseInt($scope.tempDate.selectSecond), 0).getTime();
+		$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
 		
 		$scope.auction.buy_price = parseFloat($scope.auction.buy_price);
 		$scope.auction.first_bid = parseFloat($scope.auction.first_bid);
@@ -113,7 +112,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			});
 		}
 		
-	}
+	};
 	
 }]);
 

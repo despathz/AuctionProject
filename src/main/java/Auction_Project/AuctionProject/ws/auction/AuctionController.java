@@ -40,7 +40,6 @@ public class AuctionController {
 	
 	@RequestMapping(value = "/createAuction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Boolean registerUser( @RequestBody AuctionDisplayResponse new_auction) {	
-		System.out.println("Hello");
 		Auction auction = new Auction();
 		try {
 			auction.setName(new_auction.getName());
