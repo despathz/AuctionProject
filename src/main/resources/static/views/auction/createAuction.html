@@ -7,58 +7,76 @@
     <div class="row">
         <div class="col-sm-4 col-sm-offset-2">
             <div class="form-group">
-                <label for="username">Name:</label>
+                <label for="name">Name:</label>
                 <input type="text" class="form-control" ng-model="auction.name">
             </div>
             <div class="form-group">
-                <label for="pwd">Buy Price:</label>
-				<input type="text" class="form-control" ng-model="auction.buyPrice" placeholder="$">
+                <label for="buyPrice">Buy Price:</label>
+				<input type="text" class="form-control" ng-model="auction.buy_price" placeholder="$">
             </div>
             <div class="form-group">
-                <label for="pwd">First Bid:</label>
-                <input type="text" class="form-control" ng-model="auction.firstBid" placeholder="$">
+                <label for="firstBid">First Bid:</label>
+                <input type="text" class="form-control" ng-model="auction.first_bid" placeholder="$">
             </div>
-            <div class="form-group">
-				<label for="username">Start Date:</label>
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" ng-model="user.startDate">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+            <div>
+				<label for="date">Start Date:</label><br>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectYear" ng-options="x for x in years"><option value="" disabled selected>Year</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectMonth" ng-options="x for x in months"><option value="" disabled selected>Mon</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectDay" ng-options="n for n in [] | range:1:32"><option value="" disabled selected>Day</option></select>
+				</div>
+				<br>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectHour" ng-options="n for n in [] | range:0:24"><option value="" disabled selected>Hour</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectMinute" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Min</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectSecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Sec</option></select>
+				</div>
+				<br><br>
             </div>
-            <div class="form-group">
-                <label for="username">End Date:</label>
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" ng-model="user.endDate">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
+            <div>
+				<label for="date">End Date:</label><br>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectEYear" ng-options="x for x in years"><option value="" disabled selected>Year</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectEMonth" ng-options="x for x in months"><option value="" disabled selected>Mon</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectEDay" ng-options="n for n in [] | range:1:32"><option value="" disabled selected>Day</option></select>
+				</div>
+				<br>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectEHour" ng-options="n for n in [] | range:0:24"><option value="" disabled selected>Hour</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectEMinute" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Min</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="auction.selectESecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Sec</option></select>
+				</div>
+				<br><br>
             </div>
         </div>
         <div class="col-sm-4">
 			<div class="form-group">
-				<label for="username">Select Category/ Catecories:</label>
-                <div class="dropdown">
-				  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Categories
-				  <span class="caret"></span></button>
-				  <ul class="dropdown-menu">
-					<li><a href="#">HTML</a></li>
-					<li><a href="#">CSS</a></li>
-					<li><a href="#">JavaScript</a></li>
-				  </ul>
-				</div>
-<!--                <input type="password" class="form-control" ng-model="user.password">-->
-            </div>
-			<div class="form-group">
                 <label for="email">Upload an image:</label>
-<!--                <input type="text" class="form-control" ng-model="user.telephone">-->
+				<a href="C:\Program Files">Blah</a>
             </div>
             <div class="form-group">
                 <label for="email">Description:</label>
-				<textarea type="text" class="form-control" rows="4" ng-model="user.description"></textarea>
+				<textarea type="text" class="form-control" rows="4" ng-model="auction.description"></textarea>
             </div>
+			<div>
+				<label for="email">Select Categories:</label>
+			</div>
         </div>
     </div>
 	<br>

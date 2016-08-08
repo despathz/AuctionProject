@@ -3,6 +3,7 @@ package Auction_Project.AuctionProject.ws.auction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,4 +33,17 @@ public class AuctionController {
 		}
 		return auctionResponse;
 	}
+	
+	@RequestMapping(value = "/createAuction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Boolean registerUser( @RequestBody Auction new_auction) {	
+		try {
+			auctionDAO.save(new_auction);
+		}
+		catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
 }

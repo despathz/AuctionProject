@@ -74,5 +74,48 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 }]);
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
-	$scope.auction = {name: "", firstBid: "", startDate: "", endDate: "", description: "", buyPrice:""};
+	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", user_seller_id:"",
+					 selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: "",
+					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
+
+	$scope.years = ["2016", "2017", "2018"];
+	$scope.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	
+	$scope.submitAuction = function() {
+		$scope.auction.user_seller_id = $rootScope.session.id;
+		$scope.basicFieldsError = false; 
+		$scope.databaseError = false;
+		$scope.registerComplete = false;
+		
+		if (($scope.auction.name.length == 0) || ($scope.auction.first_bid.length == 0)
+			|| ($scope.auction.description.length == 0) || ($scope.auction.buy_price.length == 0)) {
+				$scope.basicFieldsError = true;
+        }
+		console.log($scope.auction.user_seller_id);
+		
+		if (!$scope.basicFieldsError) {
+			console.log("SO");
+			var res = $http.post('/ws/auction/createAuction', $scope.auction);
+			console.log("SO?");
+			res.success(function(response) {
+				if (!response) 
+					$scope.databaseError = true;
+				else 
+					$scope.registerComplete = true;
+			});
+		}
+		console.log($scope.registerComplete);
+	}
+	
 }]);
+
+myApp.filter('range', function() {
+	return function(input, min, max) {
+	min = parseInt(min); //Make string input int
+	max = parseInt(max);
+	for (var i=min; i<max; i++)
+		input.push(i);
+	return input;
+	};
+});
+
