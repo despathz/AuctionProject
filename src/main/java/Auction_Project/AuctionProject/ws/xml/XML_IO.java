@@ -1,9 +1,13 @@
-package Auction_Project.AuctionProject;
+package Auction_Project.AuctionProject.ws.xml;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -14,17 +18,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 
-
+@RestController
+@RequestMapping("/ws/xml")
 public class XML_IO {
 
 	@Autowired
 	private CategoryDAO categoryDAO;
 	
-	 public void read(String path) {
+	@RequestMapping(value = "/load/{filename}", method = RequestMethod.GET)
+	 public void read(@PathVariable String filename) {
 
 	    try {
 
-	    File xmlFile = new File(path);
+	    File xmlFile = new File(filename + ".xml");
 	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	    Document doc = dBuilder.parse(xmlFile);
@@ -33,8 +39,8 @@ public class XML_IO {
 
 	    NodeList nList = doc.getElementsByTagName("Item");
 
-//	    for (int i = 0; i < nList.getLength(); i++) {
-	    for (int i = 2; i < 3; i++) {
+	    for (int i = 0; i < nList.getLength(); i++) {
+//	    for (int i = 2; i < 3; i++) {
 
 	        Node nNode = nList.item(i);
 
@@ -46,7 +52,7 @@ public class XML_IO {
 //	            System.out.println("Name : " + eElement.getElementsByTagName("Name").item(0).getTextContent());
 	            
 	            for (int j = 0; j < eElement.getElementsByTagName("Category").getLength(); j++) {
-	            	String cat = eElement.getElementsByTagName("Category").item(j).getTextContent();
+	            	String cat = (String)eElement.getElementsByTagName("Category").item(j).getTextContent();
 		            if (categoryDAO.countByName(cat) == 0) {
 		            	Category category = new Category();
 		            	category.setName(cat);
@@ -95,3 +101,4 @@ public class XML_IO {
 	    }
 	}
 }
+

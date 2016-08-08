@@ -11,7 +11,5 @@ public class App
 {
 	public static void main(String[] args) throws Exception {
         SpringApplication.run(App.class, args);
-        XML_IO xmlio = new XML_IO();
-        xmlio.read("items-0.xml");
     }
 }

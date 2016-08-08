@@ -75,13 +75,13 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 		}
 
 		if (!$scope.acceptTermsError && !$scope.basicFieldsError && !$scope.missmatchPassError && !$scope.passwordError) {
-			var res = $http.post('/ws/user/register/checkUsername', $scope.user);
+			var res = $http.get('/ws/user/checkUsername/' + $scope.user.username);
 			res.success(function(response) {
 				if (response) {
                     $scope.userExists = true;
                 }
 				else {
-					var res = $http.post('/ws/user/register/checkEmail', $scope.user);
+					var res = $http.post('/ws/user/checkEmail', $scope.user);
 					res.success(function(response) {
                         if (response) {
                             $scope.emailExists = true;
@@ -108,8 +108,8 @@ myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$state', '$st
     if ($scope.user_id == 0) {   //user views his OWN profile
         $scope.user_id = $rootScope.session.id;
 	}
-    $scope.sentID = {id: $scope.user_id};
-    var res = $http.post('/ws/user/getProfile', $scope.sentID);
+    
+    var res = $http.get('/ws/user/getProfile/' + $scope.user_id);
      res.success(function(response) {
         $scope.user = response;
     });
@@ -129,9 +129,9 @@ myApp.controller('editprofileCtrl', ['$rootScope', '$scope', '$http', '$statePar
         $scope.user_id = $rootScope.session.id;
 		$scope.settings.isAdmin = true;
 	}
-    $scope.sentID = {id: $scope.user_id};
-    var res = $http.post('/ws/user/getProfile', $scope.sentID);
-     res.success(function(response) {
+   
+    var res = $http.get('/ws/user/getProfile/' + $scope.user_id);
+    res.success(function(response) {
         $scope.user = response;
 		 $scope.currentUser = $scope.user.username;
     });
@@ -169,7 +169,7 @@ myApp.controller('editprofileCtrl', ['$rootScope', '$scope', '$http', '$statePar
 	};
 	
     $scope.activateUser = function() {
-        var res = $http.post('/ws/user/activate', $scope.sentID);
+        var res = $http.get('/ws/user/activate/' + $scope.user_id);
         res.success(function(response) {
             if (response)
                 $scope.user.activation = true;
@@ -177,7 +177,7 @@ myApp.controller('editprofileCtrl', ['$rootScope', '$scope', '$http', '$statePar
     };
     
      $scope.banUser = function() {
-        var res = $http.post('/ws/user/ban', $scope.sentID);
+        var res = $http.get('/ws/user/ban/' + $scope.user_id);
         res.success(function(response) {
             if (response)
                 $scope.user.activation = false;

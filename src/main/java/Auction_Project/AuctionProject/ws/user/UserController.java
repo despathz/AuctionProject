@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,11 +40,11 @@ public class UserController {
 		return responseUser;
 	}
 	
-	@RequestMapping(value = "/register/checkUsername", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean registerCheckUsername( @RequestBody User input_user) {
+	@RequestMapping(value = "/checkUsername/{username}", method = RequestMethod.GET)
+	public Boolean registerCheckUsername( @PathVariable String username) {
 		Long numOfUsernames = (long) -1;
 		try {
-			numOfUsernames = userDAO.countByUsername(input_user.getUsername());
+			numOfUsernames = userDAO.countByUsername(username);
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
@@ -53,8 +54,8 @@ public class UserController {
 		return false;
 	}
 	
-	@RequestMapping(value = "/register/checkEmail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean registerCheckEmail( @RequestBody User input_user) {
+	@RequestMapping(value = "/checkEmail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Boolean registerCheckEmail(@RequestBody User input_user) {
 		Long numOfEmails = (long) -1;
 		try {
 			numOfEmails = userDAO.countByEmail(input_user.getEmail());
@@ -97,12 +98,12 @@ public class UserController {
 		return userResponseList;
 	}
 	
-	@RequestMapping(value = "/getProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserProfileResponse getUserProfile(@RequestBody User input_user) {
+	@RequestMapping(value = "/getProfile/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserProfileResponse getUserProfile(@PathVariable long id) {
 		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false);
 		User user = new User();
 		try {
-			user = userDAO.findById(input_user.getId());
+			user = userDAO.findById(id);
 			responseUser = new UserProfileResponse(user.getUsername(), user.getEmail(), user.getName(), user.getSurname(), user.getAddress(),
 												user.getCountry(), user.getTelephone(), user.getTrn(), user.getSuperuser(), user.getActivation());
 		}
@@ -112,11 +113,11 @@ public class UserController {
 		return responseUser;
 	}
 	
-	@RequestMapping(value = "/activate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public boolean activateUser(@RequestBody User input_user) {
+	@RequestMapping(value = "/activate/{id}", method = RequestMethod.GET)
+	public boolean activateUser(@PathVariable long id) {
 		User user = new User();
 		try {
-			user = userDAO.findById(input_user.getId());
+			user = userDAO.findById(id);
 			user.setActivation(true);
 			userDAO.save(user);
 		}
@@ -127,11 +128,11 @@ public class UserController {
 		return true;
 	}
 	
-	@RequestMapping(value = "/ban", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public boolean banUser(@RequestBody User input_user) {
+	@RequestMapping(value = "/ban/{id}", method = RequestMethod.GET)
+	public boolean banUser(@PathVariable long id) {
 		User user = new User();
 		try {
-			user = userDAO.findById(input_user.getId());
+			user = userDAO.findById(id);
 			user.setActivation(false);
 			userDAO.save(user);
 		}
@@ -145,7 +146,6 @@ public class UserController {
 	@RequestMapping(value = "/getIDbyUsername", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public IdResponse getUserID(@RequestBody UsernameResponse input) {
 		User user = new User();
-		System.out.println("HELLOOO" + input.getUsername());
 		IdResponse responseUser = new IdResponse(0);
 		try {
 			user = userDAO.findByUsername(input.getUsername());
