@@ -51,11 +51,22 @@ public class XML_IO {
 //	            System.out.println("ItemID : " + eElement.getAttribute("ItemID"));
 //	            System.out.println("Name : " + eElement.getElementsByTagName("Name").item(0).getTextContent());
 	            
-	            for (int j = 0; j < eElement.getElementsByTagName("Category").getLength(); j++) {
-	            	String cat = (String)eElement.getElementsByTagName("Category").item(j).getTextContent();
+	            
+	            String cat = (String)eElement.getElementsByTagName("Category").item(0).getTextContent();
+	            if (categoryDAO.countByName(cat) == 0) {
+	            	Category category = new Category();
+	            	category.setName(cat);
+	            	Category parent = categoryDAO.findById(1);
+	            	category.setParent(parent);
+	            	categoryDAO.save(category);
+	            }
+	            for (int j = 1; j < eElement.getElementsByTagName("Category").getLength(); j++) {
+	            	cat = (String)eElement.getElementsByTagName("Category").item(j).getTextContent();
 		            if (categoryDAO.countByName(cat) == 0) {
 		            	Category category = new Category();
 		            	category.setName(cat);
+		            	Category parent = categoryDAO.findByName(eElement.getElementsByTagName("Category").item(j-1).getTextContent());
+		            	category.setParent(parent);
 		            	categoryDAO.save(category);
 		            }
 	            }
