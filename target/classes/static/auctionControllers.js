@@ -74,24 +74,31 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 }]);
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
-	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", user_seller_id:"",
-					 selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: "",
+	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", user_id: $rootScope.session.id, started:"" , ends:""};
+	$scope.tempDate = {selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: "",
 					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
-
-	$scope.years = ["2016", "2017", "2018"];
+	
 	$scope.months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	
 	$scope.submitAuction = function() {
-		$scope.auction.user_seller_id = $rootScope.session.id;
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
 		$scope.registerComplete = false;
+		$scope.NumberError = false;
 		
 		if (($scope.auction.name.length == 0) || ($scope.auction.first_bid.length == 0)
 			|| ($scope.auction.description.length == 0) || ($scope.auction.buy_price.length == 0)) {
 				$scope.basicFieldsError = true;
         }
-		console.log($scope.auction.user_seller_id);
+		
+//		if (!isNaN($scope.auction.))parseInt(
+		$scope.auction.started = new Date(parseInt($scope.tempDate.selectYear), 1, parseInt($scope.tempDate.selectDay), parseInt($scope.tempDate.selectHour), parseInt($scope.tempDate.selectMinute), parseInt($scope.tempDate.selectSecond), 0).getTime();
+		console.log(new Date(2016, 2, 3, 4, 5, 6, 0).getTime());
+		$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+		
+		$scope.auction.buy_price = parseFloat($scope.auction.buy_price);
+		$scope.auction.first_bid = parseFloat($scope.auction.first_bid);
+		console.log($scope.auction);
 		
 		if (!$scope.basicFieldsError) {
 			console.log("SO");
@@ -102,9 +109,10 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 					$scope.databaseError = true;
 				else 
 					$scope.registerComplete = true;
+				console.log($scope.registerComplete);
 			});
 		}
-		console.log($scope.registerComplete);
+		
 	}
 	
 }]);

@@ -1,7 +1,6 @@
 package Auction_Project.AuctionProject.dto.auction;
 
 import java.util.Date;
-import javax.validation.constraints.NotNull;
 
 public class AuctionDisplayResponse {
 	
@@ -15,8 +14,8 @@ public class AuctionDisplayResponse {
 	
 	private Date started, ends;
 	
-	private String creator;
-	private long user_id;
+	private String creator; //for display
+	private long user_id; //for display
 	
 	public long getId() {
 		return id;
@@ -91,6 +90,10 @@ public class AuctionDisplayResponse {
 		this.ends = ends;
 		this.creator = creator;
 		this.user_id = user_id;
+	}
+	
+	public AuctionDisplayResponse() {
+		
 	}
 	
 	public AuctionDisplayResponse(long id) {

@@ -21,7 +21,7 @@
             <div>
 				<label for="date">Start Date:</label><br>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="auction.selectYear" ng-options="x for x in years"><option value="" disabled selected>Year</option></select>
+					<select class="form-control" ng-model="auction.selectYear" ng-options="n for n in [] | range:2016:2019"><option value="" disabled selected>Year</option></select>
 				</div>
 				<div class="form-group col-sm-4">
 					<select class="form-control" ng-model="auction.selectMonth" ng-options="x for x in months"><option value="" disabled selected>Mon</option></select>
@@ -44,7 +44,7 @@
             <div>
 				<label for="date">End Date:</label><br>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="auction.selectEYear" ng-options="x for x in years"><option value="" disabled selected>Year</option></select>
+					<select class="form-control" ng-model="auction.selectEYear" ng-options="n for n in [] | range:2016:2019"><option value="" disabled selected>Year</option></select>
 				</div>
 				<div class="form-group col-sm-4">
 					<select class="form-control" ng-model="auction.selectEMonth" ng-options="x for x in months"><option value="" disabled selected>Mon</option></select>

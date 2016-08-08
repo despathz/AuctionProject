@@ -105,11 +105,4 @@ public class Auction {
 		this.user_seller_id = user_seller_id;
 	}
 	
-	public Auction() {
-		
-	}
-	
-	public Auction(long id) {
-		this.id = id;
-	}
 }
