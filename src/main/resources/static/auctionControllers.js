@@ -73,12 +73,40 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     
 }]);
 
-myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$sce', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $sce) {
 	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", user_id: $rootScope.session.id, started:"" , ends:""};
 	$scope.tempDate = {selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: "",
 					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
+    
+    $scope.categoryPath = "";
+    $scope.categoryPathList = [];
+    var res = $http.get('/ws/category/parent/1');
+    res.success(function(response) {
+        $scope.categoryList = response;
+    });
+    
+    $scope.findSubCat = function(name, id) {
+        var pos = -1, i = 0;
+        while (i < $scope.categoryPathList.length) {
+            if ($scope.categoryPathList[i].id == id){
+                pos = i;
+                break;
+            }
+            i++;
+        }
+        if (pos == -1)
+            $scope.categoryPathList.push({name, id});
+        else {
+            while ($scope.categoryPathList.length > pos + 1)
+                $scope.categoryPathList.pop();
+        }
+        var res = $http.get('/ws/category/parent/' + id);
+        res.success(function(response) {
+            $scope.categoryList = response;
+        });
+    };
 	
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 

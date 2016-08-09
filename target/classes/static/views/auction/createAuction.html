@@ -74,12 +74,23 @@
                 <label for="email">Description:</label>
 				<textarea type="text" class="form-control" rows="4" ng-model="auction.description"></textarea>
             </div>
-			<div>
-				<label for="email">Select Categories:</label>
-			</div>
         </div>
     </div>
 	<br>
+    <div class="row text-left">
+        <div class="col-sm-8 col-sm-offset-2">
+            <label for="email">Select Categories:</label>
+            <span ng-repeat="c in categoryPathList">
+                <a href="" ng-click="findSubCat(c.name, c.id)">{{c.name}}</a> / 
+            </span>
+            <br>
+            <br>
+            <ul ng-repeat="x in categoryList">
+                <li><a href="" ng-click="findSubCat(x.name, x.id)">{{x.name}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
 	<div class="row">
         <button type="submit" class="btn btn-primary">Submit auction</button>
     </div>
