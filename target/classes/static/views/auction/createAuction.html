@@ -3,7 +3,7 @@
         <legend>Create a new auction</legend>
     </div>
 </div>
-<form role="form" ng-submit="submitAuction()">
+<form role="form" ng-submit="submitAuction()" ng-hide="registerComplete">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-2">
             <div class="form-group">
@@ -83,4 +83,13 @@
 	<div class="row">
         <button type="submit" class="btn btn-primary">Submit auction</button>
     </div>
+	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
+	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid field and the buy price field.</div>
+	<div class="text-danger" ng-show="DateError">The end date must be after start date!</div>
 </form>
+<div class="col-sm-8 col-sm-offset-2" ng-show="registerComplete">
+    <div class="row">
+        <p>Your auction has been created successfully.</p>
+		<img class="edit_img" src="./img/tick.png" alt="tick"></img>
+    </div>
+</div>

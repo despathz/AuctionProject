@@ -85,24 +85,28 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		$scope.databaseError = false;
 		$scope.registerComplete = false;
 		$scope.NumberError = false;
+		$scope.DateError = false;
 		
-		if (($scope.auction.name.length == 0) || ($scope.auction.first_bid.length == 0)
-			|| ($scope.auction.description.length == 0) || ($scope.auction.buy_price.length == 0)) {
-				$scope.basicFieldsError = true;
-        }
+		if (isNaN(parseFloat($scope.auction.first_bid)) || isNaN(parseFloat($scope.auction.buy_price)))
+			$scope.NumberError = true;
 		
-//		if (!isNaN($scope.auction.))parseInt(
 		$scope.auction.started = new Date(parseInt($scope.tempDate.selectYear), parseInt($scope.tempDate.selectMonth.number) - 1, parseInt($scope.tempDate.selectDay), parseInt($scope.tempDate.selectHour), parseInt($scope.tempDate.selectMinute), parseInt($scope.tempDate.selectSecond), 0).getTime();
 		$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+		
+		if (($scope.auction.name.length == 0) || ($scope.auction.description.length == 0) || (isNaN($scope.auction.started )) 
+		   || (isNaN($scope.auction.ends))) {
+			$scope.basicFieldsError = true;
+        }
+		
+		if ($scope.auction.started >= $scope.auction.ends)
+			$scope.DateError = true;
 		
 		$scope.auction.buy_price = parseFloat($scope.auction.buy_price);
 		$scope.auction.first_bid = parseFloat($scope.auction.first_bid);
 		console.log($scope.auction);
 		
-		if (!$scope.basicFieldsError) {
-			console.log("SO");
+		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.DateError) {
 			var res = $http.post('/ws/auction/createAuction', $scope.auction);
-			console.log("SO?");
 			res.success(function(response) {
 				if (!response) 
 					$scope.databaseError = true;
