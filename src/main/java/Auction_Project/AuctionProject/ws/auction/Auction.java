@@ -26,6 +26,7 @@ public class Auction {
 	
 	@NotNull
 	private String name;
+	
 	@NotNull 
 	@Lob
 	private String description;
@@ -41,6 +42,10 @@ public class Auction {
 	@JoinColumn(name = "user_seller_id")
 	private User user_seller_id;
 
+	@ManyToMany(cascade = CascadeType.ALL) 	
+	@JoinTable(name = "item_category",
+	joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
 	private Set<Category> categories;
 	
 	public long getId() {
@@ -115,10 +120,6 @@ public class Auction {
 		this.user_seller_id = user_seller_id;
 	}
 
-	@ManyToMany(cascade = CascadeType.ALL) 	
-	@JoinTable(name = "item_category",
-	joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
-	inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
 	public Set<Category> getCategories() {
 		return categories;
 	}

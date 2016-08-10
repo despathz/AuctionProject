@@ -27,6 +27,7 @@ public class Category {
 	@JoinColumn(name = "parent")
 	private Category parent;
 
+	@ManyToMany(mappedBy = "categories") 
 	private Set<Auction> auctions; 
 	
 	public long getId() {
@@ -53,7 +54,6 @@ public class Category {
 		this.parent = parent;
 	}
 
-	@ManyToMany(mappedBy = "categories") 
 	public Set<Auction> getAuctions() {
 		return auctions;
 	}

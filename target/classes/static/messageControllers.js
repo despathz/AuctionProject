@@ -134,7 +134,6 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
     };
     
     $scope.sendMessage = function() {
-		console.log($scope.compose);
         $scope.errors = {textError: false, usernameError: false, titleError: false};
         if ($scope.compose.username === "")
             $scope.errors.usernameError = true;

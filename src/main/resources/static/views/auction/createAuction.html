@@ -43,11 +43,9 @@
             </div>
         </div>
         <div class="col-sm-4">
-			<div class="form-group">
-                <label for="email">Upload an image:</label>
-				<div class="col-sm-offset-3">
-					<input type="file" name="pic" accept="image/*">
-				</div>
+			<div class="form-group text-center">
+                <label for="upload">Upload an image:</label>
+                <input type="file" name="pic" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="email">Description:</label>
@@ -60,12 +58,12 @@
         <div class="col-sm-8 col-sm-offset-2">
             <label for="email">Select Categories:</label>
             <span ng-repeat="c in categoryPathList">
-                <a href="" ng-click="findSubCat(c.name, c.id)">{{c.name}}</a> / 
+                /&nbsp;<a style="color:rgb(251, 130, 13)" href="" ng-click="findSubCat(c.name, c.id)">{{c.name}}</a>&nbsp;
             </span>
             <br>
             <br>
-            <ul ng-repeat="x in categoryList">
-                <li><a href="" ng-click="findSubCat(x.name, x.id)">{{x.name}}</a></li>
+            <ul class="fa-ul" ng-repeat="x in categoryList">
+                <li><i class="fa-li fa fa-plus" style="color:rgb(251, 130, 13)"></i><a style="color:black" href="" ng-click="findSubCat(x.name, x.id)">{{x.name}}</a></li>
             </ul>
         </div>
     </div>

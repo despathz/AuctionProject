@@ -185,7 +185,7 @@ myApp.run(['$rootScope', '$state', '$cookies', function($rootScope, $state, $coo
 myApp.factory("stopwatch", [function () {
     function calc(ends) {
         var today = new Date();
-        var sec = 0, min = 0, hour = 0;
+        var sec = 0, min = 0, hour = 0, day = 0;
         sec = ~~((ends - today)/1000);
         if (sec > 60) {
             min = ~~(sec / 60);
@@ -194,8 +194,12 @@ myApp.factory("stopwatch", [function () {
                 hour = ~~(min / 60);
                 min = min - 60 * hour;
             }
+            if (hour > 24) {
+                day = ~~(hour / 24);
+                hour = hour - 24 * day;
+            }
         }
-        return "Ends in " + hour + " hours, " + min + " minutes and " + sec + " seconds";
+        return "Ends in " + day + " days, " + hour + " hours, " + min + " minutes and " + sec + " seconds";
     }
     
     return {

@@ -28,12 +28,20 @@
         </div>
         <br>
         <div class="input-group col-sm-7" ng-show="session.loggedIn">
-            <input ng-hide="hasEnded" type="text" class="form-control" placeholder="$" ng-model="bidAmount">
+            <input ng-hide="hasEnded || bidConfirmMessage" type="text" class="form-control" placeholder="$" ng-model="bidAmount">
             <input ng-show="hasEnded" type="text" class="form-control" placeholder="$" disabled>
-            <span class="input-group-btn">
+            <span class="input-group-btn" ng-hide="bidConfirmMessage">
                 <button ng-hide="hasEnded" class="btn btn-primary" type="button" ng-click="bid()">Bid</button>
                 <button ng-show="hasEnded" class="btn btn-primary" type="button" disabled="disabled">Bid</button>
             </span>
+            <div ng-show="bidConfirmMessage">
+                <h4>Are you sure that you want make a bid of {{bidAmount}}$ for this auction?</h4>
+                <br>
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="confirmBid()">Yes</button>
+                    <button class="btn btn-danger" type="button" ng-click="cancelBid()">No</button>
+                </span>
+            </div>
         </div>
         <br>
         <b ng-show="hasEnded">This auction is over.</b>

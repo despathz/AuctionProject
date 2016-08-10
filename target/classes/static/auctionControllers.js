@@ -1,10 +1,11 @@
 myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', 'stopwatch', 'pollingFactory', function($rootScope, $scope, $state, $stateParams, $http, $cookies, stopwatch, pollingFactory) {
     $scope.hasEnded = false;
     $scope.bidAmount = "";
-    $scope.servicePath = '/ws/auction/' + $stateParams.id;
-    var res = $http.get($scope.servicePath);
+    $scope.bidConfirmMessage = false;
+    var res = $http.get('/ws/auction/' + $stateParams.id);
     res.success(function(response) {
         $scope.auction = response;
+        $rootScope.title = $scope.auction.name;
         if (response.id == 0) {
             console.log('invalid auction id');
         }
@@ -54,17 +55,29 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     
     $scope.bid = function() {
         $scope.bidMsg = "";
-        if (!isNaN($scope.bidAmount)) {
-            var toSent = {amount: $scope.bidAmount, bidder: $rootScope.session.id, auction: $scope.auction.id};
-            var res = $http.post('/ws/bid/add', toSent);
-            res.success(function(response) {
-                if (response == false)
-                    console.log('error');
-            });
-        }
-        else 
+        if (!isNaN($scope.bidAmount))
+            $scope.bidConfirmMessage = true;
+        else {
             $scope.bidMsg = "Please type a valid amount of money";
+            $scope.bidAmount = "";
+        }
+    };
+    
+    $scope.confirmBid = function() {
+        var toSent = {amount: $scope.bidAmount, bidder: $rootScope.session.id, auction: $scope.auction.id};
+        var res = $http.post('/ws/bid/add', toSent);
+        res.success(function(response) {
+            if (response == true) {
+                $scope.bidAmount = "";
+                $scope.bidConfirmMessage = false;
+                $state.go($state.current, {id: $stateParams.id}, {reload: true});
+            }
+        });
+    };
+    
+    $scope.cancelBid = function() {
         $scope.bidAmount = "";
+        $scope.bidConfirmMessage = false;
     };
     
     $scope.bidderProfile = function(user_id) {
@@ -81,6 +94,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
     $scope.categoryPath = "";
     $scope.categoryPathList = [];
+    $scope.categoryPathList.push({name: "General", id: 1});
     var res = $http.get('/ws/category/parent/1');
     res.success(function(response) {
         $scope.categoryList = response;
