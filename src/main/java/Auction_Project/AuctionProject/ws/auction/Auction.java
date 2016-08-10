@@ -1,17 +1,21 @@
 package Auction_Project.AuctionProject.ws.auction;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-
 import Auction_Project.AuctionProject.ws.user.User;
+import Auction_Project.AuctionProject.ws.category.Category;
 
 @Entity
 public class Auction {
@@ -37,6 +41,8 @@ public class Auction {
 	@JoinColumn(name = "user_seller_id")
 	private User user_seller_id;
 
+	private Set<Category> categories;
+	
 	public long getId() {
 		return id;
 	}
@@ -108,5 +114,16 @@ public class Auction {
 	public void setUser_seller_id(User user_seller_id) {
 		this.user_seller_id = user_seller_id;
 	}
-	
+
+	@ManyToMany(cascade = CascadeType.ALL) 	
+	@JoinTable(name = "item_category",
+	joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
 }
