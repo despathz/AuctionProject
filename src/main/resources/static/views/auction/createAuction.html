@@ -3,7 +3,7 @@
         <legend>Create a new auction</legend>
     </div>
 </div>
-<form role="form" ng-submit="submitAuction()" ng-hide="registerComplete">
+<form role="form" ng-submit="submitAuction()">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-2">
             <div class="form-group">
@@ -17,29 +17,6 @@
             <div class="form-group">
                 <label for="firstBid">First Bid:</label>
                 <input type="text" class="form-control" ng-model="auction.first_bid" placeholder="$">
-            </div>
-            <div>
-				<label for="date">Start Date:</label><br>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectYear" ng-options="n for n in [] | range:2016:2019"><option value="" disabled selected>Year</option></select>
-				</div>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectMonth" ng-options="x.month for x in months" ng-value="x.number"><option value="" disabled selected>Mon</option></select>
-				</div>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectDay" ng-options="n for n in [] | range:1:32"><option value="" disabled selected>Day</option></select>
-				</div>
-				<br>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectHour" ng-options="n for n in [] | range:0:24"><option value="" disabled selected>Hour</option></select>
-				</div>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectMinute" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Min</option></select>
-				</div>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectSecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Sec</option></select>
-				</div>
-				<br><br>
             </div>
             <div>
 				<label for="date">End Date:</label><br>
@@ -68,7 +45,9 @@
         <div class="col-sm-4">
 			<div class="form-group">
                 <label for="email">Upload an image:</label>
-				<a href="C:\Program Files">Blah</a>
+				<div class="col-sm-offset-3">
+					<input type="file" name="pic" accept="image/*">
+				</div>
             </div>
             <div class="form-group">
                 <label for="email">Description:</label>
@@ -94,13 +73,7 @@
 	<div class="row">
         <button type="submit" class="btn btn-primary">Submit auction</button>
     </div>
-	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
+	<div class="text-danger" ng-show="basicFieldsError">Please fill all the fields of the form</div>
 	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid field and the buy price field.</div>
 	<div class="text-danger" ng-show="DateError">The end date must be after start date!</div>
 </form>
-<div class="col-sm-8 col-sm-offset-2" ng-show="registerComplete">
-    <div class="row">
-        <p>Your auction has been created successfully.</p>
-		<img class="edit_img" src="./img/tick.png" alt="tick"></img>
-    </div>
-</div>

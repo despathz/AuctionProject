@@ -1,14 +1,17 @@
 package Auction_Project.AuctionProject.dto.message;
 
+import java.util.Date;
+
 public class SentResponse {
 
 	private long id;
-	private String to, title, date;
+	private String to, title;
+	private Date  date;
 	
 	public SentResponse() {
 	}
 	
-	public SentResponse(long id, String to, String title, String date) {
+	public SentResponse(long id, String to, String title, Date date) {
 		super();
 		this.id = id;
 		this.to = to;
@@ -40,11 +43,11 @@ public class SentResponse {
 		this.title = title;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	

@@ -79,7 +79,6 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
-    
     $scope.categoryPath = "";
     $scope.categoryPathList = [];
     var res = $http.get('/ws/category/parent/1');
@@ -111,39 +110,29 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
-		$scope.registerComplete = false;
 		$scope.NumberError = false;
-		$scope.DateError = false;
 		
 		if (isNaN(parseFloat($scope.auction.first_bid)) || isNaN(parseFloat($scope.auction.buy_price)))
 			$scope.NumberError = true;
 		
-		$scope.auction.started = new Date(parseInt($scope.tempDate.selectYear), parseInt($scope.tempDate.selectMonth.number) - 1, parseInt($scope.tempDate.selectDay), parseInt($scope.tempDate.selectHour), parseInt($scope.tempDate.selectMinute), parseInt($scope.tempDate.selectSecond), 0).getTime();
 		$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
 		
-		if (($scope.auction.name.length == 0) || ($scope.auction.description.length == 0) || (isNaN($scope.auction.started )) 
-		   || (isNaN($scope.auction.ends))) {
+		if (($scope.auction.name.length == 0) || ($scope.auction.description.length == 0) || (isNaN($scope.auction.ends))) {
 			$scope.basicFieldsError = true;
         }
 		
-		if ($scope.auction.started >= $scope.auction.ends)
-			$scope.DateError = true;
-		
 		$scope.auction.buy_price = parseFloat($scope.auction.buy_price);
 		$scope.auction.first_bid = parseFloat($scope.auction.first_bid);
-		console.log($scope.auction);
 		
-		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.DateError) {
+		if (!$scope.basicFieldsError && !$scope.NumberError) {
 			var res = $http.post('/ws/auction/createAuction', $scope.auction);
 			res.success(function(response) {
-				if (!response) 
+				if (response == -1) 
 					$scope.databaseError = true;
 				else 
-					$scope.registerComplete = true;
-				console.log($scope.registerComplete);
+					$state.go('app.auction', {id: response}); 	
 			});
 		}
-		
 	};
 	
 }]);

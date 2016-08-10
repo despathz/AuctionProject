@@ -207,7 +207,7 @@ myApp.factory("notify", ['$rootScope', '$http', function ($rootScope, $http) {
 
     function callServer() {
         if ($rootScope.session.id != 0) {
-            var res = $http.post('/ws/message/notify', {id: $rootScope.session.id});   
+            var res = $http.get('/ws/message/notify/' + $rootScope.session.id);   
             res.success(function(response) {
                 $rootScope.newMsg = response;
             });

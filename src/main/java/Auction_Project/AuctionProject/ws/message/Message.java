@@ -1,10 +1,13 @@
 package Auction_Project.AuctionProject.ws.message;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
@@ -18,7 +21,14 @@ public class Message {
 	private long id;
 	
 	@NotNull
-	private String title, text, date;
+	private String title;
+	
+	@NotNull 
+	@Lob
+	private String text;
+	
+	@NotNull
+	private Date date;
 	
 	private Boolean isRead, inboxDelete, sentDelete;
 	
@@ -36,7 +46,7 @@ public class Message {
 		
 	}
 
-	public Message(String title, String text, String date, Boolean isRead, Boolean inboxDelete, Boolean sentDelete, User sentUser, User receiveUser) {
+	public Message(String title, String text, Date date, Boolean isRead, Boolean inboxDelete, Boolean sentDelete, User sentUser, User receiveUser) {
 		this.title = title;
 		this.text = text;
 		this.date = date;
@@ -71,11 +81,11 @@ public class Message {
 		this.text = text;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

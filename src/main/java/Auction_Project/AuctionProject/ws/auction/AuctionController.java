@@ -39,8 +39,9 @@ public class AuctionController {
 	}
 	
 	@RequestMapping(value = "/createAuction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean registerUser( @RequestBody AuctionDisplayResponse new_auction) {	
+	public long registerUser( @RequestBody AuctionDisplayResponse new_auction) {	
 		Auction auction = new Auction();
+		Auction returned = new Auction();
 		try {
 			auction.setName(new_auction.getName());
 			auction.setDescription(new_auction.getDescription());
@@ -51,13 +52,13 @@ public class AuctionController {
 			auction.setBuy_price(new_auction.getBuy_price());
 			User user = userDAO.findById(new_auction.getUser_id());
 			auction.setUser_seller_id(user);
-			auctionDAO.save(auction);
+			returned = auctionDAO.save(auction);
 		}
 		catch (Exception ex) {
 			System.out.println(ex.getMessage());
-			return false;
+			return -1;
 		}
-		return true;
+		return returned.getId();
 	}
 	
 }

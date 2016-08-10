@@ -1,10 +1,10 @@
 myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
-    var res = $http.post('/ws/message/inbox/count', {id: $rootScope.session.id});
+    var res = $http.get('/ws/message/inbox/count/' + $rootScope.session.id);
     res.success(function(response) {
         $scope.inboxCount = response;
     });
     
-    var res = $http.post('/ws/message/sent/count', {id: $rootScope.session.id});
+    var res = $http.get('/ws/message/sent/count/' + $rootScope.session.id);
     res.success(function(response) {
         $scope.sentCount = response;
     });
@@ -13,11 +13,16 @@ myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($root
 myApp.controller('inboxCtrl', ['$rootScope', '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
     $scope.prop = {selectAll: false};
     
-    var res = $http.post('/ws/message/inbox', {id: $rootScope.session.id});
+    var res = $http.get('/ws/message/inbox/' + $rootScope.session.id);
     res.success(function(response) {
         $scope.inbox = response;
-        for (m in $scope.inbox)
+        for (m in $scope.inbox) {
+			$scope.inbox[m].date = new Date($scope.inbox[m].date);
             $scope.inbox[m]['selected'] = false;
+			var dateA = $scope.inbox[m].date.getFullYear() + "-" + ('0' + ($scope.inbox[m].date.getMonth()+1)).slice(-2) + "-" + ('0' + $scope.inbox[m].date.getDate()).slice(-2);
+			var dateB = ('0' + $scope.inbox[m].date.getHours()).slice(-2) + ":" + ('0' + $scope.inbox[m].date.getMinutes()).slice(-2) + ":" + ('0' + $scope.inbox[m].date.getSeconds()).slice(-2);
+			$scope.inbox[m].date = dateA + " " + dateB;
+		}
     });
     
     $scope.deleteSelected = function() {
@@ -80,11 +85,16 @@ myApp.controller('inboxCtrl', ['$rootScope', '$scope', '$http', '$state', functi
 myApp.controller('sentCtrl', ["$rootScope", '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
     $scope.prop = {selectAll: false};
     
-    var res = $http.post('/ws/message/sent', {id: $rootScope.session.id});
+    var res = $http.get('/ws/message/sent/' + $rootScope.session.id);
     res.success(function(response) {
         $scope.sent = response;
-        for (m in $scope.sent)
+        for (m in $scope.sent) {
             $scope.sent[m]['selected'] = false;
+			$scope.sent[m].date = new Date($scope.sent[m].date);
+			var dateA = $scope.sent[m].date.getFullYear() + "-" + ('0' + ($scope.sent[m].date.getMonth()+1)).slice(-2) + "-" + ('0' + $scope.sent[m].date.getDate()).slice(-2);
+			var dateB = ('0' + $scope.sent[m].date.getHours()).slice(-2) + ":" + ('0' + $scope.sent[m].date.getMinutes()).slice(-2) + ":" + ('0' + $scope.sent[m].date.getSeconds()).slice(-2);
+			$scope.sent[m].date = dateA + " " + dateB;
+		}
     });
     
      $scope.deleteSelected = function() {
@@ -124,6 +134,7 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
     };
     
     $scope.sendMessage = function() {
+		console.log($scope.compose);
         $scope.errors = {textError: false, usernameError: false, titleError: false};
         if ($scope.compose.username === "")
             $scope.errors.usernameError = true;
@@ -136,7 +147,7 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
             if (response.id == 0 || response.id == $rootScope.session.id)
                 $scope.errors.usernameError = true;
             if (!$scope.errors.usernameError && !$scope.errors.textError && !$scope.errors.titleError) {
-                var res = $http.post('/ws/message/send', {text: $scope.compose.text, title: $scope.compose.title, from: $rootScope.session.id, to: response.id});
+                var res = $http.post('/ws/message/send', {text: $scope.compose.text, title: $scope.compose.title, from: $rootScope.session.id, to: response.id, date: new Date()});
                 res.success(function(response) {
                     if (response)
                         $state.go($state.current, {}, {reload: true});
@@ -147,7 +158,7 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
 }]);
 
 myApp.controller('viewCtrl', ["$rootScope", '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
-    var res = $http.post('/ws/message/view', {id: parseInt($stateParams.id)});
+    var res = $http.get('/ws/message/view/' + $stateParams.id);
     res.success(function(response) {
         if (response.to === $rootScope.session.username) {
             $scope.message = {text: response.text, title: response.title, from: response.from, type: "inbox"};

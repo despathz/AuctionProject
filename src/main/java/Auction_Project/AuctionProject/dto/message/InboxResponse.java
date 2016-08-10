@@ -1,17 +1,18 @@
 package Auction_Project.AuctionProject.dto.message;
 
+import java.util.Date;
+
 public class InboxResponse {
 	
 	private long id;
-	private String from, title, date;
+	private String from, title;
 	private Boolean isRead;
-	
+	private Date date;
 	
 	public InboxResponse() {
 	}
 	
-	public InboxResponse(long id, String from, String title, String date, Boolean isRead) {
-		super();
+	public InboxResponse(long id, String from, String title, Date date, Boolean isRead) {
 		this.id = id;
 		this.from = from;
 		this.title = title;
@@ -37,10 +38,10 @@ public class InboxResponse {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

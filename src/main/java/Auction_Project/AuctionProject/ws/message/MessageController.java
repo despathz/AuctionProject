@@ -1,15 +1,12 @@
 package Auction_Project.AuctionProject.ws.message;
 
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,12 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.MessageDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.message.InboxResponse;
-import Auction_Project.AuctionProject.dto.message.MessageIDResponse;
 import Auction_Project.AuctionProject.dto.message.MessageListResponse;
 import Auction_Project.AuctionProject.dto.message.SendMessageResponse;
 import Auction_Project.AuctionProject.dto.message.SentResponse;
 import Auction_Project.AuctionProject.dto.message.ViewMessageResponse;
-import Auction_Project.AuctionProject.dto.user.IdResponse;
 import Auction_Project.AuctionProject.ws.user.User;
 
 @RestController
@@ -39,14 +34,11 @@ public class MessageController {
 	@RequestMapping(value = "/send", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean sendMessage(@RequestBody SendMessageResponse input) {
 		User sentUser = new User();
-		User receiveUser = new User();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		Date date = new Date();
-		String msgDate = dateFormat.format(date);		
+		User receiveUser = new User();		
 		try {
 			sentUser = userDAO.findById(input.getFrom());
 			receiveUser = userDAO.findById(input.getTo());
-			Message msg = new Message(input.getTitle(), input.getText(), msgDate, false, false, false, sentUser, receiveUser);
+			Message msg = new Message(input.getTitle(), input.getText(), input.getDate(), false, false, false, sentUser, receiveUser);
 			messageDAO.save(msg);
 		}
 		catch (Exception ex){
@@ -56,13 +48,13 @@ public class MessageController {
 		return true;
 	}
 	
-	@RequestMapping(value = "/inbox", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<InboxResponse> inbox(@RequestBody IdResponse input_user) {
+	@RequestMapping(value = "/inbox/{user_id}", method = RequestMethod.GET)
+	public List<InboxResponse> inbox(@PathVariable long user_id) {
 		List<InboxResponse> responseList = new ArrayList<InboxResponse>();
 		List<Message> messageList = new ArrayList<Message>();
 		try {
-			User user = userDAO.findById(input_user.getId());
-			messageList = messageDAO.findByReceiveUserAndInboxDelete(user, false);
+			User user = userDAO.findById(user_id);
+			messageList = messageDAO.findByReceiveUserAndInboxDeleteOrderByDateDesc(user, false);
 			for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
 				Message msg = iterator.next();
 				InboxResponse response = new InboxResponse(msg.getId(), msg.getSentUser().getUsername(), msg.getTitle(), msg.getDate(), msg.getIsRead());
@@ -75,13 +67,13 @@ public class MessageController {
 		return responseList;
 	}
 	
-	@RequestMapping(value = "/sent", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<SentResponse> sent(@RequestBody IdResponse input_user) {
+	@RequestMapping(value = "/sent/{user_id}", method = RequestMethod.GET)
+	public List<SentResponse> sent(@PathVariable long user_id) {
 		List<SentResponse> responseList = new ArrayList<SentResponse>();
 		List<Message> messageList = new ArrayList<Message>();
 		try {
-			User user = userDAO.findById(input_user.getId());
-			messageList = messageDAO.findBySentUserAndSentDelete(user, false);
+			User user = userDAO.findById(user_id);
+			messageList = messageDAO.findBySentUserAndSentDeleteOrderByDateDesc(user, false);
 			for (Iterator<Message> iterator = messageList.iterator(); iterator.hasNext();) {
 				Message msg = iterator.next();
 				SentResponse response = new SentResponse(msg.getId(), msg.getReceiveUser().getUsername(), msg.getTitle(), msg.getDate());
@@ -170,11 +162,11 @@ public class MessageController {
 		return true;
 	}
 	
-	@RequestMapping(value = "inbox/count", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Long inboxCount(@RequestBody IdResponse input_user) {
+	@RequestMapping(value = "inbox/count/{user_id}", method = RequestMethod.GET)
+	public Long inboxCount(@PathVariable long user_id) {
 		Long c = new Long(0);
 		try {
-			User user = userDAO.findById(input_user.getId());
+			User user = userDAO.findById(user_id);
 			c = messageDAO.countByReceiveUserAndInboxDelete(user, false);
 		}
 		catch (Exception ex){
@@ -183,11 +175,11 @@ public class MessageController {
 		return c;
 	}
 	
-	@RequestMapping(value = "sent/count", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Long sentCount(@RequestBody IdResponse input_user) {
+	@RequestMapping(value = "sent/count/{user_id}", method = RequestMethod.GET)
+	public Long sentCount(@PathVariable long user_id) {
 		Long c = new Long(0);
 		try {
-			User user = userDAO.findById(input_user.getId());
+			User user = userDAO.findById(user_id);
 			c = messageDAO.countBySentUserAndSentDelete(user, false);
 		}
 		catch (Exception ex){
@@ -196,11 +188,11 @@ public class MessageController {
 		return c;
 	}
 	
-	@RequestMapping(value = "view", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ViewMessageResponse viewMessage(@RequestBody MessageIDResponse messageID) {
+	@RequestMapping(value = "view/{msg_id}", method = RequestMethod.GET)
+	public ViewMessageResponse viewMessage(@PathVariable long msg_id) {
 		ViewMessageResponse responseMessage = new ViewMessageResponse();
 		try {
-			Message msg = messageDAO.findById(messageID.getId());
+			Message msg = messageDAO.findById(msg_id);
 			responseMessage = new ViewMessageResponse(msg.getTitle(), msg.getReceiveUser().getUsername(), msg.getSentUser().getUsername(), msg.getText());
 		}
 		catch (Exception ex){
@@ -209,11 +201,11 @@ public class MessageController {
 		return responseMessage;
 	}
 	
-	@RequestMapping(value = "notify", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Long Notify(@RequestBody IdResponse input_user) {
+	@RequestMapping(value = "notify/{user_id}", method = RequestMethod.GET)
+	public Long Notify(@PathVariable long user_id) {
 		Long count = new Long(0);
 		try {
-			User user = userDAO.findById(input_user.getId());
+			User user = userDAO.findById(user_id);
 			count = messageDAO.countByReceiveUserAndInboxDeleteAndIsRead(user, false, false);
 		}
 		catch (Exception ex){

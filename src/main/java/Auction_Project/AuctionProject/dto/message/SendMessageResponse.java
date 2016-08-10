@@ -1,9 +1,12 @@
 package Auction_Project.AuctionProject.dto.message;
 
+import java.util.Date;
+
 public class SendMessageResponse {
 
 	private long to, from;
 	private String text, title;
+	private Date date;
 	
 	
 	public long getTo() {
@@ -30,6 +33,11 @@ public class SendMessageResponse {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
 	
 }
