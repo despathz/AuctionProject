@@ -1,5 +1,7 @@
 package Auction_Project.AuctionProject.ws.auction;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +52,7 @@ public class AuctionController {
 			auction.setCurrently(new_auction.getFirst_bid());
 			auction.setFirst_bid(new_auction.getFirst_bid());
 			auction.setBuy_price(new_auction.getBuy_price());
+			auction.setCreated(new Date());
 			User user = userDAO.findById(new_auction.getUser_id());
 			auction.setUser_seller_id(user);
 			returned = auctionDAO.save(auction);

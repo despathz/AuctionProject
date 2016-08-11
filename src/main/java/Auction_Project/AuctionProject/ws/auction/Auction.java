@@ -35,15 +35,23 @@ public class Auction {
 	
 	private float buy_price;
 	
-	private Date started, ends;
+	private Date started, ends, created;
 	
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "user_seller_id")
 	private User user_seller_id;
 
 	@ManyToMany(cascade = CascadeType.ALL) 	
-	@JoinTable(name = "item_category",
+	@JoinTable(name = "auction_category",
 	joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
 	private Set<Category> categories;

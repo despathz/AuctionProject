@@ -1,6 +1,10 @@
 package Auction_Project.AuctionProject.ws.xml;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +29,64 @@ public class XML_IO {
 	@Autowired
 	private CategoryDAO categoryDAO;
 	
+	public void create(String path) {
+		try {
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.newDocument();
+			
+			//root element
+			Element rootElement = doc.createElement("Item");
+			doc.appendChild(rootElement);
+			
+			//set itemID
+			long id = 123456789;
+			rootElement.setAttribute("ItemID", Long.toString(id));
+			
+			//set name
+			String name = new String("PS4 500GB");
+			Element nameElement = doc.createElement("Name");
+			rootElement.appendChild(nameElement);
+			nameElement.appendChild(doc.createTextNode(name));
+			
+			//set currently
+			Float currently = new Float(7.50);
+			Element currentlyElement = doc.createElement("Currently");
+			rootElement.appendChild(currentlyElement);
+			currentlyElement.appendChild(doc.createTextNode("$" + Float.toString(currently)));
+			
+			//set first_bid
+			Float first_bid = new Float(7);
+			Element first_bidElement = doc.createElement("First_Bid");
+			rootElement.appendChild(first_bidElement);
+			first_bidElement.appendChild(doc.createTextNode("$" + Float.toString(first_bid)));
+			
+			//set number of bids
+			int bidNumber = 2;
+			Element bidNumberElement = doc.createElement("Number_of_Bids");
+			rootElement.appendChild(bidNumberElement);
+			bidNumberElement.appendChild(doc.createTextNode(Integer.toString(bidNumber)));
+			
+			//set description
+			String description = "Description text here!";
+			Element descElement = doc.createElement("Description");
+			rootElement.appendChild(descElement);
+			descElement.appendChild(doc.createTextNode(description));
+			
+			// write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(path + ".xml"));
+			transformer.transform(source, result);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@RequestMapping(value = "/load/{filename}", method = RequestMethod.GET)
-	 public void read(@PathVariable String filename) {
+	public void read(@PathVariable String filename) {
 
 	    try {
 

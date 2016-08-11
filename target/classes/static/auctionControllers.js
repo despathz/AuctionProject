@@ -23,9 +23,15 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         }
     });
     
-    $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
-    var res2 = $http.get($scope.servicePath);
+	var res2 = $http.get('/ws/image/get/' + $stateParams.id);
     res2.success(function(response) {
+        $scope.imgA = response[0];
+        $scope.imgB = response[1];
+    });
+	
+    $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
+    var res3 = $http.get($scope.servicePath);
+    res3.success(function(response) {
         var i;
         var today = new Date();
         for (i in response) {
@@ -165,14 +171,14 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			res.success(function(response) {
 				if (response == -1) 
 					$scope.databaseError = true;
-				else 
-					$state.go('app.auction', {id: response}); 	
+				else {
+					$state.go('app.auction', {id: response});
+                    var res = $http.post('/ws/image/upload', {auction: response, imgA: $scope.images.imgA, imgB: $scope.images.imgB});
+                    res.success(function(response) {
+                        console.log("Images uploaded!");
+                    });
+				}
 			});
-            
-            var res = $http.post('/ws/image/upload', $scope.images);
-            res.success(function(response) {
-                console.log(response);
-            });
 		}
 	};
 	
