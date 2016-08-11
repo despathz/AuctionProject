@@ -5,31 +5,37 @@
 </div>
 <form role="form" ng-submit="submitAuction()">
     <div class="row">
-        <div class="col-sm-4 col-sm-offset-2">
+        <div class="col-sm-3 col-sm-offset-2">
             <div class="form-group">
-                <label for="name">Name:</label>
+                <label for="name">Title:</label>
                 <input type="text" class="form-control" ng-model="auction.name">
             </div>
-            <div class="form-group">
+            <div class="form-group col-sm-6">
                 <label for="buyPrice">Buy Price:</label>
 				<input type="text" class="form-control" ng-model="auction.buy_price" placeholder="$">
             </div>
-            <div class="form-group">
+            <div class="form-group col-sm-6">
                 <label for="firstBid">First Bid:</label>
                 <input type="text" class="form-control" ng-model="auction.first_bid" placeholder="$">
             </div>
+            <div class="form-group">
+                <label for="firstBid">Country:</label>
+                <input type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-sm-5">
             <div>
-				<label for="date">End Date:</label><br>
+				<label for="date">Ending date:</label><br>
 				<div class="form-group col-sm-4">
 					<select class="form-control" ng-model="tempDate.selectEYear" ng-options="n for n in [] | range:2016:2019"><option value="" disabled selected>Year</option></select>
 				</div>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectEMonth" ng-options="x.month for x in months" ng-value="x.number"><option value="" disabled selected>Mon</option></select>
+					<select class="form-control" ng-model="tempDate.selectEMonth" ng-options="x.month for x in months" ng-value="x.number"><option value="" disabled selected>Month</option></select>
 				</div>
 				<div class="form-group col-sm-4">
 					<select class="form-control" ng-model="tempDate.selectEDay" ng-options="n for n in [] | range:1:32"><option value="" disabled selected>Day</option></select>
 				</div>
-				<br>
+				<label for="date">Ending time:</label><br>
 				<div class="form-group col-sm-4">
 					<select class="form-control" ng-model="tempDate.selectEHour" ng-options="n for n in [] | range:0:24"><option value="" disabled selected>Hour</option></select>
 				</div>
@@ -39,23 +45,43 @@
 				<div class="form-group col-sm-4">
 					<select class="form-control" ng-model="tempDate.selectESecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Sec</option></select>
 				</div>
-				<br><br>
+                
+				<div class="form-group col-sm-4">
+                    <label>Location:</label>
+					<input type="text" class="form-control">
+				</div>
+				<div class="form-group col-sm-4">
+					<label>Longitude:</label>
+					<input type="text" class="form-control">
+				</div>
+				<div class="form-group col-sm-4">
+					<label>Latitude:</label>
+					<input type="text" class="form-control">
+				</div>
             </div>
         </div>
-        <div class="col-sm-4">
-			<div class="form-group text-center">
+    </div>
+	<br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2 text-left">
+            <div class="form-group">
                 <label for="upload">Upload images:</label>
                 <input type="file" id="imgA" accept="image/*" custom-on-change="loadImgA"/>
                 <input type="file" id="imgB" accept="image/*" custom-on-change="loadImgB"/>
                 <h5>You can upload up to <b>2</b> images.</h5>
             </div>
-            <div class="form-group">
-                <label for="email">Description:</label>
-				<textarea type="text" class="form-control" rows="4" ng-model="auction.description"></textarea>
+        </div>
+    </div>
+    <br>
+    <div class="row text-left">
+        <div class="col-sm-8 col-sm-offset-2">
+             <div class="form-group">
+                <label>Description:</label>
+				<textarea type="text" class="form-control" rows="5" ng-model="auction.description"></textarea>
             </div>
         </div>
     </div>
-	<br>
+    <br>
     <div class="row text-left">
         <div class="col-sm-8 col-sm-offset-2">
             <label for="email">Select Categories:</label>
@@ -69,11 +95,11 @@
             </ul>
         </div>
     </div>
-    <br>
 	<div class="row">
         <button type="submit" class="btn btn-primary">Create auction</button>
     </div>
 	<div class="text-danger" ng-show="basicFieldsError">Please fill all the fields of the form</div>
 	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid field and the buy price field.</div>
 	<div class="text-danger" ng-show="DateError">The end date must be after start date!</div>
+<!--    <div class="text-danger" ng-show="categoryError">Please select all categories.</div>-->
 </form>
