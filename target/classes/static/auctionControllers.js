@@ -23,9 +23,16 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         }
     });
     
-    $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
-    var res2 = $http.get($scope.servicePath);
+	var res2 = $http.get('/ws/image/get/' + $stateParams.id);
     res2.success(function(response) {
+        $scope.imgA = response[0];
+        $scope.imgB = response[1];
+        console.log($scope.imgA + " " + $scope.imgB);
+    });
+	
+    $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
+    var res3 = $http.get($scope.servicePath);
+    res3.success(function(response) {
         var i;
         var today = new Date();
         for (i in response) {

@@ -30,8 +30,6 @@ public class AuctionImageController {
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean upload(@RequestBody saveImageResponse images) {
-		System.out.println(images.getImgA());
-		System.out.println(images.getImgB());
 		
 		try {
 			String[] parts;
@@ -53,7 +51,7 @@ public class AuctionImageController {
 				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgA" + auction_id + "." + fileType);
 				fos.write(decoded);
 				fos.close();
-				img.setImgA("./src/main/resources/static/img/auction_images/imgA" + auction_id + "." + fileType);
+				img.setImgA("./img/auction_images/imgA" + auction_id + "." + fileType);
 			}
 			else {
 				img.setImgA("");
@@ -68,7 +66,7 @@ public class AuctionImageController {
 				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgB" + auction_id + "." + fileType);
 				fos.write(decoded);
 				fos.close();
-				img.setImgB("./src/main/resources/static/img/auction_images/imgB" + auction_id + "." + fileType);
+				img.setImgB("./img/auction_images/imgB" + auction_id + "." + fileType);
 			}
 			else {
 				img.setImgB("");
