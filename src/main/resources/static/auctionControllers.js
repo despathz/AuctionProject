@@ -88,8 +88,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$sce', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $sce) {
 	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", user_id: $rootScope.session.id, started:"" , ends:""};
-	$scope.tempDate = {selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: "",
-					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
+	$scope.tempDate = {selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: ""};
 	
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
     
@@ -124,25 +123,24 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
         });
     };
     
-    $scope.loadFile = function(id) {
-        console.log(id);
-        var f = document.getElementById(id).files[0],
+    $scope.loadImgA = function() {
+        var f = document.getElementById("imgA");
+        f.files[0],
         r = new FileReader();
         r.onloadend = function(e){
-            if (file === "file1")
-                $scope.images.imgA = e.target.result;
-            else
-                $scope.images.imgB = e.target.result;
+            $scope.images.imgA = e.target.result;
         }
-        r.readAsDataURL(f);
+        r.readAsDataURL(f.files[0]);
     };
     
-    $scope.upload = function() {
-        
-        var res = $http.post('/ws/image/upload', $scope.images);
-        res.success(function(response) {
-            console.log(response);
-        });
+    $scope.loadImgB = function() {
+        var f = document.getElementById("imgB");
+        f.files[0],
+        r = new FileReader();
+        r.onloadend = function(e){
+            $scope.images.imgB = e.target.result;
+        }
+        r.readAsDataURL(f.files[0]);
     };
     
 	$scope.submitAuction = function() {
@@ -170,6 +168,11 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 				else 
 					$state.go('app.auction', {id: response}); 	
 			});
+            
+            var res = $http.post('/ws/image/upload', $scope.images);
+            res.success(function(response) {
+                console.log(response);
+            });
 		}
 	};
 	
