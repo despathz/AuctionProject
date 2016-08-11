@@ -92,6 +92,9 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 					 selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
+    
+    $scope.images = {imgA : "", imgB: ""};
+    
     $scope.categoryPath = "";
     $scope.categoryPathList = [];
     $scope.categoryPathList.push({name: "General", id: 1});
@@ -120,7 +123,28 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
             $scope.categoryList = response;
         });
     };
-	
+    
+    $scope.loadFile = function(id) {
+        console.log(id);
+        var f = document.getElementById(id).files[0],
+        r = new FileReader();
+        r.onloadend = function(e){
+            if (file === "file1")
+                $scope.images.imgA = e.target.result;
+            else
+                $scope.images.imgB = e.target.result;
+        }
+        r.readAsDataURL(f);
+    };
+    
+    $scope.upload = function() {
+        
+        var res = $http.post('/ws/image/upload', $scope.images);
+        res.success(function(response) {
+            console.log(response);
+        });
+    };
+    
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
@@ -161,3 +185,12 @@ myApp.filter('range', function() {
 	};
 });
 
+myApp.directive('customOnChange', function() {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var onChangeHandler = scope.$eval(attrs.customOnChange);
+      element.bind('change', onChangeHandler);
+    }
+  };
+});

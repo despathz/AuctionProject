@@ -44,8 +44,10 @@
         </div>
         <div class="col-sm-4">
 			<div class="form-group text-center">
-                <label for="upload">Upload an image:</label>
-                <input type="file" name="pic" accept="image/*">
+                <label for="upload">Upload images:</label>
+                <input type="file" id="file1" accept="image/*" custom-on-change="loadFile(file1)"/>
+                <input type="file" id="file2" accept="image/*" custom-on-change="loadFile(file2)"/>
+                <button class="btn btn-primary" ng-click="upload()">Upload</button>
             </div>
             <div class="form-group">
                 <label for="email">Description:</label>
