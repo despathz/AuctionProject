@@ -30,6 +30,9 @@ public class AuctionImageController {
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean upload(@RequestBody saveImageResponse images) {
+		System.out.println(images.getImgA());
+		System.out.println(images.getImgB());
+		
 		try {
 			String[] parts;
 			String fileType, data;

@@ -165,14 +165,14 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			res.success(function(response) {
 				if (response == -1) 
 					$scope.databaseError = true;
-				else 
-					$state.go('app.auction', {id: response}); 	
+				else {
+					$state.go('app.auction', {id: response});
+                    var res = $http.post('/ws/image/upload', {auction: response, imgA: $scope.images.imgA, imgB: $scope.images.imgB});
+                    res.success(function(response) {
+                        console.log("Images uploaded!");
+                    });
+				}
 			});
-            
-            var res = $http.post('/ws/image/upload', $scope.images);
-            res.success(function(response) {
-                console.log(response);
-            });
 		}
 	};
 	
