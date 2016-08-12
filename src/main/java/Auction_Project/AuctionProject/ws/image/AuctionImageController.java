@@ -51,7 +51,11 @@ public class AuctionImageController {
 				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgA" + auction_id + "." + fileType);
 				fos.write(decoded);
 				fos.close();
+<<<<<<< HEAD
 				img.setImgA("imgA" + auction_id + "." + fileType);
+=======
+				img.setImgA("./img/auction_images/imgA" + auction_id + "." + fileType);
+>>>>>>> 94bd0bbf80d2faea97143037a151e4a592382786
 			}
 			else {
 				img.setImgA("");
@@ -66,7 +70,11 @@ public class AuctionImageController {
 				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgB" + auction_id + "." + fileType);
 				fos.write(decoded);
 				fos.close();
+<<<<<<< HEAD
 				img.setImgB("imgB" + auction_id + "." + fileType);
+=======
+				img.setImgB("./img/auction_images/imgB" + auction_id + "." + fileType);
+>>>>>>> 94bd0bbf80d2faea97143037a151e4a592382786
 			}
 			else {
 				img.setImgB("");
