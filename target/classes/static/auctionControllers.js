@@ -156,6 +156,10 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		$scope.databaseError = false;
 		$scope.NumberError = false;
 		$scope.LLError = false;
+		$scope.categoryError = false;
+		
+		if ($scope.categoryList.length != 0)
+			$scope.categoryError = true;
 		
 		if (isNaN($scope.auction.first_bid) || isNaN($scope.auction.buy_price))
 			$scope.NumberError = true;
@@ -179,7 +183,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			}
 		}
 		
-		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.LLError) {
+		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.LLError && !$scope.categoryError) {
 			if ($scope.tempLL.latitude.length == 0)
 				$scope.tempLL.latitude = 0;
 			if ($scope.tempLL.longitude.length == 0)
@@ -190,6 +194,8 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			$scope.auction.user_id = $rootScope.session.id;
 			
 			$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+			
+			$scope.auction.categoryList = $scope.categoryPathList;
 			
 			var res = $http.post('/ws/auction/createAuction', $scope.auction);
 			res.success(function(response) {

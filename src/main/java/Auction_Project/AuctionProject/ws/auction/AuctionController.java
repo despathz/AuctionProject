@@ -1,6 +1,7 @@
 package Auction_Project.AuctionProject.ws.auction;
 
 import java.util.Date;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
+import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionDisplayResponse;
 import Auction_Project.AuctionProject.dto.auction.AuctionSaveResponse;
+import Auction_Project.AuctionProject.ws.category.Category;
 import Auction_Project.AuctionProject.ws.user.User;
 
 
@@ -25,6 +28,9 @@ public class AuctionController {
 	
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private CategoryDAO categoryDAO;
 
 	@RequestMapping(value = "/{auctionID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public AuctionDisplayResponse getByID(@PathVariable long auctionID) {
@@ -60,6 +66,13 @@ public class AuctionController {
 			auction.setCountry(new_auction.getCountry());
 			User user = userDAO.findById(new_auction.getUser_id());
 			auction.setUser_seller_id(user);
+			
+//			HashSet<Category> catset = new HashSet<Category>();
+//			for (int i = 0; i < new_auction.getCategoryList().size(); i++) {
+//				Category cat = categoryDAO.findById(new_auction.getCategoryList().get(i).getId());
+//				catset.add(cat);
+//			}
+//			auction.setCategories(catset);
 			returned = auctionDAO.save(auction);
 		}
 		catch (Exception ex) {
