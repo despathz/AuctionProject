@@ -2,6 +2,7 @@ package Auction_Project.AuctionProject.ws.auction;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -67,12 +68,12 @@ public class AuctionController {
 			User user = userDAO.findById(new_auction.getUser_id());
 			auction.setUser_seller_id(user);
 			
-//			HashSet<Category> catset = new HashSet<Category>();
-//			for (int i = 0; i < new_auction.getCategoryList().size(); i++) {
-//				Category cat = categoryDAO.findById(new_auction.getCategoryList().get(i).getId());
-//				catset.add(cat);
-//			}
-//			auction.setCategories(catset);
+			Set<Category> catset = new HashSet<Category>();
+			for (int i = 0; i < new_auction.getCategoryList().size(); i++) {
+				Category cat = categoryDAO.findById(new_auction.getCategoryList().get(i).getId());
+				catset.add(cat);
+			}
+			auction.setCategories(catset);
 			returned = auctionDAO.save(auction);
 		}
 		catch (Exception ex) {
