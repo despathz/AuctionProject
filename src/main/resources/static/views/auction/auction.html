@@ -10,23 +10,13 @@
 
 <div class="row" ng-init="showImageA=true">
 	<div class="col-sm-4 col-sm-offset-2">
-<<<<<<< HEAD
-		<img ng-show="showImageA" ng-src="./img/auction_images/{{imgA}}" alt="auction photo" class="img-responsive"></img>
-		<img ng-hide="showImageA" ng-src="./img/auction_images/{{imgB}}" alt="auction photo" class="img-responsive"></img>
+		<img ng-show="showImageA" ng-src=".{{imgA}}" alt="auction photo" class="img-responsive"></img>
+		<img ng-hide="showImageA" ng-src=".{{imgB}}" alt="auction photo" class="img-responsive"></img>
 		<div class="col-sm-3 col-sm-offset-3">
-			<img ng-src="./img/auction_images/{{imgA}}" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=true"></img>
+			<img ng-src=".{{imgA}}" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=true"></img>
 		</div>
 		<div class="col-sm-3">
-			<img ng-src="./img/auction_images/{{imgB}}" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=false"></img>
-=======
-		<img ng-show="showImageA" ng-src="{{imgA}}" alt="auction photo" class="img-responsive"></img>
-		<img ng-hide="showImageA" ng-src={{imgB}} alt="auction photo" class="img-responsive"></img>
-		<div class="col-sm-3 col-sm-offset-3">
-			<img ng-src={{imgA}} class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=true"></img>
-		</div>
-		<div class="col-sm-3">
-			<img ng-src={{imgB}} class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=false"></img>
->>>>>>> 94bd0bbf80d2faea97143037a151e4a592382786
+			<img ng-src=".{{imgB}}" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=false"></img>
 		</div>
 	</div>
     <div class="col-sm-3 col-sm-offset-1">

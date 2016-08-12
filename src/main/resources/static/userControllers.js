@@ -46,8 +46,8 @@ myApp.controller('logoutCtrl', ['$rootScope', '$state', '$cookies', function($ro
 }]);
 
 myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', function($scope, $http, $rootScope, $state) {
-    $scope.user = {remember: false, superuser: false, activation: false, username: "", password: "", email: "", name: "", surname: ""};
-    $scope.prop = {accept: false, verifyPassword: ""};
+    $scope.user = {username: "", password: "", email: "", name: "", surname: "", location: "", telephone: "", address: "", country: "", trn: "" };
+    $scope.prop = {accept: false, verifyPassword: "", verifyEmail: ""};
 	$scope.tryRegister = function() {
 		$scope.basicFieldsError = false; //these fields must be filled
 		$scope.missmatchPassError = false;
@@ -57,24 +57,30 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
         $scope.passwordError = false;
 		$scope.databaseError = false;
 		$scope.registerComplete = false;
+		$scope.missmatchEmailError = false;
 
-		if (($scope.user.username.length == 0) || ($scope.user.password.length == 0)
-			|| ($scope.prop.verifyPassword.length == 0) || ($scope.user.email.length == 0)
-			|| ($scope.user.name.length == 0) || ($scope.user.surname.length == 0)) {
+		for (var field in $scope.user) {
+			if ($scope.user[field].length == 0) {
 				$scope.basicFieldsError = true;
-        }
+				break;
+			}
+		}
         
         if (!$scope.basicFieldsError && $scope.user.password.length < 5) {
             $scope.passwordError = true;
         }
-		else if ($scope.prop.verifyPassword !== $scope.user.password) {
-			$scope.missmatchPassError = true;
+		else { 
+			if ($scope.prop.verifyPassword !== $scope.user.password) 
+				$scope.missmatchPassError = true;
+			if ($scope.prop.verifyEmail !== $scope.user.email) 
+				$scope.missmatchEmailError = true;
 		}
-		if (!$scope.prop.accept) {
+		
+		if (!$scope.prop.accept) 
 			$scope.acceptTermsError = true;
-		}
+		
 
-		if (!$scope.acceptTermsError && !$scope.basicFieldsError && !$scope.missmatchPassError && !$scope.passwordError) {
+		if (!$scope.acceptTermsError && !$scope.basicFieldsError && !$scope.missmatchPassError && !$scope.missmatchEmailError && !$scope.passwordError) {
 			var res = $http.get('/ws/user/checkUsername/' + $scope.user.username);
 			res.success(function(response) {
 				if (response) {

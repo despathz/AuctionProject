@@ -27,10 +27,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     res2.success(function(response) {
         $scope.imgA = response[0];
         $scope.imgB = response[1];
-<<<<<<< HEAD
-=======
         console.log($scope.imgA + " " + $scope.imgB);
->>>>>>> 94bd0bbf80d2faea97143037a151e4a592382786
     });
 	
     $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
@@ -97,8 +94,9 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 }]);
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$sce', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $sce) {
-	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", user_id: $rootScope.session.id, started:"" , ends:""};
-	$scope.tempDate = {selectYear: "", selectMonth: "", selectDay: "", selectHour: "", selectMinute: "", selectSecond: ""};
+	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", country: "", location: ""};
+	$scope.tempDate = {selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
+	$scope.tempLL = {longitude: "", latitude: ""};
 	
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
     
@@ -157,20 +155,42 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
 		$scope.NumberError = false;
+		$scope.LLError = false;
 		
-		if (isNaN(parseFloat($scope.auction.first_bid)) || isNaN(parseFloat($scope.auction.buy_price)))
+		if (isNaN($scope.auction.first_bid) || isNaN($scope.auction.buy_price))
 			$scope.NumberError = true;
 		
-		$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+		if ($scope.tempLL.latitude.length != 0 && isNaN($scope.tempLL.latitude))
+			$scope.LLError = true;
+		if ($scope.tempLL.longitude.length != 0 && isNaN($scope.tempLL.longitude))
+			$scope.LLError = true;
 		
-		if (($scope.auction.name.length == 0) || ($scope.auction.description.length == 0) || (isNaN($scope.auction.ends))) {
-			$scope.basicFieldsError = true;
-        }
+		for (var field in $scope.auction) {
+			if ($scope.auction[field].length == 0) {
+				$scope.basicFieldsError = true;
+				break;
+			}
+		}
 		
-		$scope.auction.buy_price = parseFloat($scope.auction.buy_price);
-		$scope.auction.first_bid = parseFloat($scope.auction.first_bid);
+		for (var field in $scope.tempDate) {
+			if ($scope.tempDate[field].length == 0) {
+				$scope.basicFieldsError = true;
+				break;
+			}
+		}
 		
-		if (!$scope.basicFieldsError && !$scope.NumberError) {
+		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.LLError) {
+			if ($scope.tempLL.latitude.length == 0)
+				$scope.tempLL.latitude = 0;
+			if ($scope.tempLL.longitude.length == 0)
+				$scope.tempLL.longitude = 0;
+			
+			$scope.auction.longitude = $scope.tempLL.longitude;
+			$scope.auction.latitude = $scope.tempLL.latitude;
+			$scope.auction.user_id = $rootScope.session.id;
+			
+			$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+			
 			var res = $http.post('/ws/auction/createAuction', $scope.auction);
 			res.success(function(response) {
 				if (response == -1) 

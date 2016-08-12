@@ -15,12 +15,14 @@ private long id;
 	
 	private float buy_price;
 	
-	private Date started, ends, created;
+	private Date started, ends;
 	
 	private long user_id;
 	
 	private List<Category> categoryList;
 
+	private String location, country, longitude, latitude;
+	
 	public long getId() {
 		return id;
 	}
@@ -101,11 +103,36 @@ private long id;
 		this.categoryList = categoryList;
 	}
 
-	public Date getCreated() {
-		return created;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setCreated(Date created) {
-		this.created = created;
+	public void setLocation(String location) {
+		this.location = location;
 	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
 }

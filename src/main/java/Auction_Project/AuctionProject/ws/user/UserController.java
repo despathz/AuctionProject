@@ -71,6 +71,11 @@ public class UserController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Boolean registerUser( @RequestBody User input_user) {	
 		try {
+			input_user.setActivation(false);
+			input_user.setSuperuser(false);
+			input_user.setRemember(false);
+			input_user.setBidderRating(0);
+			input_user.setSellerRating(0);
 			userDAO.save(input_user);
 		}
 		catch (Exception ex) {
@@ -100,12 +105,13 @@ public class UserController {
 	
 	@RequestMapping(value = "/getProfile/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserProfileResponse getUserProfile(@PathVariable long id) {
-		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false);
+		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false, null, 0, 0);
 		User user = new User();
 		try {
 			user = userDAO.findById(id);
 			responseUser = new UserProfileResponse(user.getUsername(), user.getEmail(), user.getName(), user.getSurname(), user.getAddress(),
-												user.getCountry(), user.getTelephone(), user.getTrn(), user.getSuperuser(), user.getActivation());
+												user.getCountry(), user.getTelephone(), user.getTrn(), user.getSuperuser(), user.getActivation(), 
+												user.getLocation(), user.getBidderRating(), user.getSellerRating());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());

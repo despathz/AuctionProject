@@ -142,7 +142,7 @@ public class XML_IO {
 	}
 	
 	@RequestMapping(value = "/load/{filename}", method = RequestMethod.GET)
-	public void read(@PathVariable String filename) {
+	 public void read(@PathVariable String filename) {
 
 	    try {
 

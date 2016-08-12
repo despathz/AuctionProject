@@ -37,14 +37,8 @@ public class Auction {
 	
 	private Date started, ends, created;
 	
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
+	private String location, country, longitude, latitude;
+	
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "user_seller_id")
@@ -135,4 +129,44 @@ public class Auction {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
+	
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}	
 }

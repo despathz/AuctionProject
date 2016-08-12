@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionDisplayResponse;
+import Auction_Project.AuctionProject.dto.auction.AuctionSaveResponse;
 import Auction_Project.AuctionProject.ws.user.User;
 
 
@@ -41,7 +42,7 @@ public class AuctionController {
 	}
 	
 	@RequestMapping(value = "/createAuction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public long registerUser( @RequestBody AuctionDisplayResponse new_auction) {	
+	public long registerUser( @RequestBody AuctionSaveResponse new_auction) {	
 		Auction auction = new Auction();
 		Auction returned = new Auction();
 		try {
@@ -53,6 +54,10 @@ public class AuctionController {
 			auction.setFirst_bid(new_auction.getFirst_bid());
 			auction.setBuy_price(new_auction.getBuy_price());
 			auction.setCreated(new Date());
+			auction.setLocation(new_auction.getLocation());
+			auction.setLatitude(new_auction.getLatitude());
+			auction.setLongitude(new_auction.getLongitude());
+			auction.setCountry(new_auction.getCountry());
 			User user = userDAO.findById(new_auction.getUser_id());
 			auction.setUser_seller_id(user);
 			returned = auctionDAO.save(auction);

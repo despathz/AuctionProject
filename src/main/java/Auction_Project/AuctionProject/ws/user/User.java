@@ -17,8 +17,33 @@ public class User {
 	private String username, password, email;
 	
 	private Boolean remember, superuser, activation;
-	private String name, surname, address, country, telephone, trn;
+	private String name, surname, address, country, telephone, trn, location;
+	private Integer sellerRating, bidderRating;
 	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public Integer getSellerRating() {
+		return sellerRating;
+	}
+
+	public void setSellerRating(Integer sellerRating) {
+		this.sellerRating = sellerRating;
+	}
+
+	public Integer getBidderRating() {
+		return bidderRating;
+	}
+
+	public void setBidderRating(Integer bidderRating) {
+		this.bidderRating = bidderRating;
+	}
+
 	public String getUsername() {
 		return username;
 	}

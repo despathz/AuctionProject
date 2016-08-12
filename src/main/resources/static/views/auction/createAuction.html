@@ -20,7 +20,7 @@
             </div>
             <div class="form-group">
                 <label for="firstBid">Country:</label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" ng-model="auction.country">
             </div>
         </div>
         <div class="col-sm-5">
@@ -48,15 +48,15 @@
                 
 				<div class="form-group col-sm-4">
                     <label>Location:</label>
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" ng-model="auction.location">
 				</div>
 				<div class="form-group col-sm-4">
 					<label>Longitude:</label>
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" ng-model="tempLL.longitude">
 				</div>
 				<div class="form-group col-sm-4">
 					<label>Latitude:</label>
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" ng-model="tempLL.latitude">
 				</div>
             </div>
         </div>
@@ -99,7 +99,8 @@
         <button type="submit" class="btn btn-primary">Create auction</button>
     </div>
 	<div class="text-danger" ng-show="basicFieldsError">Please fill all the fields of the form</div>
-	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid field and the buy price field.</div>
+	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid and buy price field.</div>
+	<div class="text-danger" ng-show="LLError">Please give numeric values to the longitude and latitude field.</div>
 	<div class="text-danger" ng-show="DateError">The end date must be after start date!</div>
 <!--    <div class="text-danger" ng-show="categoryError">Please select all categories.</div>-->
 </form>

@@ -2,12 +2,13 @@ package Auction_Project.AuctionProject.dto.user;
 
 public class UserProfileResponse {
 
-	private String username, email, name, surname, address, country, telephone, trn;
+	private String username, email, name, surname, address, country, telephone, trn, location;
 	private Boolean superuser, activation;
+	private Integer bidderRating, sellerRating;
 
 	
 	public UserProfileResponse(String username, String email, String name, String surname, String address,
-			String country, String telephone, String trn, Boolean superuser, Boolean activation) {
+			String country, String telephone, String trn, Boolean superuser, Boolean activation, String location, Integer bidderRating, Integer sellerRating) {
 		this.username = username;
 		this.email = email;
 		this.name = name;
@@ -18,6 +19,9 @@ public class UserProfileResponse {
 		this.trn = trn;
 		this.superuser = superuser;
 		this.activation = activation;
+		this.location = location;
+		this.bidderRating = bidderRating;
+		this.sellerRating = sellerRating;
 	}
 	
 	public String getUsername() {
@@ -79,6 +83,30 @@ public class UserProfileResponse {
 	}
 	public void setActivation(Boolean activation) {
 		this.activation = activation;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public Integer getBidderRating() {
+		return bidderRating;
+	}
+
+	public void setBidderRating(Integer bidderRating) {
+		this.bidderRating = bidderRating;
+	}
+
+	public Integer getSellerRating() {
+		return sellerRating;
+	}
+
+	public void setSellerRating(Integer sellerRating) {
+		this.sellerRating = sellerRating;
 	}
 	
 	
