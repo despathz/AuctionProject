@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
+import Auction_Project.AuctionProject.ws.auction.Auction;
 import Auction_Project.AuctionProject.ws.category.Category;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/ws/xml")
@@ -29,37 +32,54 @@ public class XML_IO {
 	@Autowired
 	private CategoryDAO categoryDAO;
 	
-	public void create(String path) {
+	@Autowired
+	private AuctionDAO auctionDAO;
+	
+	@RequestMapping(value = "/produce/{auction_id}", method = RequestMethod.GET)
+	public void create(@PathVariable long auction_id) {
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.newDocument();
+			
+			String day, t, year;
+			String parts[];
+			HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
+			monthMap.put(1, "Jan");	monthMap.put(2, "Feb");
+			monthMap.put(3, "Mar");	monthMap.put(4, "Apr");
+			monthMap.put(5, "May");	monthMap.put(6, "Jun");
+			monthMap.put(7, "Jul");	monthMap.put(8, "Aug");
+			monthMap.put(9, "Sep");	monthMap.put(10, "Oct");
+			monthMap.put(11, "Nov");	monthMap.put(12, "Dec");
+			
+			Auction auction = auctionDAO.findById(auction_id);
 			
 			//root element
 			Element rootElement = doc.createElement("Item");
 			doc.appendChild(rootElement);
 			
 			//set itemID
-			long id = 123456789;
-			rootElement.setAttribute("ItemID", Long.toString(id));
+			rootElement.setAttribute("ItemID", Long.toString(auction.getId()));
 			
 			//set name
-			String name = new String("PS4 500GB");
 			Element nameElement = doc.createElement("Name");
 			rootElement.appendChild(nameElement);
-			nameElement.appendChild(doc.createTextNode(name));
+			nameElement.appendChild(doc.createTextNode(auction.getName()));
 			
 			//set currently
-			Float currently = new Float(7.50);
 			Element currentlyElement = doc.createElement("Currently");
 			rootElement.appendChild(currentlyElement);
-			currentlyElement.appendChild(doc.createTextNode("$" + Float.toString(currently)));
+			currentlyElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getCurrently())));
+			
+			//set buy price
+			Element buypriceElement = doc.createElement("Buy_Price");
+			rootElement.appendChild(buypriceElement);
+			buypriceElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getBuy_price())));
 			
 			//set first_bid
-			Float first_bid = new Float(7);
 			Element first_bidElement = doc.createElement("First_Bid");
 			rootElement.appendChild(first_bidElement);
-			first_bidElement.appendChild(doc.createTextNode("$" + Float.toString(first_bid)));
+			first_bidElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getFirst_bid())));
 			
 			//set number of bids
 			int bidNumber = 2;
@@ -67,17 +87,53 @@ public class XML_IO {
 			rootElement.appendChild(bidNumberElement);
 			bidNumberElement.appendChild(doc.createTextNode(Integer.toString(bidNumber)));
 			
+			//set bids
+			Element bidElement = doc.createElement("Bids");
+			rootElement.appendChild(bidElement);
+			
+			//set location
+			Element locationElement = doc.createElement("Location");
+			rootElement.appendChild(locationElement);
+			
+			//set country
+			Element countryElement = doc.createElement("Country");
+			rootElement.appendChild(countryElement);
+			
+			//set start date
+			Element startElement = doc.createElement("Started");
+			rootElement.appendChild(startElement);
+			
+			//set end date
+			Element endElement = doc.createElement("Ends");
+			rootElement.appendChild(endElement);
+			String ends = auction.getEnds().toString();
+			parts = ends.split("-");
+			year = parts[0].substring(2, 4);
+			int month = Integer.parseInt(parts[1]);
+			parts = parts[2].split(" ");
+			day = parts[0];
+			t = parts[1].replace(".", " ");
+			parts = t.split(" ");
+			t = parts[0];
+			ends = monthMap.get(month) + "-" + day + "-" + year + " " + t;
+			endElement.appendChild(doc.createTextNode(ends));
+			
+			//seller id and rating
+			Element sellerElement = doc.createElement("Seller");
+			rootElement.appendChild(sellerElement);
+			sellerElement.setAttribute("UserID", auction.getUser_seller_id().getUsername());
+			sellerElement.setAttribute("Rating", "1920");
+			
 			//set description
-			String description = "Description text here!";
 			Element descElement = doc.createElement("Description");
 			rootElement.appendChild(descElement);
-			descElement.appendChild(doc.createTextNode(description));
+			descElement.appendChild(doc.createTextNode(auction.getDescription()));
 			
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(path + ".xml"));
+			StreamResult result = new StreamResult(new File(auction.getName() + ".xml"));
 			transformer.transform(source, result);
 		}
 		catch (Exception e) {
