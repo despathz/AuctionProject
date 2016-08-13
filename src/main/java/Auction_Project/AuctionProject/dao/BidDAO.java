@@ -15,4 +15,5 @@ import Auction_Project.AuctionProject.ws.bid.Bid;
 public interface BidDAO extends CrudRepository<Bid, Long>{
 	
 	public List<Bid> findByAuctionIdOrderByAmountDesc(Auction auction_id, Pageable pageable);
+	public Long countByAuctionId(Auction auction_id);
 }

@@ -1,7 +1,9 @@
 package Auction_Project.AuctionProject.ws.auction;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionDisplayResponse;
 import Auction_Project.AuctionProject.dto.auction.AuctionSaveResponse;
+import Auction_Project.AuctionProject.dto.category.CategoryResponse;
 import Auction_Project.AuctionProject.ws.category.Category;
 import Auction_Project.AuctionProject.ws.user.User;
 
@@ -33,14 +36,46 @@ public class AuctionController {
 	@Autowired
 	private CategoryDAO categoryDAO;
 
+	@RequestMapping(value = "/begin/{auctionID}", method = RequestMethod.GET)
+	public Date begin(@PathVariable long auctionID) {
+		Date date = new Date();
+		try {
+			Auction auction = auctionDAO.findById(auctionID);
+			auction.setStarted(date);
+			auctionDAO.save(auction);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return date;
+	}
+
 	@RequestMapping(value = "/{auctionID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public AuctionDisplayResponse getByID(@PathVariable long auctionID) {
 		AuctionDisplayResponse auctionResponse = new AuctionDisplayResponse(0);
 		try {
 			Auction auction = auctionDAO.findById(auctionID);
 			User user = auction.getUser_seller_id();
-			auctionResponse = new AuctionDisplayResponse(auction.getId(), auction.getName(), auction.getDescription(), auction.getCurrently(),
-					auction.getFirst_bid(), auction.getBuy_price(), auction.getStarted(), auction.getEnds(), user.getUsername(), user.getId());
+			auctionResponse.setId(auction.getId());
+			auctionResponse.setName(auction.getName());
+			auctionResponse.setDescription(auction.getDescription());
+			auctionResponse.setCurrently(auction.getCurrently());
+			auctionResponse.setFirst_bid(auction.getFirst_bid());
+			auctionResponse.setBuy_price(auction.getBuy_price());
+			auctionResponse.setStarted(auction.getStarted());
+			auctionResponse.setEnds(auction.getEnds());
+			auctionResponse.setCreator(user.getUsername());
+			auctionResponse.setUser_id(user.getId());
+			
+			List<Category> cat = auctionDAO.findCategories(auctionID);
+			List<CategoryResponse> reCat = new ArrayList<CategoryResponse>();
+			for (int i = 0; i < cat.size(); i++) {
+				CategoryResponse newCat = new CategoryResponse();
+				newCat.setId(cat.get(i).getId());
+				newCat.setName(cat.get(i).getName());
+				reCat.add(newCat);
+			}
+			auctionResponse.setCategories(reCat);
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
@@ -49,7 +84,7 @@ public class AuctionController {
 	}
 	
 	@RequestMapping(value = "/createAuction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public long registerUser( @RequestBody AuctionSaveResponse new_auction) {	
+	public long createAuction(@RequestBody AuctionSaveResponse new_auction) {	
 		Auction auction = new Auction();
 		Auction returned = new Auction();
 		try {

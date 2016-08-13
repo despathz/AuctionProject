@@ -8,6 +8,14 @@
 	</div>
 </div>
 
+<div class="row text-left">
+    <div class="col-sm-8 col-sm-offset-2">
+        <span ng-repeat="c in auction.categories">
+                /&nbsp;<a style="color:rgb(251, 130, 13)" href="">{{c.name}}</a>&nbsp;
+        </span>
+    </div>
+</div>
+<br>
 <div class="row" ng-init="showImageA=true">
 	<div class="col-sm-4 col-sm-offset-2">
 		<img ng-show="showImageA" ng-src="{{imgA}}" alt="auction photo" class="img-responsive"></img>
@@ -21,6 +29,14 @@
 		</div>
 	</div>
     <div class="col-sm-3 col-sm-offset-1">
+        <span ng-show="auction.buy_price != 0" class="text-left">
+            <legend class="text-left">Buy price:</legend>
+            <h4>Pay <b style="color: rgb(251, 130, 13)">{{auction.buy_price}}$</b> to buy this item now!</h4>
+            <span ng-show="session.loggedIn">
+                <button ng-hide="hasEnded || !hasStarted" class="btn btn-primary" type="button">Buy now</button>
+                <button ng-show="hasEnded || !hasStarted" class="btn btn-primary" type="button" disabled="disabled">Buy now</button>
+            </span>
+        </span>
         <legend class="text-left">Current bid:</legend>
         <div class="bid-list">
             <ul style="list-style-type: none; margin: 0px; padding: 0px;" ng-repeat="bid in bidList">
@@ -32,8 +48,8 @@
             <input ng-hide="hasEnded || bidConfirmMessage" type="text" class="form-control" placeholder="$" ng-model="bidAmount">
             <input ng-show="hasEnded" type="text" class="form-control" placeholder="$" disabled>
             <span class="input-group-btn" ng-hide="bidConfirmMessage">
-                <button ng-hide="hasEnded" class="btn btn-primary" type="button" ng-click="bid()">Bid</button>
-                <button ng-show="hasEnded" class="btn btn-primary" type="button" disabled="disabled">Bid</button>
+                <button ng-hide="hasEnded || !hasStarted" class="btn btn-primary" type="button" ng-click="bid()">Bid</button>
+                <button ng-show="hasEnded || !hasStarted" class="btn btn-primary" type="button" disabled="disabled">Bid</button>
             </span>
             <div ng-show="bidConfirmMessage">
                 <h4>Are you sure that you want make a bid of {{bidAmount}}$ for this auction?</h4>
@@ -53,8 +69,9 @@
 <br>
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
-        <h4>By <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a>, on {{startDate}} at {{startTime}}</h4>
-        <h4 ng-hide="hasEnded">{{countDown}}</h4>
+        <h4 class="text-danger" ng-hide="hasStarted">This auction has not started yet.</h4>
+        <h4>By <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a><span ng-show="hasStarted">, on {{startDate}} at {{startTime}}</span></h4>
+        <h4 ng-show="!hasEnded && hasStarted">{{countDown}}</h4>
     </div>
 </div>
 
@@ -63,6 +80,13 @@
     <div class="col-sm-8 col-sm-offset-2">
         <button ng-hide="XMLcreated" ng-click="getXML()" class="btn btn-primary" type="button">Create XML</button>
         <a ng-show="XMLcreated" ng-href="{{xmlFile}}" download><button ng-click="XMLcreated=false" class="btn btn-primary" type="button">Download XML</button></a>
+    </div>
+</div>
+
+<div class="row text-left" ng-show="auction.user_id == session.id && !hasStarted">
+    <br>
+    <div class="col-sm-8 col-sm-offset-2">
+        <button ng-click="begin()" class="btn btn-primary" type="button">Begin auction</button>
     </div>
 </div>
 

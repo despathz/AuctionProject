@@ -1,6 +1,9 @@
 package Auction_Project.AuctionProject.dto.auction;
 
 import java.util.Date;
+import java.util.List;
+
+import Auction_Project.AuctionProject.dto.category.CategoryResponse;
 
 public class AuctionDisplayResponse {
 	
@@ -16,6 +19,8 @@ public class AuctionDisplayResponse {
 	
 	private String creator; //for display
 	private long user_id; //for display
+	
+	private List<CategoryResponse> categories;
 	
 	public long getId() {
 		return id;
@@ -78,18 +83,12 @@ public class AuctionDisplayResponse {
 		this.user_id = user_id;
 	}
 	
-	public AuctionDisplayResponse(long id, String name, String description, float currently, float first_bid,
-			float buy_price, Date started, Date ends, String creator, long user_id) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.currently = currently;
-		this.first_bid = first_bid;
-		this.buy_price = buy_price;
-		this.started = started;
-		this.ends = ends;
-		this.creator = creator;
-		this.user_id = user_id;
+	public List<CategoryResponse> getCategories() {
+		return categories;
+	}
+	
+	public void setCategories(List<CategoryResponse> categories) {
+		this.categories = categories;
 	}
 	
 	public AuctionDisplayResponse() {

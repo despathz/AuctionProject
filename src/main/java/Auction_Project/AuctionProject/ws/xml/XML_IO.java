@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import Auction_Project.AuctionProject.dao.AuctionDAO;
+import Auction_Project.AuctionProject.dao.BidDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.ws.auction.Auction;
 import Auction_Project.AuctionProject.ws.category.Category;
@@ -24,6 +25,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ws/xml")
@@ -34,6 +36,9 @@ public class XML_IO {
 	
 	@Autowired
 	private AuctionDAO auctionDAO;
+	
+	@Autowired
+	private BidDAO bidDAO;
 	
 	@RequestMapping(value = "/produce/{auction_id}", method = RequestMethod.GET)
 	public String create(@PathVariable long auction_id) {
@@ -67,6 +72,16 @@ public class XML_IO {
 			rootElement.appendChild(nameElement);
 			nameElement.appendChild(doc.createTextNode(auction.getName()));
 			
+			List<Category> cat = auctionDAO.findCategories(auction_id);
+			
+			for (int i = 0; i < cat.size(); i++) {
+				if (cat.get(i).getId() == 1)
+					continue;
+				Element categoryElement = doc.createElement("Category");
+				rootElement.appendChild(categoryElement);
+				categoryElement.appendChild(doc.createTextNode(cat.get(i).getName()));
+			}
+			
 			//set currently
 			Element currentlyElement = doc.createElement("Currently");
 			rootElement.appendChild(currentlyElement);
@@ -83,14 +98,16 @@ public class XML_IO {
 			first_bidElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getFirst_bid())));
 			
 			//set number of bids
-			int bidNumber = 2;
+			long bidNumber = bidDAO.countByAuctionId(auction);
 			Element bidNumberElement = doc.createElement("Number_of_Bids");
 			rootElement.appendChild(bidNumberElement);
-			bidNumberElement.appendChild(doc.createTextNode(Integer.toString(bidNumber)));
+			bidNumberElement.appendChild(doc.createTextNode(Long.toString(bidNumber)));
 			
 			//set bids
-			Element bidElement = doc.createElement("Bids");
-			rootElement.appendChild(bidElement);
+			rootElement.appendChild(doc.createElement("Bids"));
+			if (bidNumber != 0) {
+				
+			}
 			
 			//set location
 			Element locationElement = doc.createElement("Location");
@@ -125,7 +142,7 @@ public class XML_IO {
 			Element sellerElement = doc.createElement("Seller");
 			rootElement.appendChild(sellerElement);
 			sellerElement.setAttribute("UserID", auction.getUser_seller_id().getUsername());
-			sellerElement.setAttribute("Rating", "1920");
+			sellerElement.setAttribute("Rating", Integer.toString(auction.getUser_seller_id().getSellerRating()));
 			
 			//set description
 			Element descElement = doc.createElement("Description");
@@ -146,7 +163,7 @@ public class XML_IO {
 	}
 	
 	@RequestMapping(value = "/load/{filename}", method = RequestMethod.GET)
-	 public void read(@PathVariable String filename) {
+	public void read(@PathVariable String filename) {
 
 	    try {
 

@@ -3,29 +3,35 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     $scope.bidAmount = "";
     $scope.bidConfirmMessage = false;
     $scope.XMLcreated = false;
-    var res = $http.get('/ws/auction/' + $stateParams.id);
-    res.success(function(response) {
+    $scope.hasStarted = false;
+    $http.get('/ws/auction/' + $stateParams.id).
+    success(function(response) {
         $scope.auction = response;
         $rootScope.title = $scope.auction.name;
         if (response.id == 0) {
             console.log('invalid auction id');
         }
-        var started = new Date(response.started);
-        $scope.startDate = started.getFullYear() + "-" + ('0' + (started.getMonth()+1)).slice(-2) + "-" + ('0' + started.getDate()).slice(-2);
-        $scope.startTime = ('0' + started.getHours()).slice(-2) + ":" + ('0' + started.getMinutes()).slice(-2) + ":" + ('0' + started.getSeconds()).slice(-2);
-        var ends = new Date(response.ends);
-        var today = new Date();
-        if (today > ends)
-            $scope.hasEnded = true;
-        else {
-            pollingFactory.callFnOnInterval(function () {
-                $scope.countDown = stopwatch.calc(ends);
-            }, 1);
+        if (response.started != null) {
+            var started = new Date(response.started);
+            $scope.startDate = started.getFullYear() + "-" + ('0' + (started.getMonth()+1)).slice(-2) + "-" + ('0' + started.getDate()).slice(-2);
+            $scope.startTime = ('0' + started.getHours()).slice(-2) + ":" + ('0' + started.getMinutes()).slice(-2) + ":" + ('0' + started.getSeconds()).slice(-2);
+            $scope.hasStarted = true;
+        }
+        if ($scope.hasStarted == true) {
+            var ends = new Date(response.ends);
+            var today = new Date();
+            if (today > ends)
+                $scope.hasEnded = true;
+            else {
+                pollingFactory.callFnOnInterval(function () {
+                    $scope.countDown = stopwatch.calc(ends);
+                }, 1);
+            }
         }
     });
     
-	var res2 = $http.get('/ws/image/get/' + $stateParams.id);
-    res2.success(function(response) {
+	$http.get('/ws/image/get/' + $stateParams.id).
+    success(function(response) {
         $scope.imgA = response[0];
         $scope.imgB = response[1];
         if ($scope.imgA === "" && $scope.imgB !== "") {
@@ -34,9 +40,8 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         }
     });
 	
-    $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
-    var res3 = $http.get($scope.servicePath);
-    res3.success(function(response) {
+    $http.get('/ws/bid/forAuction/' + $stateParams.id).
+    success(function(response) {
         var i;
         var today = new Date();
         for (i in response) {
@@ -103,13 +108,33 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         $state.go("app.profile", {id: user_id});
     };
     
+    $scope.begin = function() {
+        $http.get('/ws/auction/begin/' + $stateParams.id).
+        success(function(response) {
+            var started = new Date(response);
+            $scope.startDate = started.getFullYear() + "-" + ('0' + (started.getMonth()+1)).slice(-2) + "-" + ('0' + started.getDate()).slice(-2);
+            $scope.startTime = ('0' + started.getHours()).slice(-2) + ":" + ('0' + started.getMinutes()).slice(-2) + ":" + ('0' + started.getSeconds()).slice(-2);
+            $scope.hasStarted = true;
+            var ends = new Date($scope.auction.ends);
+            var today = new Date();
+            if (today > ends)
+                $scope.hasEnded = true;
+            else {
+                pollingFactory.callFnOnInterval(function () {
+                    $scope.countDown = stopwatch.calc(ends);
+                }, 1);
+            }
+        });
+    };
+    
 }]);
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
-	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", country: "", location: ""};
+	$scope.auction = {name: "", first_bid: "", description: "", country: "", location: ""};
 	$scope.tempDate = {selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	$scope.tempLL = {longitude: "", latitude: ""};
-	
+	$scope.buy_price = {amount: ""};
+    
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
     
     $scope.images = {imgA : "", imgB: ""};
@@ -173,7 +198,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		if ($scope.categoryList.length != 0)
 			$scope.categoryError = true;
 		
-		if (isNaN($scope.auction.first_bid) || isNaN($scope.auction.buy_price))
+		if (isNaN($scope.auction.first_bid) || isNaN($scope.buy_price.amount))
 			$scope.NumberError = true;
 		
 		if ($scope.tempLL.latitude.length != 0 && isNaN($scope.tempLL.latitude))
@@ -200,10 +225,14 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 				$scope.tempLL.latitude = 0;
 			if ($scope.tempLL.longitude.length == 0)
 				$scope.tempLL.longitude = 0;
+            
+            if ($scope.buy_price.amount.length == 0)
+                $scope.buy_price.amount = 0;
 			
 			$scope.auction.longitude = $scope.tempLL.longitude;
 			$scope.auction.latitude = $scope.tempLL.latitude;
 			$scope.auction.user_id = $rootScope.session.id;
+            $scope.auction.buy_price = $scope.buy_price.amount;
 			
 			$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
 			

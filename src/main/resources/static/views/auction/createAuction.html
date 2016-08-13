@@ -12,7 +12,7 @@
             </div>
             <div class="form-group col-sm-6">
                 <label for="buyPrice">Buy Price:</label>
-				<input type="text" class="form-control" ng-model="auction.buy_price" placeholder="$">
+				<input type="text" class="form-control" ng-model="buy_price.amount" placeholder="$">
             </div>
             <div class="form-group col-sm-6">
                 <label for="firstBid">First Bid:</label>
@@ -98,7 +98,7 @@
 	<div class="row">
         <button type="submit" class="btn btn-primary">Create auction</button>
     </div>
-	<div class="text-danger" ng-show="basicFieldsError">Please fill all the fields of the form</div>
+	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
 	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid and buy price field.</div>
 	<div class="text-danger" ng-show="LLError">Please give numeric values to the longitude and latitude field.</div>
 	<div class="text-danger" ng-show="DateError">The end date must be after start date!</div>
