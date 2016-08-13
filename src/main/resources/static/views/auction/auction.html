@@ -10,13 +10,14 @@
 
 <div class="row" ng-init="showImageA=true">
 	<div class="col-sm-4 col-sm-offset-2">
-		<img ng-show="showImageA" ng-src=".{{imgA}}" alt="auction photo" class="img-responsive"></img>
-		<img ng-hide="showImageA" ng-src=".{{imgB}}" alt="auction photo" class="img-responsive"></img>
-		<div class="col-sm-3 col-sm-offset-3">
-			<img ng-src=".{{imgA}}" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=true"></img>
+		<img ng-show="showImageA" ng-src="{{imgA}}" alt="auction photo" class="img-responsive"></img>
+		<img ng-hide="showImageA" ng-src="{{imgB}}" alt="auction photo" class="img-responsive"></img>
+        <br>
+		<div class="col-sm-3 col-sm-offset-3" ng-hide='imgB===""'>
+			<img ng-src="{{imgA}}" class="img-responsive bid-list" alt="auction imgA" style="cursor: pointer;" ng-click="showImageA=true"></img>
 		</div>
-		<div class="col-sm-3">
-			<img ng-src=".{{imgB}}" class="img-responsive bid-list" alt="auction img" style="cursor: pointer;" ng-click="showImageA=false"></img>
+		<div class="col-sm-3" ng-hide='imgB===""'>
+			<img ng-src="{{imgB}}" class="img-responsive bid-list" alt="auction imgB" style="cursor: pointer;" ng-click="showImageA=false"></img>
 		</div>
 	</div>
     <div class="col-sm-3 col-sm-offset-1">
@@ -54,6 +55,14 @@
     <div class="col-sm-8 col-sm-offset-2">
         <h4>By <a href="" ng-click="creatorProfile()" style="color: rgb(251, 130, 13)">{{auction.creator}}</a>, on {{startDate}} at {{startTime}}</h4>
         <h4 ng-hide="hasEnded">{{countDown}}</h4>
+    </div>
+</div>
+
+<div class="row text-left" ng-show="session.isAdmin">
+    <br>
+    <div class="col-sm-8 col-sm-offset-2">
+        <button ng-hide="XMLcreated" ng-click="getXML()" class="btn btn-primary" type="button">Create XML</button>
+        <a ng-show="XMLcreated" ng-href="{{xmlFile}}" download><button ng-click="XMLcreated=false" class="btn btn-primary" type="button">Download XML</button></a>
     </div>
 </div>
 

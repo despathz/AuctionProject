@@ -1,5 +1,7 @@
 package Auction_Project.AuctionProject.dao;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 import org.springframework.data.repository.CrudRepository;
 
@@ -10,5 +12,5 @@ import Auction_Project.AuctionProject.ws.image.AuctionImage;
 public interface ImageDAO extends CrudRepository<AuctionImage, Long>{
 	
 	public AuctionImage findById(long id);
-	public AuctionImage findByAuctionId(Auction auction);
+	public List<AuctionImage> findByAuctionId(Auction auction);
 }

@@ -36,7 +36,8 @@ public class XML_IO {
 	private AuctionDAO auctionDAO;
 	
 	@RequestMapping(value = "/produce/{auction_id}", method = RequestMethod.GET)
-	public void create(@PathVariable long auction_id) {
+	public String create(@PathVariable long auction_id) {
+		Auction auction = new Auction();
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -52,7 +53,7 @@ public class XML_IO {
 			monthMap.put(9, "Sep");	monthMap.put(10, "Oct");
 			monthMap.put(11, "Nov");	monthMap.put(12, "Dec");
 			
-			Auction auction = auctionDAO.findById(auction_id);
+			auction = auctionDAO.findById(auction_id);
 			
 			//root element
 			Element rootElement = doc.createElement("Item");
@@ -94,10 +95,12 @@ public class XML_IO {
 			//set location
 			Element locationElement = doc.createElement("Location");
 			rootElement.appendChild(locationElement);
+			locationElement.appendChild(doc.createTextNode(auction.getLocation()));
 			
 			//set country
 			Element countryElement = doc.createElement("Country");
 			rootElement.appendChild(countryElement);
+			countryElement.appendChild(doc.createTextNode(auction.getCountry()));
 			
 			//set start date
 			Element startElement = doc.createElement("Started");
@@ -133,12 +136,13 @@ public class XML_IO {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(auction.getName() + ".xml"));
+			StreamResult result = new StreamResult(new File("./src/main/resources/static/" + auction.getId() + ".xml"));
 			transformer.transform(source, result);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		return Long.toString(auction.getId());
 	}
 	
 	@RequestMapping(value = "/load/{filename}", method = RequestMethod.GET)

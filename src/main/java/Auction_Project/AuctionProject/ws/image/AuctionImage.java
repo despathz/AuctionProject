@@ -19,27 +19,19 @@ public class AuctionImage {
 	private long id;
 	
 	@Lob
-	private String imgA, imgB;
+	private String imgPath;
 	
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "auctionId")
 	private Auction auctionId;
-	
-	public String getImgA() {
-		return imgA;
+
+	public String getImgPath() {
+		return imgPath;
 	}
 
-	public void setImgA(String imgA) {
-		this.imgA = imgA;
-	}
-
-	public String getImgB() {
-		return imgB;
-	}
-
-	public void setImgB(String imgB) {
-		this.imgB = imgB;
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
 	}
 
 	public long getId() {

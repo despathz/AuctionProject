@@ -29,7 +29,7 @@ public class AuctionImageController {
 	private AuctionDAO auctionDAO;
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public boolean upload(@RequestBody saveImageResponse images) {
+	public boolean upload(@RequestBody saveImageResponse image) {
 		
 		try {
 			String[] parts;
@@ -37,13 +37,14 @@ public class AuctionImageController {
 			byte[] decoded;
 			FileOutputStream fos;
 			AuctionImage img = new AuctionImage();
-			long auction_id = images.getAuction();
+			long auction_id = image.getId();
+			boolean flag = false;
 			Auction auction = auctionDAO.findById(auction_id);
 			
 			img.setAuctionId(auction);
 			
-			if (!images.getImgA().equals("")) {
-				parts = images.getImgA().split(";base64,");
+			if (!image.getImgA().equals("")) {
+				parts = image.getImgA().split(";base64,");
 				fileType = parts[0];
 				data = parts[1];
 				fileType = fileType.replace("data:image/", "");
@@ -51,14 +52,20 @@ public class AuctionImageController {
 				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgA" + auction_id + "." + fileType);
 				fos.write(decoded);
 				fos.close();
-				img.setImgA("/img/auction_images/imgA" + auction_id + "." + fileType);
+				img.setImgPath("./img/auction_images/imgA" + auction_id + "." + fileType);
 			}
 			else {
-				img.setImgA("");
+				flag = true;
+				img.setImgPath("");
 			}
 			
-			if (!images.getImgB().equals("")) {
-				parts = images.getImgB().split(";base64,");
+			imageDAO.save(img);
+			
+			img = new AuctionImage();
+			img.setAuctionId(auction);
+			
+			if (!image.getImgB().equals("")) {
+				parts = image.getImgB().split(";base64,");
 				fileType = parts[0];
 				data = parts[1];
 				fileType = fileType.replace("data:image/", "");
@@ -66,10 +73,13 @@ public class AuctionImageController {
 				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgB" + auction_id + "." + fileType);
 				fos.write(decoded);
 				fos.close();
-				img.setImgB("/img/auction_images/imgB" + auction_id + "." + fileType);
+				img.setImgPath("./img/auction_images/imgB" + auction_id + "." + fileType);
 			}
 			else {
-				img.setImgB("");
+				if (flag == true)	//imgA is also emtpy
+					img.setImgPath("./img/auction_images/imgA0.jpg");
+				else
+				img.setImgPath("");
 			}
 			
 			imageDAO.save(img);
@@ -83,12 +93,13 @@ public class AuctionImageController {
 	@RequestMapping(value = "/get/{auction_id}", method = RequestMethod.GET)
 	public List<String> get(@PathVariable long auction_id) {
 		List<String> returnList = new ArrayList<String>();
-		System.out.println(auction_id);
 		try {
 			Auction auction = auctionDAO.findById(auction_id);
-			AuctionImage images = imageDAO.findByAuctionId(auction);
-			returnList.add(images.getImgA());
-			returnList.add(images.getImgB());
+			List<AuctionImage> images = imageDAO.findByAuctionId(auction);
+			for (int i = 0; i < images.size(); i++) {
+				AuctionImage img = images.get(i);
+				returnList.add(img.getImgPath());
+			}
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());

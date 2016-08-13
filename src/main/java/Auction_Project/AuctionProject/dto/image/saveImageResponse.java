@@ -4,7 +4,7 @@ public class saveImageResponse {
 	
 	String imgA, imgB;
 	
-	long auction;
+	long id;
 
 	public String getImgA() {
 		return imgA;
@@ -22,11 +22,11 @@ public class saveImageResponse {
 		this.imgB = imgB;
 	}
 
-	public long getAuction() {
-		return auction;
+	public long getId() {
+		return id;
 	}
 
-	public void setAuction(long auction) {
-		this.auction = auction;
+	public void setId(long id) {
+		this.id = id;
 	}
 }

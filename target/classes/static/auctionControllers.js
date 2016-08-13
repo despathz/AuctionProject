@@ -2,6 +2,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     $scope.hasEnded = false;
     $scope.bidAmount = "";
     $scope.bidConfirmMessage = false;
+    $scope.XMLcreated = false;
     var res = $http.get('/ws/auction/' + $stateParams.id);
     res.success(function(response) {
         $scope.auction = response;
@@ -27,7 +28,10 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     res2.success(function(response) {
         $scope.imgA = response[0];
         $scope.imgB = response[1];
-        console.log($scope.imgA + " " + $scope.imgB);
+        if ($scope.imgA === "" && $scope.imgB !== "") {
+            $scope.imgA = $scope.imgB;
+            $scope.imgB = "";
+        }
     });
 	
     $scope.servicePath = '/ws/bid/forAuction/' + $stateParams.id;
@@ -55,6 +59,14 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         }
         $scope.bidList = response;
     });
+    
+    $scope.getXML = function() {
+        var res = $http.get('/ws/xml/produce/' + $stateParams.id);
+        res.success(function(response) {
+            $scope.xmlFile = response + ".xml";
+            $scope.XMLcreated = true;
+        });
+    };
     
     $scope.creatorProfile = function() {
         $state.go("app.profile", {id: $scope.auction.user_id});
@@ -93,7 +105,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     
 }]);
 
-myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$sce', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $sce) {
+myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
 	$scope.auction = {name: "", first_bid: "", description: "", buy_price:"", country: "", location: ""};
 	$scope.tempDate = {selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	$scope.tempLL = {longitude: "", latitude: ""};
@@ -203,7 +215,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 					$scope.databaseError = true;
 				else {
 					$state.go('app.auction', {id: response});
-                    var res = $http.post('/ws/image/upload', {auction: response, imgA: $scope.images.imgA, imgB: $scope.images.imgB});
+                    var res = $http.post('/ws/image/upload', {id: response, imgA: $scope.images.imgA, imgB: $scope.images.imgB});
                     res.success(function(response) {
                         console.log("Images uploaded!");
                     });
