@@ -192,14 +192,19 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
 		$scope.NumberError = false;
+		$scope.NumberBPError = false;
 		$scope.LLError = false;
 		$scope.categoryError = false;
+		$scope.futureDateError = false;
 		
 		if ($scope.categoryList.length != 0)
 			$scope.categoryError = true;
 		
-		if (isNaN($scope.auction.first_bid) || isNaN($scope.buy_price.amount))
+		if (isNaN($scope.auction.first_bid))
 			$scope.NumberError = true;
+		if  (isNaN($scope.buy_price.amount))
+			$scope.NumberBPError = true;
+		
 		
 		if ($scope.tempLL.latitude.length != 0 && isNaN($scope.tempLL.latitude))
 			$scope.LLError = true;
@@ -220,7 +225,12 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			}
 		}
 		
-		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.LLError && !$scope.categoryError) {
+		$scope.checkDate = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+			
+		if ($scope.checkDate <= (new Date().getTime()))
+			$scope.futureDateError = true;
+		
+		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.NumberBPError && !$scope.LLError && !$scope.futureDateError && !$scope.categoryError) {
 			if ($scope.tempLL.latitude.length == 0)
 				$scope.tempLL.latitude = 0;
 			if ($scope.tempLL.longitude.length == 0)
@@ -234,7 +244,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			$scope.auction.user_id = $rootScope.session.id;
             $scope.auction.buy_price = $scope.buy_price.amount;
 			
-			$scope.auction.ends = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+			$scope.auction.ends = $scope.checkDate;
 			
 			$scope.auction.categoryList = $scope.categoryPathList;
 			

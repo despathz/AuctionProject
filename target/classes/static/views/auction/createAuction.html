@@ -1,13 +1,14 @@
 <div class="row" ng-hide="registerComplete">
     <div class="col-sm-8 col-sm-offset-2 text-left">
         <legend>Create a new auction</legend>
+		<h5><i style="color:rgb(251, 130, 13)">*</i> Please fill the required fields.</h5><br>
     </div>
 </div>
 <form role="form" ng-submit="submitAuction()">
     <div class="row">
         <div class="col-sm-3 col-sm-offset-2">
             <div class="form-group">
-                <label for="name">Title:</label>
+                <label for="name"><i style="color:rgb(251, 130, 13)">*</i> Title:</label>
                 <input type="text" class="form-control" ng-model="auction.name">
             </div>
             <div class="form-group col-sm-6">
@@ -15,39 +16,39 @@
 				<input type="text" class="form-control" ng-model="buy_price.amount" placeholder="$">
             </div>
             <div class="form-group col-sm-6">
-                <label for="firstBid">First Bid:</label>
+                <label for="firstBid"><i style="color:rgb(251, 130, 13)">*</i> First Bid:</label>
                 <input type="text" class="form-control" ng-model="auction.first_bid" placeholder="$">
             </div>
             <div class="form-group">
-                <label for="firstBid">Country:</label>
+                <label for="firstBid"><i style="color:rgb(251, 130, 13)">*</i> Country:</label>
                 <input type="text" class="form-control" ng-model="auction.country">
             </div>
         </div>
         <div class="col-sm-5">
             <div>
-				<label for="date">Ending date:</label><br>
+				<label for="date"><i style="color:rgb(251, 130, 13)">*</i> Ending date:</label><br>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectEYear" ng-options="n for n in [] | range:2016:2019"><option value="" disabled selected>Year</option></select>
+					<select class="form-control" ng-model="tempDate.selectEYear" ng-options="n for n in [] | range:2016:2019"><option value="" disabled selected> Year</option></select>
 				</div>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectEMonth" ng-options="x.month for x in months" ng-value="x.number"><option value="" disabled selected>Month</option></select>
+					<select class="form-control" ng-model="tempDate.selectEMonth" ng-options="x.month for x in months" ng-value="x.number"><option value="" disabled selected> Month</option></select>
 				</div>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectEDay" ng-options="n for n in [] | range:1:32"><option value="" disabled selected>Day</option></select>
+					<select class="form-control" ng-model="tempDate.selectEDay" ng-options="n for n in [] | range:1:32"><option value="" disabled selected> Day</option></select>
 				</div>
-				<label for="date">Ending time:</label><br>
+				<label for="date"><i style="color:rgb(251, 130, 13)">*</i> Ending time:</label><br>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectEHour" ng-options="n for n in [] | range:0:24"><option value="" disabled selected>Hour</option></select>
-				</div>
-				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectEMinute" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Min</option></select>
+					<select class="form-control" ng-model="tempDate.selectEHour" ng-options="n for n in [] | range:0:24"><option value="" disabled selected> Hour</option></select>
 				</div>
 				<div class="form-group col-sm-4">
-					<select class="form-control" ng-model="tempDate.selectESecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected>Sec</option></select>
+					<select class="form-control" ng-model="tempDate.selectEMinute" ng-options="n for n in [] | range:0:60"><option value="" disabled selected> Min</option></select>
+				</div>
+				<div class="form-group col-sm-4">
+					<select class="form-control" ng-model="tempDate.selectESecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected> Sec</option></select>
 				</div>
                 
 				<div class="form-group col-sm-4">
-                    <label>Location:</label>
+                    <label><i style="color:rgb(251, 130, 13)">*</i> Location:</label>
 					<input type="text" class="form-control" ng-model="auction.location">
 				</div>
 				<div class="form-group col-sm-4">
@@ -76,7 +77,7 @@
     <div class="row text-left">
         <div class="col-sm-8 col-sm-offset-2">
              <div class="form-group">
-                <label>Description:</label>
+                <label><i style="color:rgb(251, 130, 13)">*</i> Description:</label>
 				<textarea type="text" class="form-control" rows="5" ng-model="auction.description"></textarea>
             </div>
         </div>
@@ -84,7 +85,7 @@
     <br>
     <div class="row text-left">
         <div class="col-sm-8 col-sm-offset-2">
-            <label for="email">Select Categories:</label>
+            <label for="email"><i style="color:rgb(251, 130, 13)">*</i> Select Categories:</label>
             <span ng-repeat="c in categoryPathList">
                 /&nbsp;<a style="color:rgb(251, 130, 13)" href="" ng-click="findSubCat(c.name, c.id)">{{c.name}}</a>&nbsp;
             </span>
@@ -99,8 +100,9 @@
         <button type="submit" class="btn btn-primary">Create auction</button>
     </div>
 	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
-	<div class="text-danger" ng-show="NumberError">Please give numeric values to the first bid and buy price field.</div>
+	<div class="text-danger" ng-show="NumberError">Please give numeric value to the first bid field.</div>
+	<div class="text-danger" ng-show="NumberBPError">Please give numeric value to the buy price field.</div>
 	<div class="text-danger" ng-show="LLError">Please give numeric values to the longitude and latitude field.</div>
-	<div class="text-danger" ng-show="DateError">The end date must be after start date!</div>
+	<div class="text-danger" ng-show="futureDateError">The end date must be a future date!</div>
     <div class="text-danger" ng-show="categoryError">Please select all categories.</div>
 </form>
