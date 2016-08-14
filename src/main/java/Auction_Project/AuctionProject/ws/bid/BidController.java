@@ -1,15 +1,8 @@
 package Auction_Project.AuctionProject.ws.bid;
 
-
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.BidDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
-import Auction_Project.AuctionProject.dto.bid.BidListResponse;
+import Auction_Project.AuctionProject.dto.bid.BidResponse;
 import Auction_Project.AuctionProject.dto.bid.NewBidResponse;
 import Auction_Project.AuctionProject.ws.auction.Auction;
 import Auction_Project.AuctionProject.ws.user.User;
@@ -31,8 +24,10 @@ public class BidController {
 	
 	@Autowired
 	private BidDAO bidDAO;
+	
 	@Autowired
 	private UserDAO userDAO;
+	
 	@Autowired
 	private AuctionDAO auctionDAO;
 	
@@ -44,6 +39,8 @@ public class BidController {
 		try {
 			User user = userDAO.findById(input_bid.getBidder());
 			Auction auction = auctionDAO.findById(input_bid.getAuction());
+			auction.setCurrently(bid.getAmount());
+			auctionDAO.save(auction);
 			bid.setBidder(user);
 			bid.setAuctionId(auction);
 			bidDAO.save(bid);
@@ -56,24 +53,21 @@ public class BidController {
 	}
 	
 	@RequestMapping(value = "/forAuction/{auctionID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<BidListResponse> getBids(@PathVariable long auctionID) {
-		List<BidListResponse> responseList = new ArrayList<BidListResponse>();
-		List<Bid> bidList = new ArrayList<Bid>();
+	public BidResponse getBids(@PathVariable long auctionID) {
+		BidResponse responseBid = new BidResponse();
 		try {
 			Auction auction = auctionDAO.findById(auctionID);
-			Pageable top = new PageRequest(0, 1);
-			bidList = bidDAO.findByAuctionIdOrderByAmountDesc(auction, top);
-			for (Iterator<Bid> iterator = bidList.iterator(); iterator.hasNext();) {
-				Bid bid = iterator.next();
-				User user = bid.getBidder();
-				BidListResponse bidResponse = new BidListResponse(user.getId(), bid.getId(), user.getUsername(), bid.getBid_time(), bid.getAmount());
-				responseList.add(bidResponse);
-			}
+			Bid bid = bidDAO.findTopBidForAuction(auction);
+			responseBid.setAmount(bid.getAmount());
+			responseBid.setBid_id(bid.getId());
+			responseBid.setBid_time(bid.getBid_time());
+			responseBid.setBidder_id(bid.getBidder().getId());
+			responseBid.setBidder_username(bid.getBidder().getUsername());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
 		}
-		return responseList;
+		return responseBid;
 	}
 
 }

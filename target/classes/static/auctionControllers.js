@@ -42,27 +42,25 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 	
     $http.get('/ws/bid/forAuction/' + $stateParams.id).
     success(function(response) {
+        $scope.currentBid = response;
         var i;
         var today = new Date();
-        for (i in response) {
-            var sec = 0, min = 0, hour = 0;
-            sec = ~~((today - response[i].bid_time)/1000);
-            if (sec > 60) {
-                min = ~~(sec / 60);
-                sec = sec - 60 * min;
-                if (min > 60) {
-                    hour = ~~(min / 60);
-                    min = min - 60 * hour;
-                }
+        var sec = 0, min = 0, hour = 0;
+        sec = ~~((today - $scope.currentBid.bid_time)/1000);
+        if (sec > 60) {
+            min = ~~(sec / 60);
+            sec = sec - 60 * min;
+            if (min > 60) {
+                hour = ~~(min / 60);
+                min = min - 60 * hour;
             }
-            if (hour >= 1)
-                response[i].bid_time = hour + " hours ago";
-            else if (min >= 1)
-                response[i].bid_time = min + " minutes ago";
-            else if (sec >= 1)
-                response[i].bid_time = sec + " seconds ago";
         }
-        $scope.bidList = response;
+        if (hour >= 1)
+            $scope.currentBid.bid_time = hour + " hours ago";
+        else if (min >= 1)
+            $scope.currentBid.bid_time = min + " minutes ago";
+        else if (sec >= 1)
+            $scope.currentBid.bid_time = sec + " seconds ago";
     });
     
     $scope.getXML = function() {
@@ -79,12 +77,16 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     
     $scope.bid = function() {
         $scope.bidMsg = "";
-        if (!isNaN($scope.bidAmount))
-            $scope.bidConfirmMessage = true;
-        else {
+        if (isNaN($scope.bidAmount) || $scope.bidAmount.length == 0) {
             $scope.bidMsg = "Please type a valid amount of money";
             $scope.bidAmount = "";
         }
+        else if (!isNaN($scope.bidAmount) && parseFloat($scope.bidAmount) <= $scope.currentBid.amount) {
+            $scope.bidMsg = "Please bid more than the current bid amount";
+            $scope.bidAmount = "";
+        }
+        else
+            $scope.bidConfirmMessage = true;
     };
     
     $scope.confirmBid = function() {

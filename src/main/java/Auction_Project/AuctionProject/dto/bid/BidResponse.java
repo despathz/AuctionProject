@@ -2,7 +2,7 @@ package Auction_Project.AuctionProject.dto.bid;
 
 import java.util.Date;
 
-public class BidListResponse {
+public class BidResponse {
 	
 	private long bidder_id, bid_id;
 	
@@ -52,12 +52,5 @@ public class BidListResponse {
 		this.bid_id = bid_id;
 	}
 
-	public BidListResponse(long bidder_id, long bid_id, String bidder_username, Date bid_time, float amount) {
-		this.bidder_id = bidder_id;
-		this.bid_id = bid_id;
-		this.bidder_username = bidder_username;
-		this.bid_time = bid_time;
-		this.amount = amount;
-	}
-
 }
+

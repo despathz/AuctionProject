@@ -39,8 +39,8 @@
         </span>
         <legend class="text-left">Current bid:</legend>
         <div class="bid-list">
-            <ul style="list-style-type: none; margin: 0px; padding: 0px;" ng-repeat="bid in bidList">
-                <li><b>{{bid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: rgb(251, 130, 13)">{{bid.bidder_username}}</a> - {{bid.bid_time}}</li>
+            <ul style="list-style-type: none; margin: 0px; padding: 0px;">
+                <li><b>{{currentBid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: rgb(251, 130, 13)">{{currentBid.bidder_username}}</a> - {{currentBid.bid_time}}</li>
             </ul>
         </div>
         <br>
@@ -51,14 +51,13 @@
                 <button ng-hide="hasEnded || !hasStarted" class="btn btn-primary" type="button" ng-click="bid()">Bid</button>
                 <button ng-show="hasEnded || !hasStarted" class="btn btn-primary" type="button" disabled="disabled">Bid</button>
             </span>
-            <div ng-show="bidConfirmMessage">
-                <h4>Are you sure that you want make a bid of {{bidAmount}}$ for this auction?</h4>
-                <br>
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" ng-click="confirmBid()">Yes</button>
-                    <button class="btn btn-danger" type="button" ng-click="cancelBid()">No</button>
-                </span>
-            </div>
+        </div>
+        <div ng-show="bidConfirmMessage">
+            <h4>Are you sure that you want make a bid of {{bidAmount}}$ for this auction?</h4>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" ng-click="confirmBid()">Yes</button>
+                <button class="btn btn-danger" type="button" ng-click="cancelBid()">No</button>
+            </span>
         </div>
         <br>
         <b ng-show="hasEnded">This auction is over.</b>

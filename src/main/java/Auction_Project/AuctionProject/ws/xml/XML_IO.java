@@ -19,6 +19,7 @@ import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.BidDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.ws.auction.Auction;
+import Auction_Project.AuctionProject.ws.bid.Bid;
 import Auction_Project.AuctionProject.ws.category.Category;
 
 import org.w3c.dom.Node;
@@ -50,6 +51,7 @@ public class XML_IO {
 			
 			String day, t, year;
 			String parts[];
+			int month;
 			HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 			monthMap.put(1, "Jan");	monthMap.put(2, "Feb");
 			monthMap.put(3, "Mar");	monthMap.put(4, "Apr");
@@ -88,9 +90,11 @@ public class XML_IO {
 			currentlyElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getCurrently())));
 			
 			//set buy price
-			Element buypriceElement = doc.createElement("Buy_Price");
-			rootElement.appendChild(buypriceElement);
-			buypriceElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getBuy_price())));
+			if (auction.getBuy_price() != 0) {
+				Element buypriceElement = doc.createElement("Buy_Price");
+				rootElement.appendChild(buypriceElement);
+				buypriceElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getBuy_price())));
+			}
 			
 			//set first_bid
 			Element first_bidElement = doc.createElement("First_Bid");
@@ -104,15 +108,55 @@ public class XML_IO {
 			bidNumberElement.appendChild(doc.createTextNode(Long.toString(bidNumber)));
 			
 			//set bids
-			rootElement.appendChild(doc.createElement("Bids"));
-			if (bidNumber != 0) {
+			Element bidsElement = doc.createElement("Bids");
+			rootElement.appendChild(bidsElement);
+			
+			//set bid
+			List<Bid> bidList = bidDAO.findByAuctionIdOrderByAmountAsc(auction);
+			for (int i = 0; i < bidList.size(); i++) {
+				Element bidElement = doc.createElement("Bid");
+				bidsElement.appendChild(bidElement);
+				Element bidderElement = doc.createElement("Bidder");
+				bidElement.appendChild(bidderElement);
+				bidderElement.setAttribute("UserID", bidList.get(i).getBidder().getUsername());
+				bidderElement.setAttribute("Rating", Integer.toString(bidList.get(i).getBidder().getBidderRating()));
+				Element bidderLocationElement = doc.createElement("Location");
+				bidderElement.appendChild(bidderLocationElement);
+				bidderLocationElement.appendChild(doc.createTextNode(bidList.get(i).getBidder().getLocation()));
+				Element bidderCountryElement = doc.createElement("Country");
+				bidderElement.appendChild(bidderCountryElement);
+				bidderCountryElement.appendChild(doc.createTextNode(bidList.get(i).getBidder().getCountry()));
+				Element bidTimeElement = doc.createElement("Time");
+				bidElement.appendChild(bidTimeElement);
 				
+				String bidTime = auction.getStarted().toString();
+				parts = bidTime.split("-");
+				year = parts[0].substring(2, 4);
+				month = Integer.parseInt(parts[1]);
+				parts = parts[2].split(" ");
+				day = parts[0];
+				t = parts[1].replace(".", " ");
+				parts = t.split(" ");
+				t = parts[0];
+				bidTime = monthMap.get(month) + "-" + day + "-" + year + " " + t;
+				bidTimeElement.appendChild(doc.createTextNode(bidTime));
+				
+				Element amountElement = doc.createElement("Amount");
+				bidElement.appendChild(amountElement);
+				amountElement.appendChild(doc.createTextNode(Float.toString(bidList.get(i).getAmount())));
 			}
 			
 			//set location
 			Element locationElement = doc.createElement("Location");
 			rootElement.appendChild(locationElement);
 			locationElement.appendChild(doc.createTextNode(auction.getLocation()));
+			
+			String latitude = auction.getLatitude();
+			String longitude = auction.getLongitude();
+			if (!longitude.equals("0"))
+				locationElement.setAttribute("Longitude", longitude);
+			if (!latitude.equals("0"))
+				locationElement.setAttribute("Latitude", latitude);
 			
 			//set country
 			Element countryElement = doc.createElement("Country");
@@ -122,6 +166,18 @@ public class XML_IO {
 			//set start date
 			Element startElement = doc.createElement("Started");
 			rootElement.appendChild(startElement);
+			String started = auction.getStarted().toString();
+			parts = started.split("-");
+			year = parts[0].substring(2, 4);
+			month = Integer.parseInt(parts[1]);
+			parts = parts[2].split(" ");
+			day = parts[0];
+			t = parts[1].replace(".", " ");
+			parts = t.split(" ");
+			t = parts[0];
+			started = monthMap.get(month) + "-" + day + "-" + year + " " + t;
+			startElement.appendChild(doc.createTextNode(started));
+			
 			
 			//set end date
 			Element endElement = doc.createElement("Ends");
@@ -129,7 +185,7 @@ public class XML_IO {
 			String ends = auction.getEnds().toString();
 			parts = ends.split("-");
 			year = parts[0].substring(2, 4);
-			int month = Integer.parseInt(parts[1]);
+			month = Integer.parseInt(parts[1]);
 			parts = parts[2].split(" ");
 			day = parts[0];
 			t = parts[1].replace(".", " ");
