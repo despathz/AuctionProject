@@ -189,23 +189,27 @@ public class XML_IO {
 //	            System.out.println("Name : " + eElement.getElementsByTagName("Name").item(0).getTextContent());
 	            
 	            
-	            String cat = (String)eElement.getElementsByTagName("Category").item(0).getTextContent();
-	            if (categoryDAO.countByName(cat) == 0) {
+	            String catName = (String)eElement.getElementsByTagName("Category").item(0).getTextContent();
+	            Category parent = categoryDAO.findById(1);
+	            if (categoryDAO.countByNameAndParent(catName, parent) == 0) {
 	            	Category category = new Category();
-	            	category.setName(cat);
-	            	Category parent = categoryDAO.findById(1);
+	            	category.setName(catName);
 	            	category.setParent(parent);
-	            	categoryDAO.save(category);
+	            	parent = categoryDAO.save(category);
 	            }
+	            else
+	            	parent = categoryDAO.findByNameAndParent(catName, parent);
+	            
 	            for (int j = 1; j < eElement.getElementsByTagName("Category").getLength(); j++) {
-	            	cat = (String)eElement.getElementsByTagName("Category").item(j).getTextContent();
-		            if (categoryDAO.countByName(cat) == 0) {
+	            	catName = (String)eElement.getElementsByTagName("Category").item(j).getTextContent();
+		            if (categoryDAO.countByNameAndParent(catName, parent) == 0) {
 		            	Category category = new Category();
-		            	category.setName(cat);
-		            	Category parent = categoryDAO.findByName(eElement.getElementsByTagName("Category").item(j-1).getTextContent());
+		            	category.setName(catName);
 		            	category.setParent(parent);
-		            	categoryDAO.save(category);
+		            	parent = categoryDAO.save(category);
 		            }
+		            else
+		            	parent = categoryDAO.findByNameAndParent(catName, parent);
 	            }
 	            
 //	            System.out.println("Currently : " + eElement.getElementsByTagName("Currently").item(0).getTextContent());

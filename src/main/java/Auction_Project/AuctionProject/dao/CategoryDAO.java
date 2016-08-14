@@ -11,8 +11,8 @@ import Auction_Project.AuctionProject.ws.category.Category;
 @Transactional
 public interface CategoryDAO extends CrudRepository<Category, Long>{
 
-	public Long countByName(String name);
+	public Long countByNameAndParent(String name, Category parent);
 	public Category findById(long id);
-	public Category findByName(String name);
 	public List<Category>findByParent(Category parent);
+	public Category findByNameAndParent(String name, Category parent);
 }

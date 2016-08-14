@@ -248,15 +248,15 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			
 			$scope.auction.categoryList = $scope.categoryPathList;
 			
-			var res = $http.post('/ws/auction/createAuction', $scope.auction);
-			res.success(function(response) {
+			$http.post('/ws/auction/createAuction', $scope.auction).
+			success(function(response) {
 				if (response == -1) 
 					$scope.databaseError = true;
 				else {
-					$state.go('app.auction', {id: response});
-                    var res = $http.post('/ws/image/upload', {id: response, imgA: $scope.images.imgA, imgB: $scope.images.imgB});
-                    res.success(function(response) {
-                        console.log("Images uploaded!");
+                    $scope.auction.id = response;
+                    $http.post('/ws/image/upload', {id: $scope.auction.id, imgA: $scope.images.imgA, imgB: $scope.images.imgB}).
+                    success(function(response) {
+                        $state.go('app.auction', {id: $scope.auction.id});
                     });
 				}
 			});
