@@ -18,14 +18,14 @@
 <br>
 <div class="row" ng-init="showImageA=true">
 	<div class="col-sm-4 col-sm-offset-2">
-		<img ng-show="showImageA" ng-src="{{imgA}}" alt="auction photo" class="img-responsive"></img>
-		<img ng-hide="showImageA" ng-src="{{imgB}}" alt="auction photo" class="img-responsive"></img>
+		<img ng-show="showImageA" ng-src="{{imgA}}" alt="auction photo" class="img-responsive">
+		<img ng-hide="showImageA" ng-src="{{imgB}}" alt="auction photo" class="img-responsive">
         <br>
 		<div class="col-sm-3 col-sm-offset-3" ng-hide='imgB===""'>
-			<img ng-src="{{imgA}}" class="img-responsive bid-list" alt="auction imgA" style="cursor: pointer;" ng-click="showImageA=true"></img>
+			<img ng-src="{{imgA}}" class="img-responsive bid-list" alt="auction imgA" style="cursor: pointer;" ng-click="showImageA=true">
 		</div>
 		<div class="col-sm-3" ng-hide='imgB===""'>
-			<img ng-src="{{imgB}}" class="img-responsive bid-list" alt="auction imgB" style="cursor: pointer;" ng-click="showImageA=false"></img>
+			<img ng-src="{{imgB}}" class="img-responsive bid-list" alt="auction imgB" style="cursor: pointer;" ng-click="showImageA=false">
 		</div>
 	</div>
     <div class="col-sm-3 col-sm-offset-1">
@@ -92,19 +92,25 @@
 <div class="row text-left">
     <div class="col-sm-8 col-sm-offset-2">
         <h3>Item information</h3>
-        <ul class="nav nav-tabs" ng-init="currentTab='desc'">
+        <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" ng-click = "currentTab='desc'" href="">Description</a></li>
             <li><a data-toggle="tab" ng-click = "currentTab='location'" href="">Location</a></li>
         </ul>
 
         <div class="tab-content">
-            <div ng-show="currentTab==='desc'" class="tab-pane fade in active">
+            <div ng-if="currentTab==='desc'" class="tab-pane fade in active">
                 <br>
                 <p>{{auction.description}}</p>
             </div>
-            <div ng-show="currentTab==='location'" class="tab-pane fade in active">
+            <div ng-if="currentTab==='location'" class="tab-pane fade in active">
                 <br>
-                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <ng-map center="37.9307562,23.6916493" zoom="15">
+                            <marker position="37.9307562, 23.6916493" centered="true"></marker>
+                        </ng-map>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

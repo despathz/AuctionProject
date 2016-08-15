@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['ui.router', 'ngResource', 'ngCookies']);
+var myApp = angular.module('myApp', ['ui.router', 'ngResource', 'ngCookies', 'ngMap']);
 
 myApp.config(function ($stateProvider) {
 
@@ -154,6 +154,16 @@ myApp.config(function ($stateProvider) {
         params: {
             title: 'Create Auction',
             requireLogin: 1
+        }
+    })
+    
+    .state('app.listingAuction', {
+        url: '/search',
+        templateUrl: './views/auction/listing.html',
+        controller: 'AuctionListCtrl',
+        params: {
+            title: 'Results',
+            requireLogin: 2
         }
     })
 

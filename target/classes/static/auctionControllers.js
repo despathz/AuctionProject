@@ -1,4 +1,5 @@
 myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', 'stopwatch', 'pollingFactory', function($rootScope, $scope, $state, $stateParams, $http, $cookies, stopwatch, pollingFactory) {
+    $scope.currentTab = "desc";
     $scope.hasEnded = false;
     $scope.bidAmount = "";
     $scope.bidConfirmMessage = false;
@@ -266,6 +267,10 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 	};
 	
 }]);
+
+myApp.controller('AuctionListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+}]);
+
 
 myApp.filter('range', function() {
 	return function(input, min, max) {
