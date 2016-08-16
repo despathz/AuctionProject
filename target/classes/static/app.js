@@ -196,6 +196,7 @@ myApp.factory("stopwatch", [function () {
     function calc(ends) {
         var today = new Date();
         var sec = 0, min = 0, hour = 0, day = 0;
+		var str = "Ends in ";
         sec = ~~((ends - today)/1000);
         if (sec > 60) {
             min = ~~(sec / 60);
@@ -209,7 +210,32 @@ myApp.factory("stopwatch", [function () {
                 hour = hour - 24 * day;
             }
         }
-        return "Ends in " + day + " days, " + hour + " hours, " + min + " minutes and " + sec + " seconds";
+		if (day > 0) {
+			str = str + day + " days, ";
+			str = str + hour + " hours, ";
+			str = str + min + " minutes and ";
+			str = str + sec + " seconds";
+		}
+		else {
+			if (hour > 0) {
+				str = str + hour + " hours, ";
+				str = str + min + " minutes and ";
+				str = str + sec + " seconds";
+			}
+			else {
+				if (min > 0) {
+					str = str + min + " minutes and ";
+					str = str + sec + " seconds";
+				}
+				else {
+					if (sec > 0)
+						str = str + sec + " seconds";
+					else
+						str = "";
+				}
+			}
+		}
+        return str;
     }
     
     return {

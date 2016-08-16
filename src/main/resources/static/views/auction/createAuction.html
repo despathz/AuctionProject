@@ -11,13 +11,13 @@
                 <label for="name"><i style="color:rgb(251, 130, 13)">*</i> Title:</label>
                 <input type="text" class="form-control" ng-model="auction.name">
             </div>
+			<div class="form-group col-sm-6">
+                <label for="firstBid"><i style="color:rgb(251, 130, 13)">*</i> First Bid:</label>
+                <input type="text" class="form-control" ng-model="auction.first_bid" placeholder="$">
+            </div>
             <div class="form-group col-sm-6">
                 <label for="buyPrice">Buy Price:</label>
 				<input type="text" class="form-control" ng-model="buy_price.amount" placeholder="$">
-            </div>
-            <div class="form-group col-sm-6">
-                <label for="firstBid"><i style="color:rgb(251, 130, 13)">*</i> First Bid:</label>
-                <input type="text" class="form-control" ng-model="auction.first_bid" placeholder="$">
             </div>
             <div class="form-group">
                 <label for="firstBid"><i style="color:rgb(251, 130, 13)">*</i> Country:</label>
@@ -47,17 +47,9 @@
 					<select class="form-control" ng-model="tempDate.selectESecond" ng-options="n for n in [] | range:0:60"><option value="" disabled selected> Sec</option></select>
 				</div>
                 
-				<div class="form-group col-sm-4">
+				<div class="form-group col-sm-12">
                     <label><i style="color:rgb(251, 130, 13)">*</i> Location:</label>
 					<input type="text" class="form-control" ng-model="auction.location">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>Longitude:</label>
-					<input type="text" class="form-control" ng-model="tempLL.longitude">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>Latitude:</label>
-					<input type="text" class="form-control" ng-model="tempLL.latitude">
 				</div>
             </div>
         </div>
@@ -72,6 +64,13 @@
                 <h5>You can upload up to <b>2</b> images.</h5>
             </div>
         </div>
+		<div class="col-sm-5">
+			<label>Map Location:</label>
+			<ng-map center="{{coord}}" zoom="2" on-dragend="dragMap()" on-zoom_changed="dragMap()">
+				<marker draggable="true" position="{{coord}}" on-dragend="dragMarker()"></marker>
+			</ng-map>
+			<p>Drag the marker to the location of the item. (optional)</p>
+		</div>
     </div>
     <br>
     <div class="row text-left">
@@ -102,7 +101,6 @@
 	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
 	<div class="text-danger" ng-show="NumberError">Please give numeric value to the first bid field.</div>
 	<div class="text-danger" ng-show="NumberBPError">Please give numeric value to the buy price field.</div>
-	<div class="text-danger" ng-show="LLError">Please give numeric values to the longitude and latitude field.</div>
 	<div class="text-danger" ng-show="futureDateError">The end date must be a future date!</div>
     <div class="text-danger" ng-show="categoryError">Please select all categories.</div>
 </form>

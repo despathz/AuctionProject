@@ -66,6 +66,10 @@ public class AuctionController {
 			auctionResponse.setEnds(auction.getEnds());
 			auctionResponse.setCreator(user.getUsername());
 			auctionResponse.setUser_id(user.getId());
+			auctionResponse.setCountry(auction.getCountry());
+			auctionResponse.setLocation(auction.getLocation());
+			auctionResponse.setLongitude(auction.getLongitude());
+			auctionResponse.setLatitude(auction.getLatitude());
 			
 			List<Category> cat = auctionDAO.findCategories(auctionID);
 			List<CategoryResponse> reCat = new ArrayList<CategoryResponse>();

@@ -5,10 +5,43 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     $scope.bidConfirmMessage = false;
     $scope.XMLcreated = false;
     $scope.hasStarted = false;
+	$scope.noBid = false;
     $http.get('/ws/auction/' + $stateParams.id).
     success(function(response) {
         $scope.auction = response;
+		
+		$http.get('/ws/bid/forAuction/' + $stateParams.id).
+		success(function(response) {
+			$scope.currentBid = response;
+			if ($scope.currentBid.amount == 0) 
+				$scope.noBid = true;
+			
+			var i;
+			var today = new Date();
+			var sec = 0, min = 0, hour = 0;
+			sec = ~~((today - $scope.currentBid.bid_time)/1000);
+			if (sec > 60) {
+				min = ~~(sec / 60);
+				sec = sec - 60 * min;
+				if (min > 60) {
+					hour = ~~(min / 60);
+					min = min - 60 * hour;
+				}
+			}
+			if (hour >= 24)
+				$scope.currentBid.bid_time = ~~(hour/24) + "days ago";
+			else if (hour >= 1)
+				$scope.currentBid.bid_time = hour + " hours ago";
+			else if (min >= 1)
+				$scope.currentBid.bid_time = min + " minutes ago";
+			else if (sec >= 1)
+				$scope.currentBid.bid_time = sec + " seconds ago";
+			else
+				$scope.currentBid.bid_time = "a moment ago";
+		});
+		
         $rootScope.title = $scope.auction.name;
+		$scope.coord = [parseFloat($scope.auction.latitude), parseFloat($scope.auction.longitude)];
         if (response.id == 0) {
             console.log('invalid auction id');
         }
@@ -24,8 +57,13 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
             if (today > ends)
                 $scope.hasEnded = true;
             else {
+				$scope.countDown = "-1";
                 pollingFactory.callFnOnInterval(function () {
-                    $scope.countDown = stopwatch.calc(ends);
+					console.log("hey");
+					if ($scope.countDown !== "")
+						 $scope.countDown = stopwatch.calc(ends);
+					else
+						$scope.hasEnded = true;
                 }, 1);
             }
         }
@@ -39,29 +77,6 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
             $scope.imgA = $scope.imgB;
             $scope.imgB = "";
         }
-    });
-	
-    $http.get('/ws/bid/forAuction/' + $stateParams.id).
-    success(function(response) {
-        $scope.currentBid = response;
-        var i;
-        var today = new Date();
-        var sec = 0, min = 0, hour = 0;
-        sec = ~~((today - $scope.currentBid.bid_time)/1000);
-        if (sec > 60) {
-            min = ~~(sec / 60);
-            sec = sec - 60 * min;
-            if (min > 60) {
-                hour = ~~(min / 60);
-                min = min - 60 * hour;
-            }
-        }
-        if (hour >= 1)
-            $scope.currentBid.bid_time = hour + " hours ago";
-        else if (min >= 1)
-            $scope.currentBid.bid_time = min + " minutes ago";
-        else if (sec >= 1)
-            $scope.currentBid.bid_time = sec + " seconds ago";
     });
     
     $scope.getXML = function() {
@@ -82,10 +97,14 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
             $scope.bidMsg = "Please type a valid amount of money";
             $scope.bidAmount = "";
         }
-        else if (!isNaN($scope.bidAmount) && parseFloat($scope.bidAmount) <= $scope.currentBid.amount) {
+        else if (!$scope.noBid && !isNaN($scope.bidAmount) && parseFloat($scope.bidAmount) <= $scope.currentBid.amount) {
             $scope.bidMsg = "Please bid more than the current bid amount";
             $scope.bidAmount = "";
         }
+		else if ($scope.noBid && !isNaN($scope.bidAmount) && parseFloat($scope.bidAmount) <= $scope.auction.first_bid) {
+			$scope.bidMsg = "Please bid more than the current bid amount";
+            $scope.bidAmount = "";
+		}
         else
             $scope.bidConfirmMessage = true;
     };
@@ -123,8 +142,12 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
             if (today > ends)
                 $scope.hasEnded = true;
             else {
+                $scope.countDown = "-1";
                 pollingFactory.callFnOnInterval(function () {
-                    $scope.countDown = stopwatch.calc(ends);
+					if ($scope.countDown !== "")
+						 $scope.countDown = stopwatch.calc(ends);
+					else 
+						$scope.hasEnded = true;
                 }, 1);
             }
         });
@@ -135,7 +158,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
 	$scope.auction = {name: "", first_bid: "", description: "", country: "", location: ""};
 	$scope.tempDate = {selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
-	$scope.tempLL = {longitude: "", latitude: ""};
+	$scope.coord = [41, 5.6];
 	$scope.buy_price = {amount: ""};
     
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
@@ -191,12 +214,19 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
         r.readAsDataURL(f.files[0]);
     };
     
+	$scope.dragMarker = function() {
+		$scope.coord = [this.getPosition().lat(), this.getPosition().lng()];
+	};
+
+	$scope.dragMap = function() {
+		$scope.coord = [this.getCenter().lat(), this.getCenter().lng()];
+	};
+	
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
 		$scope.NumberError = false;
 		$scope.NumberBPError = false;
-		$scope.LLError = false;
 		$scope.categoryError = false;
 		$scope.futureDateError = false;
 		
@@ -207,12 +237,6 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			$scope.NumberError = true;
 		if  (isNaN($scope.buy_price.amount))
 			$scope.NumberBPError = true;
-		
-		
-		if ($scope.tempLL.latitude.length != 0 && isNaN($scope.tempLL.latitude))
-			$scope.LLError = true;
-		if ($scope.tempLL.longitude.length != 0 && isNaN($scope.tempLL.longitude))
-			$scope.LLError = true;
 		
 		for (var field in $scope.auction) {
 			if ($scope.auction[field].length == 0) {
@@ -233,17 +257,18 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		if ($scope.checkDate <= (new Date().getTime()))
 			$scope.futureDateError = true;
 		
-		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.NumberBPError && !$scope.LLError && !$scope.futureDateError && !$scope.categoryError) {
-			if ($scope.tempLL.latitude.length == 0)
-				$scope.tempLL.latitude = 0;
-			if ($scope.tempLL.longitude.length == 0)
-				$scope.tempLL.longitude = 0;
+		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.NumberBPError && !$scope.futureDateError && !$scope.categoryError) {
             
             if ($scope.buy_price.amount.length == 0)
                 $scope.buy_price.amount = 0;
 			
-			$scope.auction.longitude = $scope.tempLL.longitude;
-			$scope.auction.latitude = $scope.tempLL.latitude;
+			if ($scope.coord[0] == 41 && $scope.coord[1] == 5.6) {
+				$scope.coord[0] = 0;
+				$scope.coord[1] = 0;
+			}
+			
+			$scope.auction.longitude = $scope.coord[1];
+			$scope.auction.latitude = $scope.coord[0];
 			$scope.auction.user_id = $rootScope.session.id;
             $scope.auction.buy_price = $scope.buy_price.amount;
 			

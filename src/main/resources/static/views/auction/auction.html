@@ -40,7 +40,8 @@
         <legend class="text-left">Current bid:</legend>
         <div class="bid-list">
             <ul style="list-style-type: none; margin: 0px; padding: 0px;">
-                <li><b>{{currentBid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: rgb(251, 130, 13)">{{currentBid.bidder_username}}</a> - {{currentBid.bid_time}}</li>
+                <li ng-hide="noBid"><b>{{currentBid.amount}}$</b> by <a href="" ng-click="bidderProfile(bid.bidder_id)" style="color: rgb(251, 130, 13)">{{currentBid.bidder_username}}</a> - {{currentBid.bid_time}}</li>
+				<li ng-show="noBid"><b>{{auction.first_bid}}$</b> by creator as initial bid</li>
             </ul>
         </div>
         <br>
@@ -105,9 +106,15 @@
             <div ng-if="currentTab==='location'" class="tab-pane fade in active">
                 <br>
                 <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3">
-                        <ng-map center="37.9307562,23.6916493" zoom="15">
-                            <marker position="37.9307562, 23.6916493" centered="true"></marker>
+					<div class="col-sm-5">
+						<ul style="list-style:none; padding:0; margin:0">
+							<li style="margin:10px"><b>Location:</b> {{auction.location}}</li>
+							<li style="margin:10px"><b>Country:</b> {{auction.country}}</li>
+						</ul>
+					</div>
+                    <div class="col-sm-7" ng-if="auction.latitude!=='0' && auction.longitude!=='0'">
+                        <ng-map center="{{coord}}" zoom="15">
+                            <marker position="{{coord}}" centered="true"></marker>
                         </ng-map>
                     </div>
                 </div>

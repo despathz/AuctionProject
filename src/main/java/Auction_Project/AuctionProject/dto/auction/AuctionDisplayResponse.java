@@ -11,6 +11,8 @@ public class AuctionDisplayResponse {
 	
 	private String name, description;
 	
+	private String latitude, longitude, location, country;
+	
 	private float currently, first_bid;
 	
 	private float buy_price;
@@ -98,5 +100,30 @@ public class AuctionDisplayResponse {
 	public AuctionDisplayResponse(long id) {
 		this.id = id;
 	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
+	
 }
