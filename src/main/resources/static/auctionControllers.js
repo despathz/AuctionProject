@@ -1,4 +1,4 @@
-myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', 'stopwatch', 'pollingFactory', function($rootScope, $scope, $state, $stateParams, $http, $cookies, stopwatch, pollingFactory) {
+myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$interval', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $interval) {
     $scope.currentTab = "desc";
     $scope.hasEnded = false;
     $scope.bidAmount = "";
@@ -6,6 +6,60 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     $scope.XMLcreated = false;
     $scope.hasStarted = false;
 	$scope.noBid = false;
+    
+    $scope.countDownFun = function() {
+        console.log("hey");
+        var ends = new Date($scope.auction.ends);
+        var today = new Date();
+        var sec = 0, min = 0, hour = 0, day = 0;
+		var str = "Ends in ";
+        sec = ~~((ends - today)/1000);
+        if (sec > 60) {
+            min = ~~(sec / 60);
+            sec = sec - 60 * min;
+            if (min > 60) {
+                hour = ~~(min / 60);
+                min = min - 60 * hour;
+            }
+            if (hour > 24) {
+                day = ~~(hour / 24);
+                hour = hour - 24 * day;
+            }
+        }
+		if (day > 0) {
+			str = str + day + " days, ";
+			str = str + hour + " hours, ";
+			str = str + min + " minutes and ";
+			str = str + sec + " seconds";
+		}
+		else {
+			if (hour > 0) {
+				str = str + hour + " hours, ";
+				str = str + min + " minutes and ";
+				str = str + sec + " seconds";
+			}
+			else {
+				if (min > 0) {
+					str = str + min + " minutes and ";
+					str = str + sec + " seconds";
+				}
+				else {
+					if (sec > 0)
+						str = str + sec + " seconds";
+					else
+						str = "";
+				}
+			}
+		}
+        $scope.countDown = str;
+        if ($scope.countDown === "") {
+            $interval.cancel($rootScope.promise);
+            $scope.hasEnded = true;
+            $rootScope.promise = undefined;
+        }
+    };
+    
+    
     $http.get('/ws/auction/' + $stateParams.id).
     success(function(response) {
         $scope.auction = response;
@@ -29,7 +83,7 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 				}
 			}
 			if (hour >= 24)
-				$scope.currentBid.bid_time = ~~(hour/24) + "days ago";
+				$scope.currentBid.bid_time = ~~(hour/24) + " days ago";
 			else if (hour >= 1)
 				$scope.currentBid.bid_time = hour + " hours ago";
 			else if (min >= 1)
@@ -52,20 +106,10 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
             $scope.hasStarted = true;
         }
         if ($scope.hasStarted == true) {
-            var ends = new Date(response.ends);
-            var today = new Date();
-            if (today > ends)
+            if (new Date() > new Date($scope.auction.ends))
                 $scope.hasEnded = true;
-            else {
-				$scope.countDown = "-1";
-                pollingFactory.callFnOnInterval(function () {
-					console.log("hey");
-					if ($scope.countDown !== "")
-						 $scope.countDown = stopwatch.calc(ends);
-					else
-						$scope.hasEnded = true;
-                }, 1);
-            }
+            else 
+                $rootScope.promise = $interval($scope.countDownFun, 1000);
         }
     });
     
@@ -137,19 +181,10 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
             $scope.startDate = started.getFullYear() + "-" + ('0' + (started.getMonth()+1)).slice(-2) + "-" + ('0' + started.getDate()).slice(-2);
             $scope.startTime = ('0' + started.getHours()).slice(-2) + ":" + ('0' + started.getMinutes()).slice(-2) + ":" + ('0' + started.getSeconds()).slice(-2);
             $scope.hasStarted = true;
-            var ends = new Date($scope.auction.ends);
-            var today = new Date();
-            if (today > ends)
+            if (new Date() > new Date($scope.auction.ends))
                 $scope.hasEnded = true;
-            else {
-                $scope.countDown = "-1";
-                pollingFactory.callFnOnInterval(function () {
-					if ($scope.countDown !== "")
-						 $scope.countDown = stopwatch.calc(ends);
-					else 
-						$scope.hasEnded = true;
-                }, 1);
-            }
+            else
+                $rootScope.promise = $interval($scope.countDownFun, 1000);
         });
     };
     

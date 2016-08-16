@@ -46,8 +46,8 @@
         </div>
         <br>
         <div class="input-group col-sm-7" ng-show="session.loggedIn">
-            <input ng-hide="hasEnded || bidConfirmMessage" type="text" class="form-control" placeholder="$" ng-model="bidAmount">
-            <input ng-show="hasEnded" type="text" class="form-control" placeholder="$" disabled>
+            <input ng-hide="hasEnded || !hasStarted || bidConfirmMessage" type="text" class="form-control" placeholder="$" ng-model="bidAmount">
+            <input ng-show="hasEnded || !hasStarted" type="text" class="form-control" placeholder="$" disabled>
             <span class="input-group-btn" ng-hide="bidConfirmMessage">
                 <button ng-hide="hasEnded || !hasStarted" class="btn btn-primary" type="button" ng-click="bid()">Bid</button>
                 <button ng-show="hasEnded || !hasStarted" class="btn btn-primary" type="button" disabled="disabled">Bid</button>

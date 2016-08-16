@@ -169,7 +169,7 @@ myApp.config(function ($stateProvider) {
 
 });
 
-myApp.run(['$rootScope', '$state', '$cookies', function($rootScope, $state, $cookies) {
+myApp.run(['$rootScope', '$state', '$cookies', '$interval', function($rootScope, $state, $cookies, $interval) {
 	$rootScope.session = {username: 'none', loggedIn: false, isAdmin: false, id: 0};
 	if (angular.isUndefined($cookies.get('loggedIn'))) {
 		$cookies.putObject('username', 'none');
@@ -189,58 +189,11 @@ myApp.run(['$rootScope', '$state', '$cookies', function($rootScope, $state, $coo
             $state.go('app.welcome');
         else if (toParams.requireLogin == 1 && !$rootScope.session.loggedIn)
             $state.go('app.welcome');
-    });
-}]);
-
-myApp.factory("stopwatch", [function () {
-    function calc(ends) {
-        var today = new Date();
-        var sec = 0, min = 0, hour = 0, day = 0;
-		var str = "Ends in ";
-        sec = ~~((ends - today)/1000);
-        if (sec > 60) {
-            min = ~~(sec / 60);
-            sec = sec - 60 * min;
-            if (min > 60) {
-                hour = ~~(min / 60);
-                min = min - 60 * hour;
-            }
-            if (hour > 24) {
-                day = ~~(hour / 24);
-                hour = hour - 24 * day;
-            }
+        if (angular.isDefined($rootScope.promise)) {
+            $interval.cancel($rootScope.promise);
+            $rootScope.promise = undefined;
         }
-		if (day > 0) {
-			str = str + day + " days, ";
-			str = str + hour + " hours, ";
-			str = str + min + " minutes and ";
-			str = str + sec + " seconds";
-		}
-		else {
-			if (hour > 0) {
-				str = str + hour + " hours, ";
-				str = str + min + " minutes and ";
-				str = str + sec + " seconds";
-			}
-			else {
-				if (min > 0) {
-					str = str + min + " minutes and ";
-					str = str + sec + " seconds";
-				}
-				else {
-					if (sec > 0)
-						str = str + sec + " seconds";
-					else
-						str = "";
-				}
-			}
-		}
-        return str;
-    }
-    
-    return {
-        calc: calc
-    };
+    });
 }]);
 
 myApp.factory("notify", ['$rootScope', '$http', function ($rootScope, $http) {
