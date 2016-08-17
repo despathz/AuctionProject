@@ -1,4 +1,4 @@
-myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$interval', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $interval) {
+myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', '$interval', function($rootScope, $scope, $state, $stateParams, $http, $cookies, $interval) {
     $scope.currentTab = "desc";
     $scope.hasEnded = false;
     $scope.bidAmount = "";
@@ -8,7 +8,6 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 	$scope.noBid = false;
     
     $scope.countDownFun = function() {
-        console.log("hey");
         var ends = new Date($scope.auction.ends);
         var today = new Date();
         var sec = 0, min = 0, hour = 0, day = 0;
@@ -155,8 +154,8 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     
     $scope.confirmBid = function() {
         var toSent = {amount: $scope.bidAmount, bidder: $rootScope.session.id, auction: $scope.auction.id};
-        var res = $http.post('/ws/bid/add', toSent);
-        res.success(function(response) {
+        $http.post('/ws/bid/add', toSent).
+        success(function(response) {
             if (response == true) {
                 $scope.bidAmount = "";
                 $scope.bidConfirmMessage = false;
@@ -174,6 +173,17 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         $state.go("app.profile", {id: user_id});
     };
     
+    $scope.buyNow = function() {
+        var toSent = {amount: $scope.auction.buy_price, bidder: $rootScope.session.id, auction: $scope.auction.id};
+        $http.post('/ws/bid/add', toSent).
+        success(function(response) {
+            if (response) {
+                $scope.hasEnded = true;
+                $state.go($state.current, {id: $stateParams.id}, {reload: true});
+            }
+        });
+    };
+    
     $scope.begin = function() {
         $http.get('/ws/auction/begin/' + $stateParams.id).
         success(function(response) {
@@ -189,11 +199,12 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
     };
     
     $scope.edit = function() {
-        $state.go('app.editAuction', {id: $stateParams.id});
+        $state.go('app.auction.edit', {id: $stateParams.id});
     };
     
     $scope.delete = function() {
-        
+        //
+        $state.go('app.welcome');
     };
     
 }]);
@@ -327,7 +338,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
                     $scope.auction.id = response;
                     $http.post('/ws/image/upload', {id: $scope.auction.id, imgA: $scope.images.imgA, imgB: $scope.images.imgB}).
                     success(function(response) {
-                        $state.go('app.auction', {id: $scope.auction.id});
+                        $state.go('app.auction.display', {id: $scope.auction.id});
                     });
 				}
 			});
@@ -346,6 +357,8 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     $http.get('/ws/auction/' + $stateParams.id).
     success(function(response) {
         $scope.auction = response;
+        if($scope.auction.user_id != $rootScope.session.id)
+            $state.go('app.welcome');
         if ($scope.auction.longitude != 0 && $scope.auction.latitude != 0) {
             $scope.coord = [$scope.auction.latitude, $scope.auction.longitude];
             $scope.zoomVal = 16;
@@ -440,7 +453,7 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
 			
             $http.post('/ws/auction/edit', $scope.auction).
 			success(function(response) {
-                $state.go('app.auction', {id: $scope.auction.id});
+                $state.go('app.auction.display', {id: $scope.auction.id});
             });
 		}
 	};

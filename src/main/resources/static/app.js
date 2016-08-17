@@ -136,10 +136,15 @@ myApp.config(function ($stateProvider) {
         }
     })
     
-    .state('app.auction', {
-        url: '/auction/display/:id',
+     .state('app.auction', {
+        url: '/auction',
+        template: '<ui-view></ui-view>'
+    })
+    
+    .state('app.auction.display', {
+        url: '/display/:id',
         templateUrl: './views/auction/auction.html',
-        controller: 'auctionCtrl',
+        controller: 'displayAuctionCtrl',
         params: {
             title: 'Auction',
             requireLogin: 2,
@@ -147,8 +152,8 @@ myApp.config(function ($stateProvider) {
         }
     })
     
-    .state('app.createAuction', {
-        url: '/auction/create',
+    .state('app.auction.create', {
+        url: '/create',
         templateUrl: './views/auction/createAuction.html',
         controller: 'createAuctionCtrl',
         params: {
@@ -157,8 +162,8 @@ myApp.config(function ($stateProvider) {
         }
     })
     
-    .state('app.editAuction', {
-        url: '/auction/edit/:id',
+    .state('app.auction.edit', {
+        url: '/edit/:id',
         templateUrl: './views/auction/createAuction.html',
         controller: 'editAuctionCtrl',
         params: {
@@ -168,7 +173,7 @@ myApp.config(function ($stateProvider) {
         }
     })
     
-    .state('app.listingAuction', {
+    .state('app.auction.listing', {
         url: '/search',
         templateUrl: './views/auction/listing.html',
         controller: 'AuctionListCtrl',
@@ -200,6 +205,11 @@ myApp.run(['$rootScope', '$state', '$cookies', '$interval', function($rootScope,
             $state.go('app.welcome');
         else if (toParams.requireLogin == 1 && !$rootScope.session.loggedIn)
             $state.go('app.welcome');
+        
+        if (toState.name === 'app.editprofile' && !$rootScope.session.isAdmin){
+            if (toParams.id !== "0")
+                $state.go('app.welcome');
+        }
         if (angular.isDefined($rootScope.promise)) {
             $interval.cancel($rootScope.promise);
             $rootScope.promise = undefined;

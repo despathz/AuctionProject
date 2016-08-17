@@ -1,11 +1,11 @@
 myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
-    var res = $http.get('/ws/message/inbox/count/' + $rootScope.session.id);
-    res.success(function(response) {
+    $http.get('/ws/message/inbox/count/' + $rootScope.session.id).
+    success(function(response) {
         $scope.inboxCount = response;
     });
     
-    var res = $http.get('/ws/message/sent/count/' + $rootScope.session.id);
-    res.success(function(response) {
+    $http.get('/ws/message/sent/count/' + $rootScope.session.id).
+    success(function(response) {
         $scope.sentCount = response;
     });
 }]);
@@ -13,8 +13,8 @@ myApp.controller('messageCtrl', ['$rootScope', '$scope', '$http', function($root
 myApp.controller('inboxCtrl', ['$rootScope', '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
     $scope.prop = {selectAll: false};
     
-    var res = $http.get('/ws/message/inbox/' + $rootScope.session.id);
-    res.success(function(response) {
+    $http.get('/ws/message/inbox/' + $rootScope.session.id).
+    success(function(response) {
         $scope.inbox = response;
         for (m in $scope.inbox) {
 			$scope.inbox[m].date = new Date($scope.inbox[m].date);
@@ -149,7 +149,7 @@ myApp.controller('composeCtrl', ["$rootScope", '$scope', '$http', '$state', '$st
                 var res = $http.post('/ws/message/send', {text: $scope.compose.text, title: $scope.compose.title, from: $rootScope.session.id, to: response.id, date: new Date()});
                 res.success(function(response) {
                     if (response)
-                        $state.go($state.current, {}, {reload: true});
+                        $state.go('app.message.sent', {}, {reload: true});
                 });
             }
         });
@@ -167,7 +167,7 @@ myApp.controller('viewCtrl', ["$rootScope", '$scope', '$http', '$state', '$state
         else if (response.from === $rootScope.session.username)
             $scope.message = {text: response.text, title: response.title, to: response.to, type: "sent"};
         else
-            $scope.message = {text: "", title: "", to: "", from: ""};
+            $state.go('app.welcome');
     });
     
     $scope.reply = function() {

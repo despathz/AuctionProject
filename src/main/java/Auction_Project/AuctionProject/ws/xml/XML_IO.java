@@ -143,7 +143,7 @@ public class XML_IO {
 				
 				Element amountElement = doc.createElement("Amount");
 				bidElement.appendChild(amountElement);
-				amountElement.appendChild(doc.createTextNode(Float.toString(bidList.get(i).getAmount())));
+				amountElement.appendChild(doc.createTextNode("$" + Float.toString(bidList.get(i).getAmount())));
 			}
 			
 			//set location

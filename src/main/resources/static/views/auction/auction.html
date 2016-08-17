@@ -33,7 +33,7 @@
             <legend class="text-left">Buy price:</legend>
             <h4>Pay <b style="color: rgb(251, 130, 13)">{{auction.buy_price}}$</b> to buy this item now!</h4>
             <span ng-show="session.loggedIn">
-                <button ng-hide="hasEnded || !hasStarted" class="btn btn-primary" type="button">Buy now</button>
+                <button ng-hide="hasEnded || !hasStarted" class="btn btn-primary" type="button" ng-click="buyNow()">Buy now</button>
                 <button ng-show="hasEnded || !hasStarted" class="btn btn-primary" type="button" disabled="disabled">Buy now</button>
             </span>
         </span>

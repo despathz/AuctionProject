@@ -12,6 +12,8 @@
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
             <li><a ui-sref-active="highlight" ui-sref="app.welcome"><i class="fa fa-home"></i> Home</a></li>
+            <li><a ui-sref-active="highlight" ><i class="fa fa-search"></i> Browse auctions</a></li>
+            <li ng-show="session.loggedIn"><a ui-sref-active="highlight" ><i class="fa fa-wrench"></i> Manage my auctions</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right" ng-hide="session.loggedIn">
             <li><a ui-sref-active="highlight" ui-sref="app.login"><i class="fa fa-sign-in"></i> Login</a></li>
