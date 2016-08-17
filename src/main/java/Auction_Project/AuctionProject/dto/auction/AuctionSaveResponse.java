@@ -7,13 +7,11 @@ import Auction_Project.AuctionProject.ws.category.Category;
 
 public class AuctionSaveResponse {
 	
-private long id;
+	private long id;
 	
 	private String name, description;
 	
-	private float currently, first_bid;
-	
-	private float buy_price;
+	private float first_bid, buy_price;
 	
 	private Date started, ends;
 	
@@ -45,14 +43,6 @@ private long id;
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public float getCurrently() {
-		return currently;
-	}
-
-	public void setCurrently(float currently) {
-		this.currently = currently;
 	}
 
 	public float getFirst_bid() {

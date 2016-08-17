@@ -137,7 +137,7 @@ myApp.config(function ($stateProvider) {
     })
     
     .state('app.auction', {
-        url: '/auction/:id',
+        url: '/auction/display/:id',
         templateUrl: './views/auction/auction.html',
         controller: 'auctionCtrl',
         params: {
@@ -148,12 +148,23 @@ myApp.config(function ($stateProvider) {
     })
     
     .state('app.createAuction', {
-        url: '/newAuction',
+        url: '/auction/create',
         templateUrl: './views/auction/createAuction.html',
         controller: 'createAuctionCtrl',
         params: {
-            title: 'Create Auction',
+            title: 'Create auction',
             requireLogin: 1
+        }
+    })
+    
+    .state('app.editAuction', {
+        url: '/auction/edit/:id',
+        templateUrl: './views/auction/createAuction.html',
+        controller: 'editAuctionCtrl',
+        params: {
+            title: 'Edit auction',
+            requireLogin: 1,
+            id: ""
         }
     })
     

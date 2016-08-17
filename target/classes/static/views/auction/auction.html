@@ -83,10 +83,12 @@
     </div>
 </div>
 
-<div class="row text-left" ng-show="auction.user_id == session.id && !hasStarted">
+<div class="row text-left" ng-show="auction.user_id == session.id">
     <br>
     <div class="col-sm-8 col-sm-offset-2">
-        <button ng-click="begin()" class="btn btn-primary" type="button">Begin auction</button>
+        <button ng-show="!hasStarted" ng-click="begin()" class="btn btn-primary" type="button"><i class="fa fa-play"></i> Begin</button>
+        <button ng-show="noBid" ng-click="edit()" class="btn btn-primary" type="button"><i class="fa fa-pencil"></i> Edit</button>
+        <button ng-show="noBid" ng-click="delete()" class="btn btn-primary" type="button"><i class="fa fa-trash"></i> Delete</button>
     </div>
 </div>
 
@@ -113,7 +115,7 @@
 						</ul>
 					</div>
                     <div class="col-sm-7" ng-if="auction.latitude!=='0' && auction.longitude!=='0'">
-                        <ng-map center="{{coord}}" zoom="15">
+                        <ng-map center="{{coord}}" zoom="16">
                             <marker position="{{coord}}" centered="true"></marker>
                         </ng-map>
                     </div>

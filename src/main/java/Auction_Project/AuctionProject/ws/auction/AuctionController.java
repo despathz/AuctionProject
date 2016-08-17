@@ -87,7 +87,7 @@ public class AuctionController {
 		return auctionResponse;
 	}
 	
-	@RequestMapping(value = "/createAuction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public long createAuction(@RequestBody AuctionSaveResponse new_auction) {	
 		Auction auction = new Auction();
 		Auction returned = new Auction();
@@ -120,6 +120,39 @@ public class AuctionController {
 			return -1;
 		}
 		return returned.getId();
+	}
+	
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean editAuction(@RequestBody AuctionSaveResponse new_auction) {
+		try {
+			Auction auction = auctionDAO.findById(new_auction.getId());
+			auction.setName(new_auction.getName());
+			auction.setDescription(new_auction.getDescription());
+			auction.setStarted(new_auction.getStarted());
+			auction.setEnds(new_auction.getEnds());
+			auction.setCurrently(new_auction.getFirst_bid());
+			auction.setFirst_bid(new_auction.getFirst_bid());
+			auction.setBuy_price(new_auction.getBuy_price());
+			auction.setLocation(new_auction.getLocation());
+			auction.setLatitude(new_auction.getLatitude());
+			auction.setLongitude(new_auction.getLongitude());
+			auction.setCountry(new_auction.getCountry());
+			
+			Set<Category> catset = auction.getCategories();
+			catset.clear();
+			for (int i = 0; i < new_auction.getCategoryList().size(); i++) {
+				Category cat = categoryDAO.findById(new_auction.getCategoryList().get(i).getId());
+				catset.add(cat);
+			}
+			auction.setCategories(catset);
+			
+			auctionDAO.save(auction);
+		}
+		catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
 }

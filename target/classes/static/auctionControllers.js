@@ -69,29 +69,29 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
 			$scope.currentBid = response;
 			if ($scope.currentBid.amount == 0) 
 				$scope.noBid = true;
-			
-			var i;
-			var today = new Date();
-			var sec = 0, min = 0, hour = 0;
-			sec = ~~((today - $scope.currentBid.bid_time)/1000);
-			if (sec > 60) {
-				min = ~~(sec / 60);
-				sec = sec - 60 * min;
-				if (min > 60) {
-					hour = ~~(min / 60);
-					min = min - 60 * hour;
-				}
-			}
-			if (hour >= 24)
-				$scope.currentBid.bid_time = ~~(hour/24) + " days ago";
-			else if (hour >= 1)
-				$scope.currentBid.bid_time = hour + " hours ago";
-			else if (min >= 1)
-				$scope.currentBid.bid_time = min + " minutes ago";
-			else if (sec >= 1)
-				$scope.currentBid.bid_time = sec + " seconds ago";
-			else
-				$scope.currentBid.bid_time = "a moment ago";
+			else {
+                var today = new Date();
+                var sec = 0, min = 0, hour = 0;
+                sec = ~~((today - $scope.currentBid.bid_time)/1000);
+                if (sec > 60) {
+                    min = ~~(sec / 60);
+                    sec = sec - 60 * min;
+                    if (min > 60) {
+                        hour = ~~(min / 60);
+                        min = min - 60 * hour;
+                    }
+                }
+                if (hour >= 24)
+                    $scope.currentBid.bid_time = ~~(hour/24) + " days ago";
+                else if (hour >= 1)
+                    $scope.currentBid.bid_time = hour + " hours ago";
+                else if (min >= 1)
+                    $scope.currentBid.bid_time = min + " minutes ago";
+                else if (sec >= 1)
+                    $scope.currentBid.bid_time = sec + " seconds ago";
+                else
+                    $scope.currentBid.bid_time = "a moment ago";
+            }
 		});
 		
         $rootScope.title = $scope.auction.name;
@@ -188,9 +188,19 @@ myApp.controller('auctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams
         });
     };
     
+    $scope.edit = function() {
+        $state.go('app.editAuction', {id: $stateParams.id});
+    };
+    
+    $scope.delete = function() {
+        
+    };
+    
 }]);
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+    $scope.option = "Create";
+    $scope.zoomVal = 2;
 	$scope.auction = {name: "", first_bid: "", description: "", country: "", location: ""};
 	$scope.tempDate = {selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
 	$scope.coord = [41, 5.6];
@@ -306,12 +316,10 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 			$scope.auction.latitude = $scope.coord[0];
 			$scope.auction.user_id = $rootScope.session.id;
             $scope.auction.buy_price = $scope.buy_price.amount;
-			
 			$scope.auction.ends = $scope.checkDate;
-			
 			$scope.auction.categoryList = $scope.categoryPathList;
 			
-			$http.post('/ws/auction/createAuction', $scope.auction).
+			$http.post('/ws/auction/create', $scope.auction).
 			success(function(response) {
 				if (response == -1) 
 					$scope.databaseError = true;
@@ -326,6 +334,117 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		}
 	};
 	
+}]);
+
+myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+    $scope.option = "Edit";
+    $scope.categoryList = [];
+    $scope.buy_price = {amount: ""}
+    
+    $scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
+    
+    $http.get('/ws/auction/' + $stateParams.id).
+    success(function(response) {
+        $scope.auction = response;
+        if ($scope.auction.longitude != 0 && $scope.auction.latitude != 0) {
+            $scope.coord = [$scope.auction.latitude, $scope.auction.longitude];
+            $scope.zoomVal = 16;
+        }
+        else {
+            $scope.coord = [41, 5.6];
+            $scope.zoomVal = 2;
+        }
+        $scope.tempDate = {};
+        var ends = new Date($scope.auction.ends);
+        $scope.tempDate.selectEYear = ends.getFullYear();
+        $scope.tempDate.selectEMonth = $scope.months[ends.getMonth()];
+        $scope.tempDate.selectEDay = ends.getDate();
+        $scope.tempDate.selectEHour = ends.getHours();
+        $scope.tempDate.selectEMinute = ends.getMinutes();
+        $scope.tempDate.selectESecond = ends.getSeconds();
+        $scope.categoryPathList = $scope.auction.categories;
+        $scope.buy_price.amount = $scope.auction.buy_price;
+    });
+    
+    $scope.dragMarker = function() {
+		$scope.coord = [this.getPosition().lat(), this.getPosition().lng()];
+	};
+
+	$scope.dragMap = function() {
+		$scope.coord = [this.getCenter().lat(), this.getCenter().lng()];
+	};
+    
+    $scope.findSubCat = function(name, id) {
+        var pos = -1, i = 0;
+        while (i < $scope.categoryPathList.length) {
+            if ($scope.categoryPathList[i].id == id){
+                pos = i;
+                break;
+            }
+            i++;
+        }
+        if (pos == -1)
+            $scope.categoryPathList.push({name, id});
+        else {
+            while ($scope.categoryPathList.length > pos + 1)
+                $scope.categoryPathList.pop();
+        }
+        var res = $http.get('/ws/category/parent/' + id);
+        res.success(function(response) {
+            $scope.categoryList = response;
+        });
+    };
+    
+    $scope.submitAuction = function() {
+		$scope.basicFieldsError = false; 
+		$scope.databaseError = false;
+		$scope.NumberError = false;
+		$scope.NumberBPError = false;
+		$scope.categoryError = false;
+		$scope.futureDateError = false;
+		
+		if ($scope.categoryList.length != 0)
+			$scope.categoryError = true;
+		
+		if (isNaN($scope.auction.first_bid))
+			$scope.NumberError = true;
+		if  (isNaN($scope.buy_price.amount))
+			$scope.NumberBPError = true;
+		
+		for (var field in $scope.auction) {
+			if ($scope.auction[field].length == 0) {
+				$scope.basicFieldsError = true;
+				break;
+			}
+		}
+		
+		$scope.checkDate = new Date(parseInt($scope.tempDate.selectEYear), parseInt($scope.tempDate.selectEMonth.number) - 1, parseInt($scope.tempDate.selectEDay), parseInt($scope.tempDate.selectEHour), parseInt($scope.tempDate.selectEMinute), parseInt($scope.tempDate.selectESecond), 0).getTime();
+			
+		if ($scope.checkDate <= (new Date().getTime()))
+			$scope.futureDateError = true;
+		
+		if (!$scope.basicFieldsError && !$scope.NumberError && !$scope.NumberBPError && !$scope.futureDateError && !$scope.categoryError) {
+            
+            if ($scope.buy_price.amount.length == 0)
+                $scope.buy_price.amount = 0;
+			
+			$scope.auction.longitude = $scope.coord[1];
+			$scope.auction.latitude = $scope.coord[0];
+			$scope.auction.user_id = $rootScope.session.id;
+            $scope.auction.buy_price = $scope.buy_price.amount;
+			$scope.auction.ends = $scope.checkDate;
+			$scope.auction.categoryList = $scope.categoryPathList;
+            delete $scope.auction.categories;
+            delete $scope.auction.creator;
+            delete $scope.auction.currently;
+			
+            $http.post('/ws/auction/edit', $scope.auction).
+			success(function(response) {
+                $state.go('app.auction', {id: $scope.auction.id});
+            });
+		}
+	};
+    
 }]);
 
 myApp.controller('AuctionListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {

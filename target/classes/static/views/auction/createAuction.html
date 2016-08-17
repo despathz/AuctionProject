@@ -1,6 +1,7 @@
 <div class="row" ng-hide="registerComplete">
     <div class="col-sm-8 col-sm-offset-2 text-left">
-        <legend>Create a new auction</legend>
+        <legend ng-show='option==="Create"'>Create a new auction</legend>
+        <legend ng-show='option==="Edit"'>Edit your auction</legend>
 		<h5>Fields marked with an <i style="color:rgb(251, 130, 13)">*</i> asterisk are required.</h5>
     </div>
 </div>
@@ -66,7 +67,7 @@
         </div>
 		<div class="col-sm-5">
 			<label>Map Location:</label>
-			<ng-map center="{{coord}}" zoom="2" on-dragend="dragMap()" on-zoom_changed="dragMap()">
+			<ng-map center="{{coord}}" zoom="{{zoomVal}}" on-dragend="dragMap()" on-zoom_changed="dragMap()">
 				<marker draggable="true" position="{{coord}}" on-dragend="dragMarker()"></marker>
 			</ng-map>
 			<p>Drag the marker to the location of the item. (optional)</p>
@@ -96,7 +97,7 @@
         </div>
     </div>
 	<div class="row">
-        <button type="submit" class="btn btn-primary">Create auction</button>
+        <button type="submit" class="btn btn-primary">{{option}} auction</button>
     </div>
 	<div class="text-danger" ng-show="basicFieldsError">Please fill all the required fields of the form</div>
 	<div class="text-danger" ng-show="NumberError">Please give numeric value to the first bid field.</div>
