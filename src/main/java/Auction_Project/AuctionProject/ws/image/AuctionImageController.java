@@ -1,5 +1,6 @@
 package Auction_Project.AuctionProject.ws.image;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -105,6 +106,29 @@ public class AuctionImageController {
 			System.out.println(ex.getMessage());
 		}
 		return returnList;
+	}
+	
+	@RequestMapping(value = "/delete/{auction_id}", method = RequestMethod.GET)
+	public boolean delete(@PathVariable long auction_id) {
+		try {
+			Auction auction = auctionDAO.findById(auction_id);
+			List<AuctionImage> images = imageDAO.findByAuctionId(auction);			
+			
+			for (int i = 0; i < images.size(); i++) { 
+				AuctionImage img = images.get(i); 
+
+				if (!img.getImgPath().equals("./img/auction_images/imgA0.jpg")) {
+					String editImg = img.getImgPath().substring(1);
+					String imagepath = "./src/main/resources/static" + editImg;
+					File file = new File(imagepath);
+					file.delete();
+				}
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return true;
 	}
 
 }

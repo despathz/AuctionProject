@@ -9,6 +9,9 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import Auction_Project.AuctionProject.ws.auction.Auction;
 
 @Entity
@@ -23,6 +26,7 @@ public class AuctionImage {
 	
 	@NotNull
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JoinColumn(name = "auctionId")
 	private Auction auctionId;
 

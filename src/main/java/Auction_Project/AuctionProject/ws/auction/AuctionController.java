@@ -94,7 +94,6 @@ public class AuctionController {
 		try {
 			auction.setName(new_auction.getName());
 			auction.setDescription(new_auction.getDescription());
-			auction.setStarted(new_auction.getStarted());
 			auction.setEnds(new_auction.getEnds());
 			auction.setCurrently(new_auction.getFirst_bid());
 			auction.setFirst_bid(new_auction.getFirst_bid());
@@ -128,7 +127,6 @@ public class AuctionController {
 			Auction auction = auctionDAO.findById(new_auction.getId());
 			auction.setName(new_auction.getName());
 			auction.setDescription(new_auction.getDescription());
-			auction.setStarted(new_auction.getStarted());
 			auction.setEnds(new_auction.getEnds());
 			auction.setCurrently(new_auction.getFirst_bid());
 			auction.setFirst_bid(new_auction.getFirst_bid());
@@ -155,4 +153,20 @@ public class AuctionController {
 		return true;
 	}
 	
+	@RequestMapping(value = "/delete/{auctionID}", method = RequestMethod.GET)
+	public boolean deleteAuction(@PathVariable long auctionID) {
+		try {
+			Auction auction = auctionDAO.findById(auctionID);
+			
+			Set<Category> catset = auction.getCategories(); //categories
+			catset.clear();
+			
+			auctionDAO.delete(auction);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return true;
+	}
 }

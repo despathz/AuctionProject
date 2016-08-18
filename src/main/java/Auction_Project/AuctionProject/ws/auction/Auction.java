@@ -3,7 +3,6 @@ package Auction_Project.AuctionProject.ws.auction;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +13,10 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import Auction_Project.AuctionProject.ws.user.User;
 import Auction_Project.AuctionProject.ws.category.Category;
 
@@ -41,10 +44,11 @@ public class Auction {
 	
 	@NotNull
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	@JoinColumn(name = "user_seller_id")
 	private User user_seller_id;
 
-	@ManyToMany(cascade = CascadeType.ALL) 	
+	@ManyToMany
 	@JoinTable(name = "auction_category",
 	joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))

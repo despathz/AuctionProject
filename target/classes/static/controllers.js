@@ -20,3 +20,6 @@ myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope,
         $state.go('app.editprofile', {id: userid});
     };
 }]);
+
+myApp.controller('searchCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
+}]);

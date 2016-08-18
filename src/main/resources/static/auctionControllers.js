@@ -203,8 +203,13 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
     };
     
     $scope.delete = function() {
-        //
-        $state.go('app.welcome');
+        $http.get('/ws/image/delete/' + $stateParams.id).
+        success(function(response) {
+			$http.get('/ws/auction/delete/' + $stateParams.id).
+			success(function(response) {
+				$state.go('app.welcome');
+    		});
+		});
     };
     
 }]);
@@ -348,15 +353,16 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 }]);
 
 myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
-    $scope.option = "Edit";
+    $scope.option = "Save";
     $scope.categoryList = [];
     $scope.buy_price = {amount: ""}
     
     $scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
-    
+	
     $http.get('/ws/auction/' + $stateParams.id).
     success(function(response) {
         $scope.auction = response;
+		delete $scope.auction.started;
         if($scope.auction.user_id != $rootScope.session.id)
             $state.go('app.welcome');
         if ($scope.auction.longitude != 0 && $scope.auction.latitude != 0) {
@@ -425,6 +431,7 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
 			$scope.NumberBPError = true;
 		
 		for (var field in $scope.auction) {
+			console.log(field);
 			if ($scope.auction[field].length == 0) {
 				$scope.basicFieldsError = true;
 				break;
@@ -440,6 +447,11 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
             
             if ($scope.buy_price.amount.length == 0)
                 $scope.buy_price.amount = 0;
+			
+			if ($scope.coord[0] == 41 && $scope.coord[1] == 5.6) {
+				$scope.coord[0] = 0;
+				$scope.coord[1] = 0;
+			}
 			
 			$scope.auction.longitude = $scope.coord[1];
 			$scope.auction.latitude = $scope.coord[0];
@@ -460,7 +472,7 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     
 }]);
 
-myApp.controller('AuctionListCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
 }]);
 
 
@@ -483,3 +495,6 @@ myApp.directive('customOnChange', function() {
     }
   };
 });
+
+myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+}]);

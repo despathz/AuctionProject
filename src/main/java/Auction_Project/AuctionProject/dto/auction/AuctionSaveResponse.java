@@ -13,7 +13,7 @@ public class AuctionSaveResponse {
 	
 	private float first_bid, buy_price;
 	
-	private Date started, ends;
+	private Date ends;
 	
 	private long user_id;
 	
@@ -59,14 +59,6 @@ public class AuctionSaveResponse {
 
 	public void setBuy_price(float buy_price) {
 		this.buy_price = buy_price;
-	}
-
-	public Date getStarted() {
-		return started;
-	}
-
-	public void setStarted(Date started) {
-		this.started = started;
 	}
 
 	public Date getEnds() {

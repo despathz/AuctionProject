@@ -84,6 +84,16 @@ myApp.config(function ($stateProvider) {
             id: "0"
         }
     })
+	
+	.state('app.search', {
+        url: '/search',
+        templateUrl: './views/search.html',
+        controller: 'searchCtrl',
+        params: {
+            title: 'Search',
+            requireLogin: 2
+        }
+    })
     
     .state('app.message', {
         url: '/messages',
@@ -174,12 +184,22 @@ myApp.config(function ($stateProvider) {
     })
     
     .state('app.auction.listing', {
-        url: '/search',
+        url: '/results',
         templateUrl: './views/auction/listing.html',
-        controller: 'AuctionListCtrl',
+        controller: 'listAuctionCtrl',
         params: {
             title: 'Results',
             requireLogin: 2
+        }
+    })
+	
+	.state('app.auction.manage', {
+        url: '/manage',
+        templateUrl: './views/auction/manage.html',
+        controller: 'manageAuctionCtrl',
+        params: {
+            title: 'My auctions',
+            requireLogin: 1
         }
     })
 
