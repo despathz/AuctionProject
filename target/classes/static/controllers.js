@@ -22,4 +22,36 @@ myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope,
 }]);
 
 myApp.controller('searchCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
+    $scope.currentTab = "search";
+    
+    $scope.$watch('currentTab', function() {
+        $scope.categoryPathList = [];
+        $scope.categoryPathList.push({name: "All", id: 1});
+        $http.get('/ws/category/parent/1')
+        .success(function(response) {
+            $scope.categoryList = response;
+        });
+    });
+    
+    $scope.findSubCat = function(name, id) {
+        var pos = -1, i = 0;
+        while (i < $scope.categoryPathList.length) {
+            if ($scope.categoryPathList[i].id == id){
+                pos = i;
+                break;
+            }
+            i++;
+        }
+        if (pos == -1)
+            $scope.categoryPathList.push({name, id});
+        else {
+            while ($scope.categoryPathList.length > pos + 1)
+                $scope.categoryPathList.pop();
+        }
+        $http.get('/ws/category/parent/' + id)
+        .success(function(response) {
+            $scope.categoryList = response;
+        });
+    };
+    
 }]);

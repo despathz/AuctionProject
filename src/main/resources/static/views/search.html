@@ -1,1 +1,84 @@
-<h1>HELLO</h1>
+<div class="col-sm-8 col-sm-offset-2">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" ng-click = "currentTab='search'" href="">Search for auctions</a></li>
+        <li><a data-toggle="tab" ng-click = "currentTab='browse'" href="">Browse by category</a></li>
+    </ul>
+    
+    
+
+    <div class="tab-content">
+        <div ng-show="currentTab==='search'" class="tab-pane fade in active" >
+            <div class="row">
+                <h5 class="col-sm-12 text-left">Fields marked with an <i style="color:rgb(251, 130, 13)">*</i> asterisk are required.</h5>
+                <div class="form-group col-sm-6 text-left">
+                    <label><i style="color:rgb(251, 130, 13)">*</i> Keywords:</label>
+                    <input type="text" class="form-control">
+                </div>
+                
+                <div class="form-group col-sm-6 text-left">
+                    <label>Location:</label>
+                    <input type="text" class="form-control">
+                </div>
+                
+            </div>
+            
+            <div class="row">
+                <div class="form-group col-sm-4 text-left">
+                    <label>Price range:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">from</span>
+                        <input type="text" class="form-control">
+                        <span class="input-group-addon">$</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <div class="input-group">
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="form-control">
+                        <span class="input-group-addon">$</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12 text-left">
+                    <label>Selected Categories:</label>
+                    <span ng-repeat="c in categoryPathList">
+                        /&nbsp;<a style="color:rgb(251, 130, 13)" href="" ng-click="findSubCat(c.name, c.id)">{{c.name}}</a>&nbsp;
+                    </span>
+                    <br>
+                    <br>
+                    <ul class="fa-ul" ng-repeat="x in categoryList">
+                        <li><i class="fa-li fa fa-plus" style="color:rgb(251, 130, 13)"></i><a style="color:black" href="" ng-click="findSubCat(x.name, x.id)">{{x.name}}</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary" style="float:right" type="button">Search</button>
+                </div>
+            </div>
+        </div>
+        <div ng-show="currentTab==='browse'" class="tab-pane fade in active">
+            <br>
+            <div class="row text-left">
+            <div class="col-sm-12">
+                <label>Selected Categories:</label>
+                <span ng-repeat="c in categoryPathList">
+                    /&nbsp;<a style="color:rgb(251, 130, 13)" href="" ng-click="findSubCat(c.name, c.id)">{{c.name}}</a>&nbsp;
+                </span>
+                <br>
+                <br>
+                <ul class="fa-ul" ng-repeat="x in categoryList">
+                    <li><i class="fa-li fa fa-plus" style="color:rgb(251, 130, 13)"></i><a style="color:black" href="" ng-click="findSubCat(x.name, x.id)">{{x.name}}</a></li>
+                </ul>
+                <button class="btn btn-primary" style="center" type="button">Go</button>
+            </div></div>
+        </div>
+    </div>
+    <br>
+</div>
