@@ -62,6 +62,9 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
     $http.get('/ws/auction/' + $stateParams.id).
     success(function(response) {
         $scope.auction = response;
+        if ($scope.auction.id == 0) {
+            $state.go("app.welcome");
+        }
 		
 		$http.get('/ws/bid/forAuction/' + $stateParams.id).
 		success(function(response) {
@@ -95,16 +98,17 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
 		
         $rootScope.title = $scope.auction.name;
 		$scope.coord = [parseFloat($scope.auction.latitude), parseFloat($scope.auction.longitude)];
-        if (response.id == 0) {
-            console.log('invalid auction id');
-        }
+        
+        if ($scope.auction.currently == $scope.auction.buy_price)
+            $scope.hasEnded = true;
+        
         if (response.started != null) {
             var started = new Date(response.started);
             $scope.startDate = started.getFullYear() + "-" + ('0' + (started.getMonth()+1)).slice(-2) + "-" + ('0' + started.getDate()).slice(-2);
             $scope.startTime = ('0' + started.getHours()).slice(-2) + ":" + ('0' + started.getMinutes()).slice(-2) + ":" + ('0' + started.getSeconds()).slice(-2);
             $scope.hasStarted = true;
         }
-        if ($scope.hasStarted == true) {
+        if ($scope.hasStarted == true && !$scope.auction.hasEnded) {
             if (new Date() > new Date($scope.auction.ends))
                 $scope.hasEnded = true;
             else 
@@ -177,10 +181,8 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
         var toSent = {amount: $scope.auction.buy_price, bidder: $rootScope.session.id, auction: $scope.auction.id};
         $http.post('/ws/bid/add', toSent).
         success(function(response) {
-            if (response) {
-                $scope.hasEnded = true;
+            if (response)
                 $state.go($state.current, {id: $stateParams.id}, {reload: true});
-            }
         });
     };
     
@@ -219,10 +221,21 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
     $scope.zoomVal = 2;
 	$scope.auction = {name: "", first_bid: "", description: "", country: "", location: ""};
 	$scope.tempDate = {selectEYear: "", selectEMonth: "", selectEDay: "", selectEHour: "", selectEMinute: "", selectESecond: ""};
-	$scope.coord = [41, 5.6];
+	$scope.coord = [0, 0];
 	$scope.buy_price = {amount: ""};
     
 	$scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
+    
+    $scope.$on('mapInitialized', function(evt, evtMap) {
+        $scope.map = evtMap;
+        $scope.marker = $scope.map.markers[0];
+    });
+   
+    $scope.mapClick = function(event) {
+        $scope.marker.setPosition(event.latLng); 
+        $scope.marker.visible = "true";
+        $scope.coord = [$scope.marker.getPosition().lat(), $scope.marker.getPosition().lng()];
+    };
     
     $scope.images = {imgA : "", imgB: ""};
     
@@ -274,14 +287,6 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
         }
         r.readAsDataURL(f.files[0]);
     };
-    
-	$scope.dragMarker = function() {
-		$scope.coord = [this.getPosition().lat(), this.getPosition().lng()];
-	};
-
-	$scope.dragMap = function() {
-		$scope.coord = [this.getCenter().lat(), this.getCenter().lng()];
-	};
 	
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
@@ -323,11 +328,6 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
             if ($scope.buy_price.amount.length == 0)
                 $scope.buy_price.amount = 0;
 			
-			if ($scope.coord[0] == 41 && $scope.coord[1] == 5.6) {
-				$scope.coord[0] = 0;
-				$scope.coord[1] = 0;
-			}
-			
 			$scope.auction.longitude = $scope.coord[1];
 			$scope.auction.latitude = $scope.coord[0];
 			$scope.auction.user_id = $rootScope.session.id;
@@ -365,14 +365,27 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
 		delete $scope.auction.started;
         if($scope.auction.user_id != $rootScope.session.id)
             $state.go('app.welcome');
-        if ($scope.auction.longitude != 0 && $scope.auction.latitude != 0) {
-            $scope.coord = [$scope.auction.latitude, $scope.auction.longitude];
-            $scope.zoomVal = 16;
-        }
-        else {
-            $scope.coord = [41, 5.6];
-            $scope.zoomVal = 2;
-        }
+        
+        $scope.coord = [parseFloat($scope.auction.latitude), parseFloat($scope.auction.longitude)];
+        $scope.$on('mapInitialized', function(evt, evtMap) {
+            $scope.map = evtMap;
+            $scope.marker = $scope.map.markers[0];
+            if ($scope.coord[0] != 0 && $scope.coord[1] != 0) {
+                $scope.map.setCenter(new google.maps.LatLng($scope.coord[0], $scope.coord[1]));
+                $scope.zoomVal = 16;
+                $scope.marker.setPosition(new google.maps.LatLng($scope.coord[0], $scope.coord[1]));
+                $scope.marker.visible = "true";
+            }
+            else
+                $scope.zoomVal = 2;
+        });
+
+        $scope.mapClick = function(event) {
+            $scope.marker.setPosition(event.latLng);
+            $scope.marker.visible = "true";
+            $scope.coord = [$scope.marker.getPosition().lat(), $scope.marker.getPosition().lng()];
+        };
+        
         $scope.tempDate = {};
         var ends = new Date($scope.auction.ends);
         $scope.tempDate.selectEYear = ends.getFullYear();
@@ -384,14 +397,6 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
         $scope.categoryPathList = $scope.auction.categories;
         $scope.buy_price.amount = $scope.auction.buy_price;
     });
-    
-    $scope.dragMarker = function() {
-		$scope.coord = [this.getPosition().lat(), this.getPosition().lng()];
-	};
-
-	$scope.dragMap = function() {
-		$scope.coord = [this.getCenter().lat(), this.getCenter().lng()];
-	};
     
     $scope.findSubCat = function(name, id) {
         var pos = -1, i = 0;
@@ -431,7 +436,6 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
 			$scope.NumberBPError = true;
 		
 		for (var field in $scope.auction) {
-			console.log(field);
 			if ($scope.auction[field].length == 0) {
 				$scope.basicFieldsError = true;
 				break;
@@ -447,11 +451,6 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
             
             if ($scope.buy_price.amount.length == 0)
                 $scope.buy_price.amount = 0;
-			
-			if ($scope.coord[0] == 41 && $scope.coord[1] == 5.6) {
-				$scope.coord[0] = 0;
-				$scope.coord[1] = 0;
-			}
 			
 			$scope.auction.longitude = $scope.coord[1];
 			$scope.auction.latitude = $scope.coord[0];

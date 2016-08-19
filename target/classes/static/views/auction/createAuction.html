@@ -67,10 +67,10 @@
         </div>
 		<div class="col-sm-5">
 			<label>Map Location:</label>
-			<ng-map center="{{coord}}" zoom="{{zoomVal}}" on-dragend="dragMap()" on-zoom_changed="dragMap()">
-				<marker draggable="true" position="{{coord}}" on-dragend="dragMarker()"></marker>
-			</ng-map>
-			<p>Drag the marker to the location of the item. (optional)</p>
+            <ng-map zoom="{{zoomVal}}" center="41, 5.6" on-rightclick="mapClick()">
+                <marker visible="false"></marker>
+            </ng-map>
+			<p>Right mouse click to place the marker to the location of the item. (optional)</p>
 		</div>
     </div>
     <br>
