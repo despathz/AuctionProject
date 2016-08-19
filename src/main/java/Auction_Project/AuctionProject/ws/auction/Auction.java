@@ -45,8 +45,8 @@ public class Auction {
 	@NotNull
 	@ManyToOne
 	@OnDelete(action = OnDeleteAction.NO_ACTION)
-	@JoinColumn(name = "user_seller_id")
-	private User user_seller_id;
+	@JoinColumn(name = "seller")
+	private User seller;
 
 	@ManyToMany
 	@JoinTable(name = "auction_category",
@@ -119,11 +119,11 @@ public class Auction {
 	}
 
 	public User getUser_seller_id() {
-		return user_seller_id;
+		return seller;
 	}
 
 	public void setUser_seller_id(User user_seller_id) {
-		this.user_seller_id = user_seller_id;
+		this.seller = user_seller_id;
 	}
 
 	public Set<Category> getCategories() {

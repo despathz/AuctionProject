@@ -3,6 +3,7 @@ package Auction_Project.AuctionProject.ws.auction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionDisplayResponse;
 import Auction_Project.AuctionProject.dto.auction.AuctionSaveResponse;
+import Auction_Project.AuctionProject.dto.auction.UserAuctionsListResponse;
 import Auction_Project.AuctionProject.dto.category.CategoryResponse;
 import Auction_Project.AuctionProject.ws.category.Category;
 import Auction_Project.AuctionProject.ws.user.User;
@@ -120,6 +122,26 @@ public class AuctionController {
 		}
 		return returned.getId();
 	}
+	
+	@RequestMapping(value = "/getUserAuctions/{user_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<UserAuctionsListResponse> getUserAuctions(@PathVariable long user_id) {
+		List<Auction> auctionList = new ArrayList<Auction>();
+		List<UserAuctionsListResponse> auctionResponseList = new ArrayList<UserAuctionsListResponse>();
+		User seller = userDAO.findById(user_id);
+		try {
+			auctionList = auctionDAO.findBySeller(seller);
+			for (Iterator<Auction> iterator = auctionList.iterator(); iterator.hasNext();) {
+				Auction auction = iterator.next();
+				UserAuctionsListResponse auctionResponse = new UserAuctionsListResponse(auction.getName(), auction.getStarted(), auction.getEnds());
+				auctionResponseList.add(auctionResponse);
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return auctionResponseList;
+	}
+	
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean editAuction(@RequestBody AuctionSaveResponse new_auction) {

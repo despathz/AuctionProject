@@ -497,4 +497,12 @@ myApp.directive('customOnChange', function() {
 });
 
 myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+	var res = $http.get('/ws/auction/getUserAuctions/' + $rootScope.session.id).
+    success(function(response) {
+        $scope.auctionList = response;
+		console.log(response);
+    });
+//    $scope.viewProfile = function(userid) {
+//        $state.go('app.editprofile', {id: userid});
+//    };
 }]);
