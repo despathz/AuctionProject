@@ -76,17 +76,27 @@ myApp.controller('searchCtrl', ['$scope', '$http', '$state', function($scope, $h
     };
     
     $scope.browse = function() {
-        $state.go('app.results', {ws: "ws/search/category/" + $scope.categoryPathList[$scope.categoryPathList.length-1].id});
+        var params = {keywords: null, from: null, to: null, location: null, category: $scope.categoryPathList[$scope.categoryPathList.length-1].id, page: 1};
+        $state.go('app.results', params);
     };
     
 }]);
 
 myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
     
-    $http.get($stateParams.ws).
+    $http.get('ws/search/category/matches/' + $stateParams.category).
     success(function(response) {
-        $scope.results = response;
+        $scope.pages = Math.ceil(response/2);
+        $scope.pageNumbers = _.range(1, $scope.pages + 1);
+        $scope.getResults();
     });
+    
+    $scope.getResults = function() {
+        $http.get('ws/search/category/' + $stateParams.category + '/' + $stateParams.page).
+        success(function(response) {
+            $scope.results = response;
+        });
+    };
     
     $scope.sellerProfile = function(user_id) {
         $state.go('app.profile', {id: user_id});
@@ -94,6 +104,12 @@ myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     
     $scope.auctionPage = function(auction_id) {
         $state.go('app.auction.display', {id: auction_id});
+    };
+    
+    $scope.getPage = function(n) {
+        $stateParams.page = n;
+        $scope.getResults();
+        $state.go($state.current, $stateParams, {notify: false});
     };
     
 }]);

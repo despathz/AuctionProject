@@ -1,16 +1,22 @@
 package Auction_Project.AuctionProject.dto.auction;
 
+import java.util.List;
+
+import Auction_Project.AuctionProject.dto.category.CategoryResponse;
+
 public class AuctionSearchResponse {
 
 	private long id, seller_id;
 	
-	private String name, seller_username, location;
+	private String name, seller_username, location, img;
 	
 	private boolean status;
 	
 	private float currently, buy_price;
 	
 	private int rating;
+	
+	private List<CategoryResponse> categories;
 
 	public long getId() {
 		return id;
@@ -54,6 +60,14 @@ public class AuctionSearchResponse {
 		this.location = location;
 	}
 
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
 	public boolean isStatus() {
 		return status;
 	}
@@ -85,6 +99,13 @@ public class AuctionSearchResponse {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-	
-	
+
+	public List<CategoryResponse> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<CategoryResponse> categories) {
+		this.categories = categories;
+	}
+
 }

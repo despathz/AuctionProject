@@ -10,11 +10,11 @@
         <div class="row" ng-repeat="auction in results" style="border-style:solid; border-color: rgb(163, 159, 153); border-radius: 5px; margin: 10px;">
             
             <div class="col-sm-12 text-left">
-                <h5><b>Category:</b> / All / Sports / Memorabilia / Golf-Other</h5>
+                <h5><b>Categories:</b> <span ng-repeat="cat in auction.categories">/ {{cat.name}} </span></h5>
             </div>
             
             <div class="col-sm-3">
-                <img src="./img/auction_images/imgA0.jpg" style="max-height: 100px;"></img>
+                <img ng-src="{{auction.img}}" style="max-height: 100px;" alt="auction_image">
             </div>
         
             <div class="col-sm-9">
@@ -38,7 +38,7 @@
                     </div>
                 </div>
             </div>
-        
+
         </div>
     
     </div>
@@ -47,9 +47,8 @@
 
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-        <ul class="pagination">
-            <li><a href="">1</a></li>
-            <li><a href="">2</a></li>
+        <ul ng-repeat="n in pageNumbers" class="pagination">
+            <li><a href="" ng-click="getPage(n)">{{n}}</a></li>
         </ul>
     </div>
 </div>

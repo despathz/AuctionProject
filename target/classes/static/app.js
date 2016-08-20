@@ -96,13 +96,18 @@ myApp.config(function ($stateProvider) {
     })
     
     .state('app.results', {
-        url: '/results',
+        url: '/results?keywords&from&to&location&category&page',
         templateUrl: './views/auction/listing.html',
         controller: 'listAuctionCtrl',
         params: {
             title: 'Results',
             requireLogin: 2,
-            ws: ""
+            keywords: null,
+            from: null,
+            to: null,
+            location: null,
+            category: null,
+            page: null
         }
     })
     
