@@ -75,4 +75,25 @@ myApp.controller('searchCtrl', ['$scope', '$http', '$state', function($scope, $h
         
     };
     
+    $scope.browse = function() {
+        $state.go('app.results', {ws: "ws/search/category/" + $scope.categoryPathList[$scope.categoryPathList.length-1].id});
+    };
+    
+}]);
+
+myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+    
+    $http.get($stateParams.ws).
+    success(function(response) {
+        $scope.results = response;
+    });
+    
+    $scope.sellerProfile = function(user_id) {
+        $state.go('app.profile', {id: user_id});
+    };
+    
+    $scope.auctionPage = function(auction_id) {
+        $state.go('app.auction.display', {id: auction_id});
+    };
+    
 }]);

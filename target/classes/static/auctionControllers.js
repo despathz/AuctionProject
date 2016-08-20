@@ -471,10 +471,6 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     
 }]);
 
-myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
-}]);
-
-
 myApp.filter('range', function() {
 	return function(input, min, max) {
 	min = parseInt(min); //Make string input int

@@ -95,6 +95,17 @@ myApp.config(function ($stateProvider) {
         }
     })
     
+    .state('app.results', {
+        url: '/results',
+        templateUrl: './views/auction/listing.html',
+        controller: 'listAuctionCtrl',
+        params: {
+            title: 'Results',
+            requireLogin: 2,
+            ws: ""
+        }
+    })
+    
     .state('app.message', {
         url: '/messages',
         templateUrl: './views/message/message.html',
@@ -180,16 +191,6 @@ myApp.config(function ($stateProvider) {
             title: 'Edit auction',
             requireLogin: 1,
             id: ""
-        }
-    })
-    
-    .state('app.auction.listing', {
-        url: '/results',
-        templateUrl: './views/auction/listing.html',
-        controller: 'listAuctionCtrl',
-        params: {
-            title: 'Results',
-            requireLogin: 2
         }
     })
 	
