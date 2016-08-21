@@ -7,6 +7,12 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         
+        <div class="row">
+            <div class="col-sm-12 text-left" style="margin-bottom: 10px; margin-left: 10px;">
+                <i><b>{{matches}}</b> matches found</i>
+            </div>
+        </div>
+        
         <div class="row" ng-repeat="auction in results" style="border-style:solid; border-color: rgb(163, 159, 153); border-radius: 5px; margin: 10px;">
             
             <div class="col-sm-12 text-left">
@@ -45,10 +51,11 @@
 </div>
 
 
-<div class="row">
+<div class="row" style="margin: 10px">
     <div class="col-sm-8 col-sm-offset-2">
-        <ul ng-repeat="n in pageNumbers" class="pagination">
-            <li><a href="" ng-click="getPage(n)">{{n}}</a></li>
+        <ul ng-repeat="n in pageNumbers" class="my-pagination">
+            <li ng-show="n == currentPage"><a class="active" href="" ng-click="getPage(n)">{{n}}</a></li>
+            <li ng-hide="n == currentPage"><a href="" ng-click="getPage(n)">{{n}}</a></li>
         </ul>
     </div>
 </div>

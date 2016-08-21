@@ -148,7 +148,7 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
             $scope.bidMsg = "Please bid more than the current bid amount";
             $scope.bidAmount = "";
         }
-		else if ($scope.noBid && !isNaN($scope.bidAmount) && parseFloat($scope.bidAmount) <= $scope.auction.first_bid) {
+		else if ($scope.noBid && !isNaN($scope.bidAmount) && parseFloat($scope.bidAmount) < $scope.auction.first_bid) {
 			$scope.bidMsg = "Please bid more than the current bid amount";
             $scope.bidAmount = "";
 		}
@@ -413,8 +413,8 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
             while ($scope.categoryPathList.length > pos + 1)
                 $scope.categoryPathList.pop();
         }
-        var res = $http.get('/ws/category/parent/' + id);
-        res.success(function(response) {
+        $http.get('/ws/category/parent/' + id).
+        success(function(response) {
             $scope.categoryList = response;
         });
     };
@@ -501,13 +501,15 @@ myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
         $state.go('app.auction.edit', {id: auctionid});
     };
 	
-	$scope.delete = function(auctionid) {
-        $http.get('/ws/image/delete/' + auctionid).
-        success(function(response) {
-			$http.get('/ws/auction/delete/' + auctionid).
-			success(function(response) {
-				//$scope.auctionList.removeAt(0);
-    		});
-		});
+	$scope.delete = function(pos, auctionid) {
+        $scope.auctionList.splice(pos, 1);
+//        $http.get('/ws/image/delete/' + auctionid).
+//        success(function(response) {
+//			$http.get('/ws/auction/delete/' + auctionid).
+//			success(function(response) {
+//				
+//    		});
+//		});
     };
+    
 }]);

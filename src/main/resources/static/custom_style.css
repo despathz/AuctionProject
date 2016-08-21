@@ -158,28 +158,30 @@ footer a:hover, footer a:focus {
     border-radius: 5px;
 }
 
-.pagination>li>a, .pagination>li>span {
-    color: rgb(251, 130, 13);
-    border-color: rgb(163, 159, 153);
+ul.my-pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
 }
 
-.pagination>li>a:hover, .pagination>li>span:hover {
-    color: rgb(251, 130, 13);
-    border-color: rgb(163, 159, 153);
+ul.my-pagination li {display: inline;}
+
+ul.my-pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid rgb(163, 159, 153);
 }
 
-.pagination>li>a:focus, .pagination>li>span:focus {
-    color: rgb(251, 130, 13);
-    font-weight: bold;
-    border-color: rgb(163, 159, 153);
+ul.my-pagination li a.active {
+    background-color: rgb(251, 130, 13);
+    color: white;
+    border: 1px solid rgb(251, 130, 13);
 }
 
-.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
-    color: rgb(251, 130, 13);
-    font-weight: bold;
-    border-color: rgb(163, 159, 153);
-    background-color: #eee;
-}
+ul.my-pagination li a:hover:not(.active) {background-color: #ddd;}
 
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {

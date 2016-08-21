@@ -1,7 +1,7 @@
 package Auction_Project.AuctionProject.ws.auction;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,9 +50,9 @@ public class Auction {
 
 	@ManyToMany
 	@JoinTable(name = "auction_category",
-	joinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"),
+	joinColumns = @JoinColumn(name = "auction_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
-	private Set<Category> categories;
+	private List<Category> categories;
 	
 	public long getId() {
 		return id;
@@ -126,11 +126,11 @@ public class Auction {
 		this.seller = user_seller_id;
 	}
 
-	public Set<Category> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(Set<Category> categories) {
+	public void setCategories(List<Category> categories) {
 		this.categories = categories;
 	}
 	

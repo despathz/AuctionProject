@@ -2,10 +2,8 @@ package Auction_Project.AuctionProject.ws.auction;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -73,7 +71,7 @@ public class AuctionController {
 			auctionResponse.setLongitude(auction.getLongitude());
 			auctionResponse.setLatitude(auction.getLatitude());
 			
-			List<Category> cat = auctionDAO.findCategories(auctionID);
+			List<Category> cat = auction.getCategories();
 			List<CategoryResponse> reCat = new ArrayList<CategoryResponse>();
 			for (int i = 0; i < cat.size(); i++) {
 				CategoryResponse newCat = new CategoryResponse();
@@ -108,12 +106,12 @@ public class AuctionController {
 			User user = userDAO.findById(new_auction.getUser_id());
 			auction.setUser_seller_id(user);
 			
-			Set<Category> catset = new HashSet<Category>();
+			List<Category> catList = new ArrayList<Category>();
 			for (int i = 0; i < new_auction.getCategoryList().size(); i++) {
 				Category cat = categoryDAO.findById(new_auction.getCategoryList().get(i).getId());
-				catset.add(cat);
+				catList.add(cat);
 			}
-			auction.setCategories(catset);
+			auction.setCategories(catList);
 			returned = auctionDAO.save(auction);
 		}
 		catch (Exception ex) {
@@ -164,13 +162,13 @@ public class AuctionController {
 			auction.setLongitude(new_auction.getLongitude());
 			auction.setCountry(new_auction.getCountry());
 			
-			Set<Category> catset = auction.getCategories();
-			catset.clear();
+			List<Category> catList = auction.getCategories();
+			catList.clear();
 			for (int i = 0; i < new_auction.getCategoryList().size(); i++) {
 				Category cat = categoryDAO.findById(new_auction.getCategoryList().get(i).getId());
-				catset.add(cat);
+				catList.add(cat);
 			}
-			auction.setCategories(catset);
+			auction.setCategories(catList);
 			
 			auctionDAO.save(auction);
 		}
@@ -186,8 +184,8 @@ public class AuctionController {
 		try {
 			Auction auction = auctionDAO.findById(auctionID);
 			
-			Set<Category> catset = auction.getCategories(); //categories
-			catset.clear();
+			List<Category> catList = auction.getCategories(); //categories
+			catList.clear();
 			
 			auctionDAO.delete(auction);
 		}

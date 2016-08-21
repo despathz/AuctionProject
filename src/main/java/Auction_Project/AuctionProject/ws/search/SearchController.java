@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.dao.ImageDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionSearchResponse;
@@ -29,14 +28,12 @@ public class SearchController {
 	private CategoryDAO categoryDAO;
 	
 	@Autowired
-	private AuctionDAO auctionDAO;
-	
-	@Autowired
 	private ImageDAO imageDAO;
 	
 	@RequestMapping(value = "/category/matches/{id}", method = RequestMethod.GET)
 	public long browseCategoryMatches(@PathVariable long id) {
-		return categoryDAO.countAuctions(id);
+		Category cat = categoryDAO.findById(id);
+		return cat.getAuctions().size();
 	}
 	
 	@RequestMapping(value = "/category/{id}/{page}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,7 +59,7 @@ public class SearchController {
 				}
 				result.setStatus(status);
 				
-				List<Category> catList = auctionDAO.findCategories(auction.getId());
+				List<Category> catList = auction.getCategories();
 				List<CategoryResponse> catRes = new ArrayList<CategoryResponse>();
 				for (int j = 0; j < catList.size(); j++) {
 					CategoryResponse cat = new CategoryResponse();

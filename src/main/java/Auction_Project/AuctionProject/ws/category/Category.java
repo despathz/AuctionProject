@@ -1,6 +1,7 @@
 package Auction_Project.AuctionProject.ws.category;
 
-import java.util.Set;
+
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class Category {
 	private Category parent;
 
 	@ManyToMany(mappedBy = "categories") 
-	private Set<Auction> auctions; 
+	private List<Auction> auctions; 
 	
 	public long getId() {
 		return id;
@@ -54,11 +55,11 @@ public class Category {
 		this.parent = parent;
 	}
 
-	public Set<Auction> getAuctions() {
+	public List<Auction> getAuctions() {
 		return auctions;
 	}
 
-	public void setAuctions(Set<Auction> auctions) {
+	public void setAuctions(List<Auction> auctions) {
 		this.auctions = auctions;
 	}
 

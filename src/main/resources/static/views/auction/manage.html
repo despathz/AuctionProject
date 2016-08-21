@@ -1,21 +1,38 @@
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th style="text-align: center">Title</th>
-            <th style="text-align: center">Status</th>
-            <th style="text-align: center">Current Price</th>
-            <th style="text-align: center"></th>
-            <th style="text-align: center"></th>
-        </tr>
-    </thead>
-	<tbody>
-        <tr ng-repeat="auction in auctionList" ui-sref="app.auction.display({id:auction.id})" style="cursor:pointer">
-            <td>{{auction.name}}</td>
-            <td ng-if="!auction.status">inactive</td>
-			<td ng-if="auction.status">active</td>
-            <td>{{auction.currently}} $</td>
-            <td><button class="btn btn-primary btn-xs" ng-click="edit(auction.id)">Edit auction</button></td>
-			<td><button class="btn btn-danger btn-xs" ng-click="delete(auction.id)" >Delete auction</button></td>
-        </tr>
-    </tbody>
-</table>
+<div class="col-sm-8 col-sm-offset-2">
+    
+    <div class="row text-left">
+        <legend>My auctions</legend>
+    </div>
+    
+    <div class="row text-left" style="margin-bottom: 10px">
+        <button class="btn btn-primary" ui-sref="app.auction.create">Create new auction</button>
+        <br><br>Please note that you can only edit or delete an auction if:
+        <br>1. you havent started it
+        <br>2. no bids have been placed for it
+    </div>
+    
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th style="text-align: center">Title</th>
+                <th style="text-align: center">Status</th>
+                <th style="text-align: center">Current bid</th>
+                <th style="text-align: center"></th>
+    <!--            <th style="text-align: center"></th>-->
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="auction in auctionList" ui-sref="app.auction.display({id:auction.id})" style="cursor: pointer">
+                <td style="line-height: 2">{{auction.name}}</td>
+                <td style="line-height: 2" ng-if="!auction.status">inactive</td>
+                <td style="line-height: 2" ng-if="auction.status">active</td>
+                <td style="line-height: 2">{{auction.currently}} $</td>
+                <td style="line-height: 2">
+                    <button class="btn btn-primary btn-sm" ng-click="edit(auction.id)">Edit auction</button>
+                    <button class="btn btn-danger btn-sm" ng-click="delete($index, auction.id)" >Delete auction</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>

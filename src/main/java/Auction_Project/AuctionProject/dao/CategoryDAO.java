@@ -22,6 +22,4 @@ public interface CategoryDAO extends CrudRepository<Category, Long>{
 	@Query("SELECT a FROM Category c INNER JOIN c.auctions a WHERE c.id = ?1")
 	public List<Auction> findAuctions(long id, Pageable page);
 	
-	@Query("SELECT COUNT(a) FROM Category c INNER JOIN c.auctions a WHERE c.id = ?1")
-	public Long countAuctions(long id);
 }

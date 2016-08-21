@@ -86,7 +86,9 @@ myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     
     $http.get('ws/search/category/matches/' + $stateParams.category).
     success(function(response) {
-        $scope.pages = Math.ceil(response/2);
+        $scope.matches = response;
+        $scope.pages = Math.ceil($scope.matches/2);
+        $scope.currentPage = $stateParams.page;
         $scope.pageNumbers = _.range(1, $scope.pages + 1);
         $scope.getResults();
     });
@@ -108,6 +110,7 @@ myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     
     $scope.getPage = function(n) {
         $stateParams.page = n;
+        $scope.currentPage = n;
         $scope.getResults();
         $state.go($state.current, $stateParams, {notify: false});
     };
