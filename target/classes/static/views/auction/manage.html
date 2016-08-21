@@ -2,30 +2,20 @@
     <thead>
         <tr>
             <th style="text-align: center">Title</th>
-            <th style="text-align: center">Started</th>
-            <th style="text-align: center">Ends</th>
-            <th style="text-align: center">Edit</th>
-            <th style="text-align: center">Delete</th>
+            <th style="text-align: center">Status</th>
+            <th style="text-align: center">Current Price</th>
+            <th style="text-align: center"></th>
+            <th style="text-align: center"></th>
         </tr>
     </thead>
 	<tbody>
-        <tr ng-repeat="auction in auctionList">
+        <tr ng-repeat="auction in auctionList" ui-sref="app.auction.display({id:auction.id})" style="cursor:pointer">
             <td>{{auction.name}}</td>
-            <td>{{auction.started}}</td>
-            <td>{{auction.ends}}</td>
-            <td><button class="btn btn-primary btn-sm">Edit auction</button></td>
-			<td><button class="btn btn-primary btn-sm">Delete auction</button></td>
+            <td ng-if="!auction.status">inactive</td>
+			<td ng-if="auction.status">active</td>
+            <td>{{auction.currently}} $</td>
+            <td><button class="btn btn-primary btn-xs" ng-click="edit(auction.id)">Edit auction</button></td>
+			<td><button class="btn btn-danger btn-xs" ng-click="delete(auction.id)" >Delete auction</button></td>
         </tr>
     </tbody>
-<!--
-    <tbody>
-        <tr ng-repeat="user in userList">
-            <td>{{user.username}}</td>
-            <td>{{user.email}}</td>
-            <td>{{user.name}}</td>
-            <td>{{user.surname}}</td>
-            <td><button class="btn btn-primary btn-sm" ng-click="viewProfile(user.id)">Edit Profile</button></td>
-        </tr>
-    </tbody>
--->
 </table>

@@ -492,12 +492,22 @@ myApp.directive('customOnChange', function() {
 });
 
 myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
-	var res = $http.get('/ws/auction/getUserAuctions/' + $rootScope.session.id).
+	$http.get('/ws/auction/getUserAuctions/' + $rootScope.session.id).
     success(function(response) {
         $scope.auctionList = response;
-		console.log(response);
     });
-//    $scope.viewProfile = function(userid) {
-//        $state.go('app.editprofile', {id: userid});
-//    };
+	
+    $scope.edit = function(auctionid) {
+        $state.go('app.auction.edit', {id: auctionid});
+    };
+	
+	$scope.delete = function(auctionid) {
+        $http.get('/ws/image/delete/' + auctionid).
+        success(function(response) {
+			$http.get('/ws/auction/delete/' + auctionid).
+			success(function(response) {
+				//$scope.auctionList.removeAt(0);
+    		});
+		});
+    };
 }]);

@@ -132,7 +132,13 @@ public class AuctionController {
 			auctionList = auctionDAO.findBySeller(seller);
 			for (Iterator<Auction> iterator = auctionList.iterator(); iterator.hasNext();) {
 				Auction auction = iterator.next();
-				UserAuctionsListResponse auctionResponse = new UserAuctionsListResponse(auction.getName(), auction.getStarted(), auction.getEnds());
+				
+				boolean status = false;
+				if (auction.getStarted() != null && auction.getEnds().after(new Date()) && auction.getCurrently() != auction.getBuy_price()) {
+					status = true;
+				}
+
+				UserAuctionsListResponse auctionResponse = new UserAuctionsListResponse(auction.getId(), auction.getName(), status, auction.getCurrently());
 				auctionResponseList.add(auctionResponse);
 			}
 		}

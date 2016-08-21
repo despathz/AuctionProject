@@ -1,16 +1,25 @@
 package Auction_Project.AuctionProject.dto.auction;
 
-import java.util.Date;
-
 public class UserAuctionsListResponse {
 	
 	private String name;
-	private Date started, ends;
+	private boolean status;
+	private float currently;
+	private long id;
 	
-	public UserAuctionsListResponse(String name, Date started, Date ends) {
+	public UserAuctionsListResponse(long id, String name, boolean status, float currently) {
 		this.name = name;
-		this.started = started;
-		this.ends = ends;
+		this.status = status;
+		this.currently = currently;
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -21,20 +30,20 @@ public class UserAuctionsListResponse {
 		this.name = name;
 	}
 
-	public Date getStarted() {
-		return started;
+	public boolean isStatus() {
+		return status;
 	}
 
-	public void setStarted(Date started) {
-		this.started = started;
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
-	public Date getEnds() {
-		return ends;
+	public float getCurrently() {
+		return currently;
 	}
 
-	public void setEnds(Date ends) {
-		this.ends = ends;
+	public void setCurrently(float currently) {
+		this.currently = currently;
 	}
 	
 }
