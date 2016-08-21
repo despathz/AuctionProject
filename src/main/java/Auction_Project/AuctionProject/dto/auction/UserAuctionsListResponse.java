@@ -3,15 +3,16 @@ package Auction_Project.AuctionProject.dto.auction;
 public class UserAuctionsListResponse {
 	
 	private String name;
-	private boolean status;
+	private boolean status, allowChanges;
 	private float currently;
 	private long id;
 	
-	public UserAuctionsListResponse(long id, String name, boolean status, float currently) {
+	public UserAuctionsListResponse(long id, String name, boolean status, float currently, boolean allowChanges) {
 		this.name = name;
 		this.status = status;
 		this.currently = currently;
 		this.id = id;
+		this.allowChanges = allowChanges;
 	}
 
 	public long getId() {
@@ -44,6 +45,14 @@ public class UserAuctionsListResponse {
 
 	public void setCurrently(float currently) {
 		this.currently = currently;
+	}
+
+	public boolean isAllowChanges() {
+		return allowChanges;
+	}
+
+	public void setAllowChanges(boolean allowChanges) {
+		this.allowChanges = allowChanges;
 	}
 	
 }

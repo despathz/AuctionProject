@@ -495,6 +495,7 @@ myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 	$http.get('/ws/auction/getUserAuctions/' + $rootScope.session.id).
     success(function(response) {
         $scope.auctionList = response;
+		console.log($scope.auctionList[1]);
     });
 	
     $scope.edit = function(auctionid) {

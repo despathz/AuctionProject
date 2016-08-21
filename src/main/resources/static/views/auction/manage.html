@@ -7,7 +7,7 @@
     <div class="row text-left" style="margin-bottom: 10px">
         <button class="btn btn-primary" ui-sref="app.auction.create">Create new auction</button>
         <br><br>Please note that you can only edit or delete an auction if:
-        <br>1. you havent started it
+        <br>1. you have not started it
         <br>2. no bids have been placed for it
     </div>
     
@@ -18,18 +18,17 @@
                 <th style="text-align: center">Status</th>
                 <th style="text-align: center">Current bid</th>
                 <th style="text-align: center"></th>
-    <!--            <th style="text-align: center"></th>-->
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="auction in auctionList" ui-sref="app.auction.display({id:auction.id})" style="cursor: pointer">
-                <td style="line-height: 2">{{auction.name}}</td>
-                <td style="line-height: 2" ng-if="!auction.status">inactive</td>
-                <td style="line-height: 2" ng-if="auction.status">active</td>
-                <td style="line-height: 2">{{auction.currently}} $</td>
+            <tr ng-repeat="auction in auctionList">
+                <td style="line-height: 2; cursor: pointer" ui-sref="app.auction.display({id:auction.id})">{{auction.name}}</td>
+                <td style="line-height: 2; cursor: pointer" ui-sref="app.auction.display({id:auction.id})" ng-if="!auction.status">inactive</td>
+                <td style="line-height: 2; cursor: pointer" ui-sref="app.auction.display({id:auction.id})" ng-if="auction.status"><span style= "color: rgb(251, 130, 13)">active</td>
+                <td style="line-height: 2; cursor: pointer" ui-sref="app.auction.display({id:auction.id})">{{auction.currently}} $</td>
                 <td style="line-height: 2">
-                    <button class="btn btn-primary btn-sm" ng-click="edit(auction.id)">Edit auction</button>
-                    <button class="btn btn-danger btn-sm" ng-click="delete($index, auction.id)" >Delete auction</button>
+                    <button class="btn btn-primary btn-sm" ng-disabled="auction.allowChanges" ng-click="edit(auction.id)">Edit auction</button>
+                    <button class="btn btn-danger btn-sm" ng-disabled="auction.allowChanges" ng-click="delete($index, auction.id)">Delete auction</button>
                 </td>
             </tr>
         </tbody>

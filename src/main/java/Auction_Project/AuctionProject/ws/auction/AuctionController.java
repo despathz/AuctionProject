@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
+import Auction_Project.AuctionProject.dao.BidDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionDisplayResponse;
@@ -36,6 +37,9 @@ public class AuctionController {
 	@Autowired
 	private CategoryDAO categoryDAO;
 
+	@Autowired
+	private BidDAO bidDAO;
+	
 	@RequestMapping(value = "/begin/{auctionID}", method = RequestMethod.GET)
 	public Date begin(@PathVariable long auctionID) {
 		Date date = new Date();
@@ -136,7 +140,11 @@ public class AuctionController {
 					status = true;
 				}
 
-				UserAuctionsListResponse auctionResponse = new UserAuctionsListResponse(auction.getId(), auction.getName(), status, auction.getCurrently());
+				boolean allowChanges = true;
+				if (bidDAO.countByAuctionId(auction) == 0)
+					allowChanges = false;
+				
+				UserAuctionsListResponse auctionResponse = new UserAuctionsListResponse(auction.getId(), auction.getName(), status, auction.getCurrently(), allowChanges);
 				auctionResponseList.add(auctionResponse);
 			}
 		}
