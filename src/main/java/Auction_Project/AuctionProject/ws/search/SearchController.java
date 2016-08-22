@@ -97,7 +97,7 @@ public class SearchController {
 			search.setTo(1000000);
 		System.out.print(search.getKeywords());
 		try {
-			List<Auction> auctions = auctionDAO.searchAuctions(search.getFrom(), search.getTo());
+			List<Auction> auctions = auctionDAO.searchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory());
 			for (int i = 0; i < auctions.size(); i++) {
 				AuctionSearchResponse result = new AuctionSearchResponse();
 				Auction auction = auctions.get(i);
