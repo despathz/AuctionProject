@@ -503,14 +503,13 @@ myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
     };
 	
 	$scope.delete = function(pos, auctionid) {
-        $scope.auctionList.splice(pos, 1);
-//        $http.get('/ws/image/delete/' + auctionid).
-//        success(function(response) {
-//			$http.get('/ws/auction/delete/' + auctionid).
-//			success(function(response) {
-//				
-//    		});
-//		});
+        $http.get('/ws/image/delete/' + auctionid).
+        success(function(response) {
+			$http.get('/ws/auction/delete/' + auctionid).
+			success(function(response) {
+				$scope.auctionList.splice(pos, 1);
+    		});
+		});
     };
     
 }]);

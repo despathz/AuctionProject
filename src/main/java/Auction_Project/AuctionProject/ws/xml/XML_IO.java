@@ -74,7 +74,7 @@ public class XML_IO {
 			rootElement.appendChild(nameElement);
 			nameElement.appendChild(doc.createTextNode(auction.getName()));
 			
-			List<Category> cat = auctionDAO.findCategories(auction_id);
+			List<Category> cat = auction.getCategories();
 			
 			for (int i = 0; i < cat.size(); i++) {
 				if (cat.get(i).getId() == 1)

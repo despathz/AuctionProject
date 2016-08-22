@@ -55,49 +55,66 @@ myApp.controller('searchCtrl', ['$scope', '$http', '$state', function($scope, $h
         });
     };
     
-    $scope.search = function() {
-        $scope.numberError = false;
-        
-        if (isNaN($scope.data.from) || isNaN($scope.data.to))
-            $scope.numberError = true;
-        
-        if ($scope.data.from === "")
-            $scope.data.from = 0;
-        
-        if ($scope.data.to === "")
-            $scope.data.to = 0;
-        
-        if (!$scope.numberError) {
-            $scope.data.from = parseFloat($scope.data.from);
-            $scope.data.to = parseFloat($scope.data.to);
-            console.log($scope.data);
-        }
-        
-    };
-    
     $scope.browse = function() {
         var params = {keywords: null, from: null, to: null, location: null, category: $scope.categoryPathList[$scope.categoryPathList.length-1].id, page: 1};
         $state.go('app.results', params);
+    };
+    
+    $scope.search = function() {
+        $scope.numberError = false;
+        
+        if (isNaN($scope.data.from)) {
+            $scope.numberError = true;
+            $scope.data.from = "";
+        }
+        
+        if (isNaN($scope.data.to)) {
+            $scope.numberError = true;
+            $scope.data.to = "";
+        }
+        
+        if (!$scope.numberError) {
+            if ($scope.data.from === "")
+                $scope.data.from = 0;
+            if ($scope.data.to === "")
+                $scope.data.to = 0;
+            $scope.data.from = parseFloat($scope.data.from);
+            $scope.data.to = parseFloat($scope.data.to);
+            
+            if ($scope.data.keywords.length == 0 && $scope.data.location.length == 0 && $scope.data.from == 0 && $scope.data.to == 0) {
+                $scope.browse();
+            }
+            else {
+                var params = {};
+                params.keywords = $scope.data.keywords;
+                params.from = $scope.data.from;
+                params.to = $scope.data.to;
+                params.location = $scope.data.location;
+                params.category = $scope.categoryPathList[$scope.categoryPathList.length-1].id;
+                params.page = 1;
+                $state.go('app.results', params);
+            }
+        }
     };
     
 }]);
 
 myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
     
-    $http.get('ws/search/category/matches/' + $stateParams.category).
-    success(function(response) {
-        $scope.matches = response;
-        $scope.pages = Math.ceil($scope.matches/2);
-        $scope.currentPage = $stateParams.page;
-        $scope.pageNumbers = _.range(1, $scope.pages + 1);
-        $scope.getResults();
-    });
-    
-    $scope.getResults = function() {
-        $http.get('ws/search/category/' + $stateParams.category + '/' + $stateParams.page).
-        success(function(response) {
-            $scope.results = response;
-        });
+    $scope.getResults = function(option) {
+        if (option == 1) {
+            $http.post('ws/search/advanced/' + $stateParams.page, {
+            keywords: $stateParams.keywords, location: $stateParams.location, from: $stateParams.from, to: $stateParams.to, category: $stateParams.category
+            }).success(function(response) {
+                $scope.results = response;
+            });
+        }
+        else if (option == 2) {
+            $http.get('ws/search/category/' + $stateParams.category + '/' + $stateParams.page).
+            success(function(response) {
+                $scope.results = response;
+            });
+        }
     };
     
     $scope.sellerProfile = function(user_id) {
@@ -111,8 +128,26 @@ myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     $scope.getPage = function(n) {
         $stateParams.page = n;
         $scope.currentPage = n;
-        $scope.getResults();
+        $scope.getResults($scope.option);
         $state.go($state.current, $stateParams, {notify: false});
     };
+    
+    if ($stateParams.location == null && $stateParams.keywords == null && $stateParams.from == null && $stateParams.to == null) {
+        console.log("browse");
+        $http.get('ws/search/category/matches/' + $stateParams.category).
+        success(function(response) {
+            $scope.matches = response;
+            $scope.pages = Math.ceil($scope.matches/2);
+            $scope.currentPage = $stateParams.page;
+            $scope.pageNumbers = _.range(1, $scope.pages + 1);
+            $scope.option = 2;
+            $scope.getResults($scope.option);
+        });
+    }
+    else {
+        console.log("search");
+            $scope.option = 1;
+            $scope.getResults($scope.option);
+    }
     
 }]);
