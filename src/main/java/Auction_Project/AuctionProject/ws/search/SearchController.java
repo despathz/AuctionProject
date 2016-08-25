@@ -38,7 +38,13 @@ public class SearchController {
 	
 	@RequestMapping(value = "/category/matches/{id}", method = RequestMethod.GET)
 	public long browseCategoryMatches(@PathVariable long id) {
-		Category cat = categoryDAO.findById(id);
+		Category cat = new Category();
+		try {
+			cat = categoryDAO.findById(id);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
 		return cat.getAuctions().size();
 	}
 	
@@ -114,7 +120,7 @@ public class SearchController {
 			search.setLocation(newLocation);
 		}
 		try {
-			results = auctionDAO.countAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation());
+			results = auctionDAO.countAdvancedSearchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
@@ -146,7 +152,7 @@ public class SearchController {
 			search.setLocation(newLocation);
 		}
 		try {
-			List<Auction> auctions = auctionDAO.searchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation());
+			List<Auction> auctions = auctionDAO.advancedSearchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation(), 2, (page-1) * 2);
 			for (int i = 0; i < auctions.size(); i++) {
 				AuctionSearchResponse result = new AuctionSearchResponse();
 				Auction auction = auctions.get(i);
