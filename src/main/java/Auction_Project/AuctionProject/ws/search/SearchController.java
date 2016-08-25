@@ -90,14 +90,63 @@ public class SearchController {
 		return results;
 	}
 	
+	@RequestMapping(value = "/advanced/matches", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public long AdvancedSearchMatches(@RequestBody SearchResponse search) {
+		long results = 0;
+		if (search.getTo() == 0)
+			search.setTo(1000000);
+		if (search.getKeywords() != null) {
+			String[] parts = search.getKeywords().split(" ");
+			String newKeywords = "";
+			for (String str: parts) {
+				str += "*";
+				newKeywords += " " + str;
+			}
+			search.setKeywords(newKeywords);
+		}
+		if (search.getLocation() != null) {
+			String[] parts = search.getLocation().split(" ");
+			String newLocation = "";
+			for (String str: parts) {
+				str += "*";
+				newLocation += " " + str;
+			}
+			search.setLocation(newLocation);
+		}
+		try {
+			results = auctionDAO.countAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation());
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return results;
+	}
+	
 	@RequestMapping(value = "/advanced/{page}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<AuctionSearchResponse> AdvancedSearch(@PathVariable int page, @RequestBody SearchResponse search) {
 		List<AuctionSearchResponse> results = new ArrayList<AuctionSearchResponse>();
 		if (search.getTo() == 0)
 			search.setTo(1000000);
-		System.out.print(search.getKeywords());
+		if (search.getKeywords() != null) {
+			String[] parts = search.getKeywords().split(" ");
+			String newKeywords = "";
+			for (String str: parts) {
+				str += "*";
+				newKeywords += " " + str;
+			}
+			search.setKeywords(newKeywords);
+		}
+		if (search.getLocation() != null) {
+			String[] parts = search.getLocation().split(" ");
+			String newLocation = "";
+			for (String str: parts) {
+				str += "*";
+				newLocation += " " + str;
+			}
+			search.setLocation(newLocation);
+		}
 		try {
-			List<Auction> auctions = auctionDAO.searchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory());
+			List<Auction> auctions = auctionDAO.searchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation());
 			for (int i = 0; i < auctions.size(); i++) {
 				AuctionSearchResponse result = new AuctionSearchResponse();
 				Auction auction = auctions.get(i);

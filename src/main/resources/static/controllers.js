@@ -133,7 +133,6 @@ myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
     };
     
     if ($stateParams.location == null && $stateParams.keywords == null && $stateParams.from == null && $stateParams.to == null) {
-        console.log("browse");
         $http.get('ws/search/category/matches/' + $stateParams.category).
         success(function(response) {
             $scope.matches = response;
@@ -145,9 +144,16 @@ myApp.controller('listAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
         });
     }
     else {
-        console.log("search");
+        $http.post('ws/search/advanced/matches',{
+        keywords: $stateParams.keywords, location: $stateParams.location, from: $stateParams.from, to: $stateParams.to, category: $stateParams.category
+        }).success(function(response) {
+            $scope.matches = response;
+            $scope.pages = Math.ceil($scope.matches/2);
+            $scope.currentPage = $stateParams.page;
+            $scope.pageNumbers = _.range(1, $scope.pages + 1);
             $scope.option = 1;
             $scope.getResults($scope.option);
+        });
     }
     
 }]);
