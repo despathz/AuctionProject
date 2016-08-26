@@ -2,13 +2,13 @@ package Auction_Project.AuctionProject.dto.user;
 
 public class UserProfileResponse {
 
-	private String username, email, name, surname, address, country, telephone, trn, location;
+	private String username, email, name, surname, address, country, telephone, trn, location, avatar;
 	private Boolean superuser, activation;
 	private Integer bidderRating, sellerRating;
 
 	
-	public UserProfileResponse(String username, String email, String name, String surname, String address,
-			String country, String telephone, String trn, Boolean superuser, Boolean activation, String location, Integer bidderRating, Integer sellerRating) {
+	public UserProfileResponse(String username, String email, String name, String surname, String address, String country, 
+			String telephone, String trn, Boolean superuser, Boolean activation, String location, Integer bidderRating, Integer sellerRating, String avatar) {
 		this.username = username;
 		this.email = email;
 		this.name = name;
@@ -22,6 +22,7 @@ public class UserProfileResponse {
 		this.location = location;
 		this.bidderRating = bidderRating;
 		this.sellerRating = sellerRating;
+		this.avatar = avatar;
 	}
 	
 	public String getUsername() {
@@ -108,6 +109,13 @@ public class UserProfileResponse {
 	public void setSellerRating(Integer sellerRating) {
 		this.sellerRating = sellerRating;
 	}
-	
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 	
 }

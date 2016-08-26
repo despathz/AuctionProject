@@ -18,6 +18,7 @@ import Auction_Project.AuctionProject.dto.user.UserListResponse;
 import Auction_Project.AuctionProject.dto.user.UserLoginResponse;
 import Auction_Project.AuctionProject.dto.user.UserProfileResponse;
 import Auction_Project.AuctionProject.dto.user.UsernameResponse;
+import Auction_Project.AuctionProject.ws.image.Avatar;
 
 @RestController
 @RequestMapping("/ws/user")
@@ -69,13 +70,14 @@ public class UserController {
 	}		
 		
 	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Boolean registerUser( @RequestBody User input_user) {	
+	public Boolean registerUser(@RequestBody User input_user) {	
 		try {
 			input_user.setActivation(false);
 			input_user.setSuperuser(false);
 			input_user.setRemember(false);
 			input_user.setBidderRating(0);
 			input_user.setSellerRating(0);
+			input_user.setAvatar(new Avatar("./img/avatars/avatar0.png"));
 			userDAO.save(input_user);
 		}
 		catch (Exception ex) {
@@ -105,13 +107,13 @@ public class UserController {
 	
 	@RequestMapping(value = "/getProfile/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserProfileResponse getUserProfile(@PathVariable long id) {
-		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false, null, 0, 0);
+		UserProfileResponse responseUser = new UserProfileResponse(null, null, null, null, null, null, null, null, false, false, null, 0, 0, null);
 		User user = new User();
 		try {
 			user = userDAO.findById(id);
 			responseUser = new UserProfileResponse(user.getUsername(), user.getEmail(), user.getName(), user.getSurname(), user.getAddress(),
 												user.getCountry(), user.getTelephone(), user.getTrn(), user.getSuperuser(), user.getActivation(), 
-												user.getLocation(), user.getBidderRating(), user.getSellerRating());
+												user.getLocation(), user.getBidderRating(), user.getSellerRating(), user.getAvatar().getImgPath());
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
@@ -203,5 +205,10 @@ public class UserController {
 		}
 		return 1;
 	}
+	
+//	@RequestMapping(value = "/editAvatar/{id}", method = RequestMethod.GET)
+//	public boolean editAvatar(@PathVariable long id) {
+//		
+//	}
 	
 }

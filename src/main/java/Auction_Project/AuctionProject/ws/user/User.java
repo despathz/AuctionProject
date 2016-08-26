@@ -1,10 +1,15 @@
 package Auction_Project.AuctionProject.ws.user;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+
+import Auction_Project.AuctionProject.ws.image.Avatar;
 
 @Entity
 public class User {
@@ -19,6 +24,10 @@ public class User {
 	private Boolean remember, superuser, activation;
 	private String name, surname, address, country, telephone, trn, location;
 	private Integer sellerRating, bidderRating;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "avatar")
+	private Avatar avatar;
 	
 	public String getLocation() {
 		return location;
@@ -147,6 +156,13 @@ public class User {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
+	}
 	
 }

@@ -110,13 +110,13 @@ myApp.controller('registerCtrl', ['$scope', '$http', '$rootScope', '$state', fun
 
 myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
     $scope.user_id = parseInt($stateParams.id);
-	
+    
     if ($scope.user_id == 0) {   //user views his OWN profile
         $scope.user_id = $rootScope.session.id;
 	}
     
-    var res = $http.get('/ws/user/getProfile/' + $scope.user_id);
-     res.success(function(response) {
+    $http.get('/ws/user/getProfile/' + $scope.user_id).
+    success(function(response) {
         $scope.user = response;
     });
     
