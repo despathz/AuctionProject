@@ -20,10 +20,11 @@
 			</div>
 		</div>
 		<div class="col-sm-2 col-sm-offset-1">
-			<img ng-src="{{user.avatar}}" alt="profile_photo" class="img-responsive"></img><br>
-			<input type="file" value="Change avatar" id="imgA" accept="image/*" custom-on-change="loadImgA"/><br>
-			<button class="btn btn-primary" ng-show="session.id == user_id" ng-click="uploadAvatar()">Change avatar</button>
-			<div class="text-danger" ng-show="noImage">Please select an image!</div>
+			<img ng-src="{{user.avatar}}" alt="profile_photo" class="img-responsive"></img>
+            <label for="imgA" style="display: inline-block; cursor: pointer; float: left; font-weight: normal; color: rgb(251, 130, 13); margin-top: 5px">
+                Change avatar
+            </label>
+            <input id="imgA" type="file" accept="image/*" style="display: none;" custom-on-change="loadImgA"/><br>
 		</div>
 	</div>
 </div>

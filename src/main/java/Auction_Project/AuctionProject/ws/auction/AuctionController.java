@@ -131,7 +131,7 @@ public class AuctionController {
 		List<UserAuctionsListResponse> auctionResponseList = new ArrayList<UserAuctionsListResponse>();
 		User seller = userDAO.findById(user_id);
 		try {
-			auctionList = auctionDAO.findBySeller(seller);
+			auctionList = auctionDAO.findBySellerOrderByCreatedDesc(seller);
 			for (Iterator<Auction> iterator = auctionList.iterator(); iterator.hasNext();) {
 				Auction auction = iterator.next();
 				

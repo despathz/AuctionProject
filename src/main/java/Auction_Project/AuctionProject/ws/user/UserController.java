@@ -206,9 +206,4 @@ public class UserController {
 		return 1;
 	}
 	
-//	@RequestMapping(value = "/editAvatar/{id}", method = RequestMethod.GET)
-//	public boolean editAvatar(@PathVariable long id) {
-//		
-//	}
-	
 }
