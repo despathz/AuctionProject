@@ -119,10 +119,35 @@ myApp.controller('profileCtrl', ['$rootScope', '$scope', '$http', '$state', '$st
     success(function(response) {
         $scope.user = response;
     });
+	
+	$scope.imgA = "";
+	$scope.noImage = false;
+	
+	$scope.loadImgA = function() {
+        var f = document.getElementById("imgA");
+        f.files[0],
+        r = new FileReader();
+        r.onloadend = function(e){
+            $scope.imgA = e.target.result;
+        }
+        r.readAsDataURL(f.files[0]);
+    };	
+	
+	$scope.uploadAvatar = function() {
+		if (!($scope.imgA == "")) {
+			$http.post('/ws/avatar/upload', {id: $scope.user_id, imgA: $scope.imgA}).
+				success(function(response) {
+					console.log("Hey!");
+					$state.go('app.profile', {id: $scope.user_id});
+				});
+		}
+		else
+			$scope.noImage = true;
+	};
     
     $scope.sendMsg = function() {
         $state.go("app.message.compose", {to: $scope.user.username});
-    }
+    };
 
 }]);
 
