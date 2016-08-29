@@ -7,7 +7,7 @@
     
 
     <div class="tab-content">
-        <div ng-show="currentTab==='search'" class="tab-pane fade in active" >
+        <form ng-show="currentTab==='search'" class="tab-pane fade in active" ng-submit="search()">
             <div class="row">
                 <h5 class="col-sm-12 text-left">Search auctions using as many of the following filters as you like.</h5>
                 <div class="form-group col-sm-6 text-left">
@@ -59,10 +59,11 @@
             <div class="row">
                 <div class="col-sm-12">
                     <span class="text-danger" ng-show="numberError">Price range values must be numeric</span>
-                    <button class="btn btn-primary" style="float:right" type="button" ng-click="search()">Search</button>
+                    <button type="submit" class="btn btn-primary" style="float:right">Search</button>
                 </div>
             </div>
-        </div>
+        </form>
+        
         <div ng-show="currentTab==='browse'" class="tab-pane fade in active">
             <div class="row text-left">
             <h5 class="col-sm-12">View auctions that belong to specific categories.</h5>

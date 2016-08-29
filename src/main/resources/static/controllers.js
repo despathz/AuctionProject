@@ -4,11 +4,18 @@ myApp.controller('navCtrl', ['$rootScope', '$scope', '$stateParams', 'notify', '
     }, 5);
 }]);
 
-myApp.controller('mainCtrl', ['$rootScope', '$scope', '$stateParams', function($rootScope, $scope, $stateParams) {
+myApp.controller('mainCtrl', ['$rootScope', '$scope', '$state', '$stateParams', function($rootScope, $scope, $state, $stateParams) {
     $scope.isAdmin = false;
 	$scope.user_id = parseInt($stateParams.id);
 	if ($scope.user_id == 1)
 		$scope.isAdmin = true;
+    
+    $scope.keywords = "";
+    $scope.search = function() {
+        if ($scope.keywords !== "")
+            $state.go('app.results', {keywords: $scope.keywords, page: 1, category: 1});
+    };
+    
 }]);
 
 myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {

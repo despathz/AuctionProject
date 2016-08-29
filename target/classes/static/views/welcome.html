@@ -5,13 +5,13 @@
 </div>
 <div class="row element_margin">
     <div id="custom-search-input">
-        <div class="input-group col-sm-6 col-sm-offset-3">
-            <input type="text" class="search-query form-control" placeholder="Search" />
+        <form class="input-group col-sm-6 col-sm-offset-3" ng-submit="search()">
+            <input type="text" class="search-query form-control" placeholder="Search" ng-model="keywords"/>
             <span class="input-group-btn">
                 <button class="btn btn-primary" type="button">
                     <i class="fa fa-search"></i>
                 </button>
             </span>
-        </div>
+        </form>
     </div>
 </div>
