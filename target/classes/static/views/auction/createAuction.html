@@ -58,12 +58,43 @@
 	<br>
     <div class="row">
         <div class="col-sm-3 col-sm-offset-2 text-left">
-            <div class="form-group">
-                <label for="upload">Upload images:</label>
-                <input type="file" id="imgA" accept="image/*" custom-on-change="loadImgA"/>
-                <input type="file" id="imgB" accept="image/*" custom-on-change="loadImgB"/>
+            
+            <div class="form-group text-center">
+                <label>Upload images:</label>
+                <div class="row text-center">
+                    <div class="col-sm-6" ng-hide="images.imgA ===''">
+                        <div class="img-thumbnail">
+                            <img ng-src={{images.imgA}} class="img-responsive center-block" style="max-height: 100px;">
+                            <a class="close-btn" href="" ng-click="images.imgA = ''"><i class="fa fa-times" style="padding: 2px;"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" ng-show="images.imgA ===''">
+                        <div class="img-thumbnail">
+                            <label for="imgA" style="cursor:pointer">
+                                <i class="fa fa-plus fa-10x" style="color: rgb(251, 130, 13); padding: 42px;"></i></a>
+                            </label>
+                            <input type="file" id="imgA" style="display: none;" accept="image/*" custom-on-change="loadImgA"/>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6" ng-hide="images.imgB ===''">
+                        <div class="img-thumbnail">
+                            <img ng-src={{images.imgB}} class="img-responsive center-block" style="max-height: 100px;">
+                            <a class="close-btn" href="" ng-click="images.imgB = ''"><i class="fa fa-times" style="padding: 2px;"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6" ng-show="images.imgB ===''">
+                        <div class="img-thumbnail">
+                            <label for="imgB" style="cursor:pointer">
+                                <i class="fa fa-plus fa-10x" style="color: rgb(251, 130, 13); padding: 42px;"></i></a>
+                            </label>
+                            <input type="file" id="imgB" style="display: none;" accept="image/*" custom-on-change="loadImgB"/>
+                        </div>
+                    </div>
+                </div>
                 <h5>You can upload up to <b>2</b> images.</h5>
             </div>
+            
         </div>
 		<div class="col-sm-5">
 			<label>Map Location:</label>

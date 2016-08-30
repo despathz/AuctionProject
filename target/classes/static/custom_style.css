@@ -183,6 +183,27 @@ ul.my-pagination li a.active {
 
 ul.my-pagination li a:hover:not(.active) {background-color: #ddd;}
 
+.img-thumbnail {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+    padding: 0px;
+    border: 3px solid rgb(163, 159, 153);
+    border-radius: 4px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: auto;
+    height: 20%;
+    color: white;
+    display: block;
+    background: rgb(163, 159, 153);
+}
+
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
     .sidenav {
