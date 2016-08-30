@@ -77,13 +77,24 @@ public class AuctionImageController {
 				img.setImgPath("./img/auction_images/imgB" + auction_id + "." + fileType);
 			}
 			else {
-				if (flag == true)	//imgA is also emtpy
+				if (flag == true)	//imgA is also empty
 					img.setImgPath("./img/auction_images/imgA0.jpg");
 				else
-				img.setImgPath("");
+					img.setImgPath("");
 			}
 			
 			imageDAO.save(img);
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public boolean edit(@RequestBody saveImageResponse image) {
+		try {
+			
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());
@@ -124,6 +135,25 @@ public class AuctionImageController {
 					file.delete();
 				}
 			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return true;
+	}
+	
+	@RequestMapping(value = "/deleteOne/{auction_id}/{img}", method = RequestMethod.GET)
+	public boolean deleteSpecific(@PathVariable long auction_id, @PathVariable int img) {
+		try {
+			List<AuctionImage> images = imageDAO.findByAuctionId(auctionDAO.findById(auction_id));
+			new File("./src/main/resources/static" + images.get(img).getImgPath().substring(1)).delete();
+			images.get(img).setImgPath("");
+			if (img == 0 && images.get(img+1).getImgPath().equals(""))
+				images.get(img+1).setImgPath("./img/auction_images/imgA0.jpg");
+			else if (img == 1 && images.get(img-1).getImgPath().equals(""))
+				images.get(img).setImgPath("./img/auction_images/imgA0.jpg");
+			imageDAO.save(images.get(0));
+			imageDAO.save(images.get(1));
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());

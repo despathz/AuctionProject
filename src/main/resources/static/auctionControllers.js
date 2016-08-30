@@ -287,6 +287,17 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
         }
         r.readAsDataURL(f.files[0]);
     };
+    
+    $scope.clearImg = function(img) {
+        if (img === "imgA") {
+            $scope.images.imgA = "";
+            $('#imgA').val('');
+        }
+        else {
+            $scope.images.imgB = "";
+            $('#imgB').val('');
+        } 
+    };
 	
 	$scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
@@ -355,7 +366,8 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
     $scope.option = "Save";
     $scope.categoryList = [];
-    $scope.buy_price = {amount: ""}
+    $scope.buy_price = {amount: ""};
+    $scope.images = {imgA : "", imgB: ""};
     
     $scope.months = [{month: "Jan", number: 1}, {month: "Feb", number: 2}, {month: "Mar", number: 3}, {month: "Apr", number: 4}, {month: "May", number: 5}, {month: "Jun", number: 6}, {month: "Jul", number: 7}, {month: "Aug", number: 8}, {month: "Sep", number: 9}, {month: "Oct", number: 10}, {month: "Nov", number: 11}, {month: "Dec", number: 12}];
 	
@@ -419,6 +431,53 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
         });
     };
     
+    $http.get('/ws/image/get/' + $stateParams.id).
+    success(function(response) {
+        $scope.images.imgA = response[0];
+        $scope.images.imgB = response[1];
+        if ($scope.images.imgB === "./img/auction_images/imgA0.jpg")
+            $scope.images.imgB = "";
+    });
+    
+    $scope.loadImgA = function() {
+        var f = document.getElementById("imgA");
+        f.files[0],
+        r = new FileReader();
+        r.onloadend = function(e){
+            $scope.images.imgA = e.target.result;
+        }
+        r.readAsDataURL(f.files[0]);
+    };
+    
+    $scope.loadImgB = function() {
+        var f = document.getElementById("imgB");
+        f.files[0],
+        r = new FileReader();
+        r.onloadend = function(e){
+            $scope.images.imgB = e.target.result;
+        }
+        r.readAsDataURL(f.files[0]);
+    };
+    
+    $scope.clearImg = function(img) {
+        if (img === "imgA") {
+            if ($scope.images.imgA.indexOf("./img/auction_images/") != -1) {
+                $http.get('/ws/image/deleteOne/' + $stateParams.id + '/0').
+                success(function(response) {});
+            }
+            $scope.images.imgA = "";
+            $('#imgA').val('');
+        }
+        else {
+            if ($scope.images.imgB.indexOf("./img/auction_images/") != -1) {
+                $http.get('/ws/image/deleteOne/' + $stateParams.id + '/1').
+                success(function(response) {});
+            }
+            $scope.images.imgB = "";
+            $('#imgB').val('');
+        } 
+    };
+    
     $scope.submitAuction = function() {
 		$scope.basicFieldsError = false; 
 		$scope.databaseError = false;
@@ -464,7 +523,10 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
 			
             $http.post('/ws/auction/edit', $scope.auction).
 			success(function(response) {
-                $state.go('app.auction.display', {id: $scope.auction.id});
+                $http.post('/ws/image/edit', {id: $scope.auction.id, imgA: $scope.images.imgA, imgB: $scope.images.imgB}).
+                success(function(response) {
+                    $state.go('app.auction.display', {id: $scope.auction.id});
+                });
             });
 		}
 	};
