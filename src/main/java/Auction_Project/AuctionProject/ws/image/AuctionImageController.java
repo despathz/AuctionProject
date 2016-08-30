@@ -93,8 +93,42 @@ public class AuctionImageController {
 	
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean edit(@RequestBody saveImageResponse image) {
+		String[] parts;
+		String fileType, data;
+		byte[] decoded;
+		FileOutputStream fos;
 		try {
+			List<AuctionImage> images = imageDAO.findByAuctionId(auctionDAO.findById(image.getId()));
 			
+			if (image.getImgB().contains("data:")) {
+				parts = image.getImgB().split(";base64,");
+				fileType = parts[0];
+				data = parts[1];
+				fileType = fileType.replace("data:image/", "");
+				decoded = Base64.getDecoder().decode(data);
+				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgB" + image.getId() + "." + fileType);
+				fos.write(decoded);
+				fos.close();
+				images.get(1).setImgPath("./img/auction_images/imgB" + image.getId() + "." + fileType);
+				imageDAO.save(images.get(1));
+			}
+			
+			if (image.getImgA().contains("data:")) {
+				parts = image.getImgA().split(";base64,");
+				fileType = parts[0];
+				data = parts[1];
+				fileType = fileType.replace("data:image/", "");
+				decoded = Base64.getDecoder().decode(data);
+				fos = new FileOutputStream("./src/main/resources/static/img/auction_images/imgA" + image.getId() + "." + fileType);
+				fos.write(decoded);
+				fos.close();
+				images.get(0).setImgPath("./img/auction_images/imgA" + image.getId() + "." + fileType);
+				imageDAO.save(images.get(0));
+				if (images.get(1).getImgPath().equals("./img/auction_images/imgA0.jpg")) {
+					images.get(1).setImgPath("");
+					imageDAO.save(images.get(1));
+				}
+			}
 		}
 		catch (Exception ex){
 			System.out.println(ex.getMessage());

@@ -523,10 +523,14 @@ myApp.controller('editAuctionCtrl', ['$rootScope', '$scope', '$state', '$statePa
 			
             $http.post('/ws/auction/edit', $scope.auction).
 			success(function(response) {
-                $http.post('/ws/image/edit', {id: $scope.auction.id, imgA: $scope.images.imgA, imgB: $scope.images.imgB}).
-                success(function(response) {
+                if ($scope.images.imgA.indexOf("data:") != -1 || $scope.images.imgB.indexOf("data:") != -1) {
+                    $http.post('/ws/image/edit', {id: $scope.auction.id, imgA: $scope.images.imgA, imgB: $scope.images.imgB}).
+                    success(function(response) {
+                        $state.go('app.auction.display', {id: $scope.auction.id});
+                    });
+                }
+                else
                     $state.go('app.auction.display', {id: $scope.auction.id});
-                });
             });
 		}
 	};
