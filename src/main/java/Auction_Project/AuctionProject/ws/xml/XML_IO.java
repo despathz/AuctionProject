@@ -18,13 +18,17 @@ import org.w3c.dom.NodeList;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.BidDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
+import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.ws.auction.Auction;
 import Auction_Project.AuctionProject.ws.bid.Bid;
 import Auction_Project.AuctionProject.ws.category.Category;
+import Auction_Project.AuctionProject.ws.image.Avatar;
+import Auction_Project.AuctionProject.ws.user.User;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,6 +44,9 @@ public class XML_IO {
 	
 	@Autowired
 	private BidDAO bidDAO;
+	
+	@Autowired
+	private UserDAO userDAO;
 	
 	@RequestMapping(value = "/produce/{auction_id}", method = RequestMethod.GET)
 	public String create(@PathVariable long auction_id) {
@@ -240,6 +247,8 @@ public class XML_IO {
 	        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 	            Element eElement = (Element) nNode;
+	            Auction auction = new Auction();
+	            auction.setName(eElement.getElementsByTagName("Name").item(0).getTextContent());
 
 //	            System.out.println("ItemID : " + eElement.getAttribute("ItemID"));
 //	            System.out.println("Name : " + eElement.getElementsByTagName("Name").item(0).getTextContent());
@@ -270,37 +279,95 @@ public class XML_IO {
 	            
 //	            System.out.println("Currently : " + eElement.getElementsByTagName("Currently").item(0).getTextContent());
 //	            System.out.println("First_bid : " + eElement.getElementsByTagName("First_Bid").item(0).getTextContent());
-//	            
-//	            int bidNumber = Integer.parseInt(eElement.getElementsByTagName("Number_of_Bids").item(0).getTextContent());
-//	            System.out.println("Number_of_Bids : " + bidNumber);
-//	            
-//	            Element bidsElement = (Element) eElement.getElementsByTagName("Bids").item(0);
-//	            
-//	            for (int j = 0; j < bidNumber; j++) {
-//	            	Element bidElement = (Element) bidsElement.getElementsByTagName("Bid").item(j);
-//	            	Element bidderElement = (Element) bidElement.getElementsByTagName("Bidder").item(0);
-//	            	System.out.println("	Bidder UserID : " + bidderElement.getAttribute("UserID"));
-//	            	System.out.println("	Bidder Rating : " + bidderElement.getAttribute("Rating"));
+         
+	            auction.setCurrently(Float.parseFloat(eElement.getElementsByTagName("Currently").item(0).getTextContent().substring(1)));
+	            auction.setFirst_bid(Float.parseFloat(eElement.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1)));
+	            int bidNumber = Integer.parseInt(eElement.getElementsByTagName("Number_of_Bids").item(0).getTextContent());
+	            
+	            Element bidsElement = (Element) eElement.getElementsByTagName("Bids").item(0);
+	            
+	            for (int j = 0; j < bidNumber; j++) {
+	            	Element bidElement = (Element) bidsElement.getElementsByTagName("Bid").item(j);
+	            	Element bidderElement = (Element) bidElement.getElementsByTagName("Bidder").item(0);
 //	            	System.out.println("	Bidder Location : " + bidderElement.getElementsByTagName("Location").item(0).getTextContent());
 //	            	System.out.println("	Bidder Country : " + bidderElement.getElementsByTagName("Country").item(0).getTextContent());
+	            	if (userDAO.countByUsername(bidderElement.getAttribute("UserID")) == 0) {
+			            User user = new User();
+			            user.setUsername(bidderElement.getAttribute("UserID"));
+			            user.setBidderRating(Integer.parseInt(bidderElement.getAttribute("Rating")));
+			            user.setPassword("password");
+			            user.setEmail(bidderElement.getAttribute("UserID") + "@gmail.com");
+			            user.setRemember(false);
+			            user.setActivation(true);
+			            user.setSuperuser(false);
+			            user.setName(bidderElement.getAttribute("UserID"));
+			            user.setSurname("Jones");
+			            user.setAddress("St Pauls 89");
+			            user.setCountry("Italy");
+			            user.setTelephone("11880");
+			            user.setTrn("666");
+			            user.setLocation("Venezia");
+			            user.setSellerRating(0);
+			            user.setAvatar(new Avatar("./img/avatars/avatar0.png"));
+			            userDAO.save(user);
+		            }
+		            else {
+		            	User user = userDAO.findByUsername(bidderElement.getAttribute("UserID"));
+		            	user.setBidderRating(Integer.parseInt(bidderElement.getAttribute("Rating")));
+		            	user.setCountry("Italy");
+		            	user.setLocation("Venezia");
+		            	userDAO.save(user);
+		            }
 //	            	System.out.println("	Time : " + bidElement.getElementsByTagName("Time").item(0).getTextContent());
 //	            	System.out.println("	Amount : " + bidElement.getElementsByTagName("Amount").item(0).getTextContent());
 //	            	System.out.println("");
-//	            }
-//	            
+	            }
+            
 //	            Element lElement = (Element) eElement.getElementsByTagName("Location").item(bidNumber);
 //	            System.out.println("Location Longitude : " + lElement.getAttribute("Longitude"));
 //	            System.out.println("Location Latitude : " + lElement.getAttribute("Latitude"));
 //	            System.out.println("Location : " + lElement.getTextContent());
-//	            
+//	            auction.setLocation(lElement.getTextContent());
+	            auction.setCountry(eElement.getElementsByTagName("Country").item(0).getTextContent());
 //	            System.out.println("Country : " + eElement.getElementsByTagName("Country").item(0).getTextContent());
 //	            System.out.println("Started : " + eElement.getElementsByTagName("Started").item(0).getTextContent());
 //	            System.out.println("Ends : " + eElement.getElementsByTagName("Ends").item(0).getTextContent());
-//	            
-//	            Element sElement = (Element) eElement.getElementsByTagName("Seller").item(0);
-//	            System.out.println("Seller UserID : " + sElement.getAttribute("UserID"));
-//	            System.out.println("Seller Rating : " + sElement.getAttribute("Rating"));
-//	            
+	           
+	            auction.setStarted(new Date());
+	            auction.setCreated(auction.getStarted());
+	            auction.setEnds(new Date());
+	            Element sElement = (Element) eElement.getElementsByTagName("Seller").item(0);
+	            
+	            if (userDAO.countByUsername(sElement.getAttribute("UserID")) == 0) {
+		            User user = new User();
+		            user.setUsername(sElement.getAttribute("UserID"));
+		            user.setSellerRating(Integer.parseInt(sElement.getAttribute("Rating")));
+		            user.setPassword("password");
+		            user.setEmail(sElement.getAttribute("UserID") + "@gmail.com");
+		            user.setRemember(false);
+		            user.setActivation(true);
+		            user.setSuperuser(false);
+		            user.setName(sElement.getAttribute("UserID"));
+		            user.setSurname("Jones");
+		            user.setAddress("St Pauls 89");
+		            user.setCountry("Italy");
+		            user.setTelephone("11880");
+		            user.setTrn("666");
+		            user.setLocation("Venezia");
+		            user.setBidderRating(0);
+		            user.setAvatar(new Avatar("./img/avatars/avatar0.png"));
+		            userDAO.save(user);
+		            auction.setUser_seller_id(user);
+	            }
+	            else {
+	            	User user = userDAO.findByUsername(sElement.getAttribute("UserID"));
+	            	user.setSellerRating(Integer.parseInt(sElement.getAttribute("Rating")));
+	            	userDAO.save(user);
+	            	auction.setUser_seller_id(user);
+	            }
+	            
+	            auction.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+	            auctionDAO.save(auction);
 //	            System.out.println("Description : " + eElement.getElementsByTagName("Description").item(0).getTextContent());
 	        }
 	    }
