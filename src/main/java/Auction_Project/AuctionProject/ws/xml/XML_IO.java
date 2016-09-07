@@ -18,16 +18,19 @@ import org.w3c.dom.NodeList;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
 import Auction_Project.AuctionProject.dao.BidDAO;
 import Auction_Project.AuctionProject.dao.CategoryDAO;
+import Auction_Project.AuctionProject.dao.ImageDAO;
 import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.ws.auction.Auction;
 import Auction_Project.AuctionProject.ws.bid.Bid;
 import Auction_Project.AuctionProject.ws.category.Category;
+import Auction_Project.AuctionProject.ws.image.AuctionImage;
 import Auction_Project.AuctionProject.ws.image.Avatar;
 import Auction_Project.AuctionProject.ws.user.User;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +50,9 @@ public class XML_IO {
 	
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private ImageDAO imageDAO;
 	
 	@RequestMapping(value = "/produce/{auction_id}", method = RequestMethod.GET)
 	public String create(@PathVariable long auction_id) {
@@ -240,7 +246,7 @@ public class XML_IO {
 	    NodeList nList = doc.getElementsByTagName("Item");
 
 	    for (int i = 0; i < nList.getLength(); i++) {
-//	    for (int i = 2; i < 3; i++) {
+//	    for (int i = 0; i < 1; i++) {
 
 	        Node nNode = nList.item(i);
 
@@ -249,13 +255,12 @@ public class XML_IO {
 	            Element eElement = (Element) nNode;
 	            Auction auction = new Auction();
 	            auction.setName(eElement.getElementsByTagName("Name").item(0).getTextContent());
-
-//	            System.out.println("ItemID : " + eElement.getAttribute("ItemID"));
-//	            System.out.println("Name : " + eElement.getElementsByTagName("Name").item(0).getTextContent());
 	            
+	            List<Category> catList = new ArrayList<Category>();
 	            
 	            String catName = (String)eElement.getElementsByTagName("Category").item(0).getTextContent();
 	            Category parent = categoryDAO.findById(1);
+	            catList.add(parent);
 	            if (categoryDAO.countByNameAndParent(catName, parent) == 0) {
 	            	Category category = new Category();
 	            	category.setName(catName);
@@ -264,6 +269,7 @@ public class XML_IO {
 	            }
 	            else
 	            	parent = categoryDAO.findByNameAndParent(catName, parent);
+	            catList.add(parent);
 	            
 	            for (int j = 1; j < eElement.getElementsByTagName("Category").getLength(); j++) {
 	            	catName = (String)eElement.getElementsByTagName("Category").item(j).getTextContent();
@@ -275,22 +281,23 @@ public class XML_IO {
 		            }
 		            else
 		            	parent = categoryDAO.findByNameAndParent(catName, parent);
+		            catList.add(parent);
 	            }
 	            
-//	            System.out.println("Currently : " + eElement.getElementsByTagName("Currently").item(0).getTextContent());
-//	            System.out.println("First_bid : " + eElement.getElementsByTagName("First_Bid").item(0).getTextContent());
-         
+	            auction.setCategories(catList);
 	            auction.setCurrently(Float.parseFloat(eElement.getElementsByTagName("Currently").item(0).getTextContent().substring(1)));
 	            auction.setFirst_bid(Float.parseFloat(eElement.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1)));
 	            int bidNumber = Integer.parseInt(eElement.getElementsByTagName("Number_of_Bids").item(0).getTextContent());
 	            
 	            Element bidsElement = (Element) eElement.getElementsByTagName("Bids").item(0);
 	            
+	            List<Bid> bidList = new ArrayList<Bid>();
 	            for (int j = 0; j < bidNumber; j++) {
 	            	Element bidElement = (Element) bidsElement.getElementsByTagName("Bid").item(j);
 	            	Element bidderElement = (Element) bidElement.getElementsByTagName("Bidder").item(0);
 //	            	System.out.println("	Bidder Location : " + bidderElement.getElementsByTagName("Location").item(0).getTextContent());
 //	            	System.out.println("	Bidder Country : " + bidderElement.getElementsByTagName("Country").item(0).getTextContent());
+	            	User savedUser = new User();
 	            	if (userDAO.countByUsername(bidderElement.getAttribute("UserID")) == 0) {
 			            User user = new User();
 			            user.setUsername(bidderElement.getAttribute("UserID"));
@@ -309,15 +316,19 @@ public class XML_IO {
 			            user.setLocation("Venezia");
 			            user.setSellerRating(0);
 			            user.setAvatar(new Avatar("./img/avatars/avatar0.png"));
-			            userDAO.save(user);
+			            savedUser = userDAO.save(user);
 		            }
 		            else {
 		            	User user = userDAO.findByUsername(bidderElement.getAttribute("UserID"));
 		            	user.setBidderRating(Integer.parseInt(bidderElement.getAttribute("Rating")));
 		            	user.setCountry("Italy");
 		            	user.setLocation("Venezia");
-		            	userDAO.save(user);
+		            	savedUser = userDAO.save(user);
 		            }
+	            	Bid bid = new Bid();
+	            	bid.setAmount(Float.parseFloat(bidElement.getElementsByTagName("Amount").item(0).getTextContent().substring(1)));
+	            	bid.setBidder(savedUser);
+	            	bidList.add(bid);
 //	            	System.out.println("	Time : " + bidElement.getElementsByTagName("Time").item(0).getTextContent());
 //	            	System.out.println("	Amount : " + bidElement.getElementsByTagName("Amount").item(0).getTextContent());
 //	            	System.out.println("");
@@ -367,8 +378,26 @@ public class XML_IO {
 	            }
 	            
 	            auction.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
-	            auctionDAO.save(auction);
-//	            System.out.println("Description : " + eElement.getElementsByTagName("Description").item(0).getTextContent());
+	            Auction newAuction  = auctionDAO.save(auction);
+	            
+	            for (int j = 0; j < bidList.size(); j++) {
+	            	Bid tempBid = bidList.get(j);
+	            	tempBid.setAuctionId(newAuction);
+	            	bidDAO.save(tempBid);
+	            }
+	            
+	            bidList.clear();
+	            
+	            AuctionImage img = new AuctionImage();
+	            img.setImgPath("");
+	            img.setAuctionId(newAuction);
+	            imageDAO.save(img);
+	            
+	            img = new AuctionImage();
+	            img.setImgPath("./img/auction_images/imgA0.jpg");
+	            img.setAuctionId(newAuction);
+	            imageDAO.save(img);
+	            
 	        }
 	    }
 	    } catch (Exception e) {
