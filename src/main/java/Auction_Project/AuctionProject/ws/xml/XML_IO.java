@@ -30,6 +30,7 @@ import Auction_Project.AuctionProject.ws.user.User;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -235,6 +236,15 @@ public class XML_IO {
 	public void read(@PathVariable String filename) {
 
 	    try {
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+	    String[] parts;
+    	HashMap<String, Integer> monthMap = new HashMap<String, Integer>();
+		monthMap.put("Jan", 1);	monthMap.put("Feb", 2);
+		monthMap.put("Mar", 3);	monthMap.put("Apr", 4);
+		monthMap.put("May", 5);	monthMap.put("Jun", 6);
+		monthMap.put("Jul", 7);	monthMap.put("Aug", 8);
+		monthMap.put("Sep", 9);	monthMap.put("Oct", 10);
+		monthMap.put("Nov", 11);	monthMap.put("Dec", 12);
 
 	    File xmlFile = new File(filename + ".xml");
 	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -328,27 +338,31 @@ public class XML_IO {
 	            	Bid bid = new Bid();
 	            	bid.setAmount(Float.parseFloat(bidElement.getElementsByTagName("Amount").item(0).getTextContent().substring(1)));
 	            	bid.setBidder(savedUser);
+	            	String bidDate = bidElement.getElementsByTagName("Time").item(0).getTextContent();
+	            	parts = bidDate.split("[-  :]");
+	            	Date bidTime = sdf.parse(parts[1] + "/" + Integer.toString(monthMap.get(parts[0])) + "/20" + parts[2] + " " + parts[3] + ":" + parts[4] + ":" + parts[5]);
+	            	bid.setBid_time(bidTime);
 	            	bidList.add(bid);
-//	            	System.out.println("	Time : " + bidElement.getElementsByTagName("Time").item(0).getTextContent());
-//	            	System.out.println("	Amount : " + bidElement.getElementsByTagName("Amount").item(0).getTextContent());
-//	            	System.out.println("");
 	            }
             
-//	            Element lElement = (Element) eElement.getElementsByTagName("Location").item(bidNumber);
+	            Element lElement = (Element) eElement.getElementsByTagName("Location").item(eElement.getElementsByTagName("Location").getLength()-1);
 //	            System.out.println("Location Longitude : " + lElement.getAttribute("Longitude"));
 //	            System.out.println("Location Latitude : " + lElement.getAttribute("Latitude"));
-//	            System.out.println("Location : " + lElement.getTextContent());
-//	            auction.setLocation(lElement.getTextContent());
-	            auction.setCountry(eElement.getElementsByTagName("Country").item(0).getTextContent());
-//	            System.out.println("Country : " + eElement.getElementsByTagName("Country").item(0).getTextContent());
-//	            System.out.println("Started : " + eElement.getElementsByTagName("Started").item(0).getTextContent());
-//	            System.out.println("Ends : " + eElement.getElementsByTagName("Ends").item(0).getTextContent());
-	           
-	            auction.setStarted(new Date());
-	            auction.setCreated(auction.getStarted());
-	            auction.setEnds(new Date());
-	            Element sElement = (Element) eElement.getElementsByTagName("Seller").item(0);
+	            auction.setLocation(lElement.getTextContent());
+	            auction.setCountry(eElement.getElementsByTagName("Country").item(eElement.getElementsByTagName("Country").getLength()-1).getTextContent());
 	            
+	            String startDate = eElement.getElementsByTagName("Started").item(0).getTextContent();
+	            parts = startDate.split("[-  :]");
+	            Date started = sdf.parse(parts[1] + "/" + Integer.toString(monthMap.get(parts[0])) + "/20" + parts[2] + " " + parts[3] + ":" + parts[4] + ":" + parts[5]);
+	            auction.setStarted(started);
+	            auction.setCreated(auction.getStarted());
+	            
+	            String endsDate = eElement.getElementsByTagName("Ends").item(0).getTextContent();
+	            parts = endsDate.split("[-  :]");
+	            Date ends = sdf.parse(parts[1] + "/" + Integer.toString(monthMap.get(parts[0])) + "/20" + parts[2] + " " + parts[3] + ":" + parts[4] + ":" + parts[5]);
+	            auction.setEnds(ends);
+	            
+	            Element sElement = (Element) eElement.getElementsByTagName("Seller").item(0);
 	            if (userDAO.countByUsername(sElement.getAttribute("UserID")) == 0) {
 		            User user = new User();
 		            user.setUsername(sElement.getAttribute("UserID"));
