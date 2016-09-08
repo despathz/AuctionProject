@@ -256,7 +256,7 @@ public class XML_IO {
 	    NodeList nList = doc.getElementsByTagName("Item");
 
 	    for (int i = 0; i < nList.getLength(); i++) {
-//	    for (int i = 0; i < 1; i++) {
+//	    for (int i = 8; i < 9; i++) {
 
 	        Node nNode = nList.item(i);
 
@@ -295,6 +295,10 @@ public class XML_IO {
 	            }
 	            
 	            auction.setCategories(catList);
+	            if (eElement.getElementsByTagName("Buy_Price").getLength() == 1)
+	            	auction.setBuy_price(Float.parseFloat(eElement.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1)));
+	            else
+	            	auction.setBuy_price(0);
 	            auction.setCurrently(Float.parseFloat(eElement.getElementsByTagName("Currently").item(0).getTextContent().substring(1)));
 	            auction.setFirst_bid(Float.parseFloat(eElement.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1)));
 	            int bidNumber = Integer.parseInt(eElement.getElementsByTagName("Number_of_Bids").item(0).getTextContent());
@@ -346,8 +350,16 @@ public class XML_IO {
 	            }
             
 	            Element lElement = (Element) eElement.getElementsByTagName("Location").item(eElement.getElementsByTagName("Location").getLength()-1);
-//	            System.out.println("Location Longitude : " + lElement.getAttribute("Longitude"));
-//	            System.out.println("Location Latitude : " + lElement.getAttribute("Latitude"));
+	            String longitude = lElement.getAttribute("Longitude");
+	            String latitude = lElement.getAttribute("Latitude");
+	            if (longitude.length() != 0 && latitude.length() != 0) {
+	            	auction.setLongitude(longitude);
+	            	auction.setLatitude(latitude);
+	            }
+	            else {
+	            	auction.setLongitude("0");
+	            	auction.setLatitude("0");
+	            }
 	            auction.setLocation(lElement.getTextContent());
 	            auction.setCountry(eElement.getElementsByTagName("Country").item(eElement.getElementsByTagName("Country").getLength()-1).getTextContent());
 	            
