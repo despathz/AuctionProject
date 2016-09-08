@@ -52,7 +52,7 @@ public class SearchController {
 	public List<AuctionSearchResponse> browseCategory(@PathVariable long id, @PathVariable int page) {
 		List<AuctionSearchResponse> results = new ArrayList<AuctionSearchResponse>();
 		try {
-			List<Auction> auctions = categoryDAO.findAuctions(id, new PageRequest(page-1,2));
+			List<Auction> auctions = categoryDAO.findAuctions(id, new PageRequest(page-1,30));
 			for (int i = 0; i < auctions.size(); i++) {
 				AuctionSearchResponse result = new AuctionSearchResponse();
 				Auction auction = auctions.get(i);
@@ -152,7 +152,7 @@ public class SearchController {
 			search.setLocation(newLocation);
 		}
 		try {
-			List<Auction> auctions = auctionDAO.advancedSearchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation(), 2, (page-1) * 2);
+			List<Auction> auctions = auctionDAO.advancedSearchAuctions(search.getFrom(), search.getTo(), search.getKeywords(), search.getCategory(), search.getLocation(), 30, (page-1) * 30);
 			for (int i = 0; i < auctions.size(); i++) {
 				AuctionSearchResponse result = new AuctionSearchResponse();
 				Auction auction = auctions.get(i);

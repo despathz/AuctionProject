@@ -17,9 +17,12 @@ public interface AuctionDAO extends CrudRepository<Auction, Long>{
 	
 	public Auction findById(long id);
 	
-	@Query(value = "SELECT * FROM Auction a INNER JOIN auction_category c WHERE a.id = c.auction_id AND c.category_id = ?4 AND (a.currently BETWEEN ?1 AND ?2 OR a.buy_price BETWEEN ?1 AND ?2) "
+	@Query(value = "SELECT *, MATCH(a.name) AGAINST(?3 IN BOOLEAN MODE) AS rev1, MATCH(a.description) AGAINST(?3 IN BOOLEAN MODE) AS rev2, MATCH(a.location) AGAINST (?5 IN BOOLEAN MODE) AS rev3 " 
+			+ "FROM Auction a INNER JOIN auction_category c "
+			+ "WHERE a.id = c.auction_id AND c.category_id = ?4 AND (a.currently BETWEEN ?1 AND ?2 OR a.buy_price BETWEEN ?1 AND ?2) "
 			+ "AND (?3 IS NULL OR MATCH(a.description) AGAINST(?3 IN BOOLEAN MODE) OR MATCH(a.name) AGAINST(?3 IN BOOLEAN MODE)) "
 			+ "AND (?5 IS NULL OR MATCH(a.location) AGAINST (?5 IN BOOLEAN MODE)) "
+			+ "ORDER BY rev1+rev2+rev3 DESC "
 			+ "LIMIT ?6 OFFSET ?7",
 	nativeQuery = true)
 	public List<Auction> advancedSearchAuctions(float min, float max, String keywords, long category, String location, long page_size, long offset);
