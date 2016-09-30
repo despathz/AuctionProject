@@ -33,6 +33,11 @@ public interface AuctionDAO extends CrudRepository<Auction, Long>{
 	nativeQuery = true)
 	public long countAdvancedSearchAuctions(float min, float max, String keywords, long category, String location);
 	
+	@Query(value = "SELECT a.id "
+			+ "FROM Auction a, Bid b "
+			+ "WHERE b.bidder = ?1 AND b.auction_id = a.id", nativeQuery = true)
+	public List<Long> userAuctions(long user_id);
+	
 	public List<Auction> findBySellerOrderByCreatedDesc(User user_seller_id);
 	public Long countByIdAndStarted(long id, Date started);
 }

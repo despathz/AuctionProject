@@ -296,11 +296,11 @@ public class XML_IO {
 	            
 	            auction.setCategories(catList);
 	            if (eElement.getElementsByTagName("Buy_Price").getLength() == 1)
-	            	auction.setBuy_price(Float.parseFloat(eElement.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1)));
+	            	auction.setBuy_price(Float.parseFloat(eElement.getElementsByTagName("Buy_Price").item(0).getTextContent().substring(1).replace(",", "")));
 	            else
 	            	auction.setBuy_price(0);
-	            auction.setCurrently(Float.parseFloat(eElement.getElementsByTagName("Currently").item(0).getTextContent().substring(1)));
-	            auction.setFirst_bid(Float.parseFloat(eElement.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1)));
+	            auction.setCurrently(Float.parseFloat(eElement.getElementsByTagName("Currently").item(0).getTextContent().substring(1).replace(",", "")));
+	            auction.setFirst_bid(Float.parseFloat(eElement.getElementsByTagName("First_Bid").item(0).getTextContent().substring(1).replace(",", "")));
 	            int bidNumber = Integer.parseInt(eElement.getElementsByTagName("Number_of_Bids").item(0).getTextContent());
 	            
 	            Element bidsElement = (Element) eElement.getElementsByTagName("Bids").item(0);
@@ -340,7 +340,7 @@ public class XML_IO {
 		            	savedUser = userDAO.save(user);
 		            }
 	            	Bid bid = new Bid();
-	            	bid.setAmount(Float.parseFloat(bidElement.getElementsByTagName("Amount").item(0).getTextContent().substring(1)));
+	            	bid.setAmount(Float.parseFloat(bidElement.getElementsByTagName("Amount").item(0).getTextContent().substring(1).replace(",", "")));
 	            	bid.setBidder(savedUser);
 	            	String bidDate = bidElement.getElementsByTagName("Time").item(0).getTextContent();
 	            	parts = bidDate.split("[-  :]");

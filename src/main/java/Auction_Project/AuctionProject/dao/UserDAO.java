@@ -17,4 +17,5 @@ public interface UserDAO extends CrudRepository<User, Long>{
 	public Long countByEmail(String email);
 	public List<User> findBySuperuser(boolean superuser);
 	public User findByUsername(String username);
+	public List<User> findAll();
 }
