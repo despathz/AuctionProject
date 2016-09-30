@@ -1,6 +1,7 @@
 package Auction_Project.AuctionProject.dao;
 
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface AuctionDAO extends CrudRepository<Auction, Long>{
 	@Query(value = "SELECT a.id "
 			+ "FROM Auction a, Bid b "
 			+ "WHERE b.bidder = ?1 AND b.auction_id = a.id", nativeQuery = true)
-	public List<Long> userAuctions(long user_id);
+	public List<BigInteger> userAuctions(BigInteger user_id);
 	
 	public List<Auction> findBySellerOrderByCreatedDesc(User user_seller_id);
 	public Long countByIdAndStarted(long id, Date started);
