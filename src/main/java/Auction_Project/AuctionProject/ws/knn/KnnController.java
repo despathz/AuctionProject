@@ -2,6 +2,7 @@ package Auction_Project.AuctionProject.ws.knn;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -54,20 +55,20 @@ public class KnnController {
 	}
 	
 	@RequestMapping(value = "/getSuggestions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<BigInteger> getSuggestions(@PathVariable long id) {
+	public BigInteger[] getSuggestions(@PathVariable long id) {
 		
-		List<BigInteger> returnlist = new ArrayList<BigInteger>();
-		List<BigInteger> neighbor = new LinkedList<BigInteger>();
-		List<Double> neighborCos = new LinkedList<Double>();
-		
-//		for (int i = 0; i < 20; i++) {
-//			neighbor.add(BigInteger.ZERO);
-//			neighborCos.add(0.0);
-//		}
+		BigInteger[] recommendedItems =  {BigInteger.valueOf(10),BigInteger.valueOf(11),BigInteger.valueOf(12), BigInteger.valueOf(13), BigInteger.valueOf(14)};
+		BigInteger[] neighbor =  new BigInteger[20];
+		Double[] neighborCos =  new Double[20];
+		Arrays.fill(neighbor, BigInteger.ZERO);
+		Arrays.fill(neighborCos, 0.0);
 		
 		BigInteger userA = BigInteger.valueOf(id); 
+		
+		if (getUserArray().get(userA).size() == 0) //if the user hasn't bids to any auctions
+			return recommendedItems;
 		try {//calculate top 20 neighbors of user
-	
+			int position = 0;
 			for(BigInteger i: getUserArray().keySet()) {
 				List<BigInteger> userBAuctions = new LinkedList<BigInteger>();
 				
@@ -77,29 +78,36 @@ public class KnnController {
 				int c_userA = getUserArray().get(userA).size();
 				int c_userB = userBAuctions.size();
 				List<BigInteger> commonAuctionList = userBAuctions;
-				if (commonAuctionList.size() != 0)
-					System.out.println("B auctions: " + userBAuctions);
 				commonAuctionList.retainAll(getUserArray().get(userA)); 
-				if (c_userA != 0 && c_userB != 0)
-					System.out.println(getUserArray().get(userA).size() + " " + userA + " A has " + c_userA + " " + getUserArray().get(userA) + " B: " + c_userB + " " + i + "soo common: " + commonAuctionList.size() + " " + commonAuctionList);
-				
+
 				double cos_similarity = ((commonAuctionList.size()) / (Math.pow((c_userA * c_userB), 0.5)));
 				
-				if (commonAuctionList.size() != 0)
-					System.out.println("Cosine similarity: " + cos_similarity);
-				
-				if (commonAuctionList.size() != 0) {
-					neighborCos.add(cos_similarity);
-					neighbor.add(i);
+				if ((position == 20) && (commonAuctionList.size() != 0) && (neighborCos[19] < cos_similarity)) {
+					neighborCos[19] = cos_similarity;
+					neighbor[19] = i;
+					
+					for (int pos_i = 0; pos_i < 20; pos_i++) { //sort list with cosine similarity
+						for (int pos_j = 0; pos_j < 20; pos_j++) {
+							if (neighborCos[pos_i] > neighborCos[pos_j]) {
+								double temp = neighborCos[pos_i];
+								BigInteger btemp = neighbor[pos_i];
+								neighborCos[pos_i] = neighborCos[pos_j];
+								neighbor[pos_i] = neighbor[pos_j];
+								neighborCos[pos_j] = temp;
+								neighbor[pos_j] = btemp;
+							}
+						}
+					}
 				}
-				//System.out.println(neighbor);
-				//sort the two lists
-				
-
+				else if ((commonAuctionList.size() != 0) && (position != 20)) {
+					neighborCos[position] = cos_similarity;
+					neighbor[position] = i;
+					position++;
+				}
 			}
 			//find top 5 items to suggest
-			//List<BigInteger> itemList = new LinkedList<BigInteger>();
 			Map<BigInteger, List<BigInteger>> itemHaveBidders = new HashMap<BigInteger, List<BigInteger>>();
+			System.out.println("Regina <3");
 			for (BigInteger nearNeighbor: neighbor)  { //get all the items of the neighbors
 				for (BigInteger item: userArray.get(nearNeighbor)) {
 					System.out.println("neig " + nearNeighbor + " item " + item);
@@ -117,27 +125,53 @@ public class KnnController {
 					}
 				}
 			}
-			//System.out.println(itemHaveBidders);
 			
 			for (BigInteger userAitem : getUserArray().get(userA)) { //remove all the userA items
 				if (itemHaveBidders.containsKey(userAitem))
 					itemHaveBidders.remove(userAitem);
 			}
-			//System.out.println(getUserArray().get(userA) + "  " + itemHaveBidders);
 
+			int total = itemHaveBidders.keySet().size();
+			BigInteger[] sortedItems =  new BigInteger[total];
+			Integer[] popularItems = new Integer[total];
+			total = 0;
+			for (BigInteger key : itemHaveBidders.keySet()) {
+				int size = itemHaveBidders.get(key).size();
+				popularItems[total] = size;
+				sortedItems[total]= key;
+				total++;
+			}
+			System.out.println(Arrays.toString(sortedItems));
+			System.out.println(Arrays.toString(popularItems));
+			
+			//sort items according to the amount of nearest neighbors that have bids on the item
+			for (int pos_i = 0; pos_i < 20; pos_i++) { //sort list with cosine similarity
+				for (int pos_j = 0; pos_j < 20; pos_j++) {
+					if (popularItems[pos_i] > popularItems[pos_j]) {
+						int temp = popularItems[pos_i];
+						BigInteger btemp = sortedItems[pos_i];
+						popularItems[pos_i] = popularItems[pos_j];
+						sortedItems[pos_i] = sortedItems[pos_j];
+						popularItems[pos_j] = temp;
+						sortedItems[pos_j] = btemp;
+					}
+				}
+			}
+			
+			for (int x = 0; x < 5; x++)
+				recommendedItems[x] = sortedItems[x];
+			System.out.println(Arrays.toString(recommendedItems));
 			
 		}
 		catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
 		
-		for (int x = 10; x < 15; x++)
-			returnlist.add(BigInteger.valueOf(x));
-		System.out.println(returnlist);
-		
-		return returnlist;
+		return recommendedItems;
 	}
 
+	
+	
 	public Map<BigInteger, List<BigInteger>> getUserArray() {
 		return userArray;
 	}
