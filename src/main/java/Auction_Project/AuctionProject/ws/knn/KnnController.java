@@ -43,10 +43,9 @@ public class KnnController {
 	@Autowired
 	private ImageDAO imageDAO;
 	
-	private Map<BigInteger, List<BigInteger>> userArray;
+	private Map<BigInteger, List<BigInteger>> userArray; //<user, <List of auctions user had bidden>>
 
-
-	@Scheduled(fixedRate = 360000)
+	@Scheduled(fixedRate = 3600000) //update every hour
 	public void updateArray() {
 		
 		List<User> userList = userDAO.findAll();
@@ -60,9 +59,7 @@ public class KnnController {
 			newUserArray.put(user_id, auctionList);//store <user_id(long), auctionList(list of long)>
 		}
 		setUserArray(newUserArray);
-		
-		System.out.println("array ok" + newUserArray.size() + newUserArray);
-		
+		System.out.println("array completed");
 	}
 	
 	@RequestMapping(value = "/getSuggestions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -75,20 +72,14 @@ public class KnnController {
 		Arrays.fill(neighbor, BigInteger.ZERO);
 		Arrays.fill(neighborCos, 0.0);
 		
-		BigInteger userA = BigInteger.valueOf(id); 
-		if (getUserArray().get(userA).size() == 0) //if the user hasn't bids to any auctions
+		BigInteger userA = BigInteger.valueOf(id);  
+		if (getUserArray().get(userA).size() == 0) //if the user hasn't bids to any auctions find 5 random to recommend
 		{
 			Integer totalAuctions = auctionDAO.countAuctions();
 			for (int x = 0; x < 5; x++) {
-				while (true) {
-					Random rand = new Random();
-					int  n = rand.nextInt(totalAuctions) + 1;
-					if (!userArray.get(userA).contains(BigInteger.valueOf(n)))
-					{
-						recommendedItems[x] = BigInteger.valueOf(n);
-						break;
-					}
-				}
+				Random rand = new Random();
+				int  n = rand.nextInt(totalAuctions) + 1;
+				recommendedItems[x] = BigInteger.valueOf(n);
 			}
 			
 			List<Auction> auctionList = auctionDAO.suggestions(recommendedItems[0], recommendedItems[1], recommendedItems[2], recommendedItems[3], recommendedItems[4]);
@@ -126,22 +117,22 @@ public class KnnController {
 			return returnList;
 		}
 		
-		try {//calculate top 20 neighbors of user
+		try { //calculate top 20 neighbors of user
 			int position = 0;
-			for(BigInteger i: getUserArray().keySet()) {
+			for(BigInteger i: getUserArray().keySet()) { //for every user in the dataset
 				List<BigInteger> userBAuctions = new LinkedList<BigInteger>();
 				
-				for (int j = 0; j < getUserArray().get(i).size(); j++)
-					userBAuctions.add(getUserArray().get(i).get(j));
+				for (int j = 0; j < getUserArray().get(i).size(); j++) 
+					userBAuctions.add(getUserArray().get(i).get(j)); //get the auctions the possible neighbor had bidden
 				
-				int c_userA = getUserArray().get(userA).size();
-				int c_userB = userBAuctions.size();
+				int c_userA = getUserArray().get(userA).size(); //amount of auctions loggedin user ad bidden
+				int c_userB = userBAuctions.size(); //amount of auctions possible neighbor had bidden
 				List<BigInteger> commonAuctionList = userBAuctions;
-				commonAuctionList.retainAll(getUserArray().get(userA)); 
+				commonAuctionList.retainAll(getUserArray().get(userA)); //get the common auctions of the two users
 
 				double cos_similarity = ((commonAuctionList.size()) / (Math.pow((c_userA * c_userB), 0.5)));
 				
-				if ((position == 20) && (commonAuctionList.size() != 0) && (neighborCos[19] < cos_similarity)) {
+				if ((position == 20) && (commonAuctionList.size() != 0) && (neighborCos[19] < cos_similarity)) { //update the top 20 neighbors
 					neighborCos[19] = cos_similarity;
 					neighbor[19] = i;
 					
@@ -158,7 +149,7 @@ public class KnnController {
 						}
 					}
 				}
-				else if ((commonAuctionList.size() != 0) && (position != 20)) {
+				else if ((commonAuctionList.size() != 0) && (position != 20)) { //if the neighbors array is not full insert the new neighbor
 					neighborCos[position] = cos_similarity;
 					neighbor[position] = i;
 					position++;
@@ -178,7 +169,13 @@ public class KnnController {
 					}
 				}
 			}
-			//find top 5 items to suggest
+			/*
+			 * find top 5 items to suggest
+			 * Heuristic for choosing the top 5 recommended items:
+			 *  > Get all the items each neighbor had bidden
+			 *  > Sort the items by the amount of neighbors that had bid on them
+			 */
+			
 			Map<BigInteger, List<BigInteger>> itemHaveBidders = new HashMap<BigInteger, List<BigInteger>>();
 			for (BigInteger nearNeighbor: neighbor)  { //get all the items of the neighbors
 				if (nearNeighbor == BigInteger.ZERO)
@@ -220,7 +217,6 @@ public class KnnController {
 			}
 			
 			//sort items according to the amount of nearest neighbors that have bids on the item
-			
 			if (sortedItems[0] != BigInteger.ZERO)  //in case the only common item with the neighbors is already recommended
 			{
 				for (int pos_i = 0; pos_i < sortedItems.length; pos_i++) { //sort list 
