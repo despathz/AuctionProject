@@ -94,7 +94,7 @@ public class KnnController {
 				temp2Auction.setSeller_id(tempAuction.getUser_seller_id().getId());
 				temp2Auction.setRating(tempAuction.getUser_seller_id().getSellerRating());
 				temp2Auction.setSeller_username(tempAuction.getUser_seller_id().getUsername());
-				temp2Auction.setStatus(true);
+				temp2Auction.setStatus(false);
 				
 				List<Category> catList = tempAuction.getCategories();
 				List<CategoryResponse> catRes = new ArrayList<CategoryResponse>();
@@ -264,7 +264,7 @@ public class KnnController {
 				temp2Auction.setSeller_id(tempAuction.getUser_seller_id().getId());
 				temp2Auction.setRating(tempAuction.getUser_seller_id().getSellerRating());
 				temp2Auction.setSeller_username(tempAuction.getUser_seller_id().getUsername());
-				temp2Auction.setStatus(true);
+				temp2Auction.setStatus(false);
 				
 				List<Category> catList = tempAuction.getCategories();
 				List<CategoryResponse> catRes = new ArrayList<CategoryResponse>();

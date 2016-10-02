@@ -41,12 +41,10 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-5 text-left">
-                                <h5 ng-show="auction.status"><b>Status:</b> <span style= "color: rgb(251, 130, 13)">active</span></h5>
-                                <h5 ng-hide="auction.status"><b>Status:</b> <span>inactive</span></h5>
+                                 <h5><b>Seller:</b> <a href="" ng-click="sellerProfile(auction.seller_id)" style= "color: rgb(251, 130, 13)">{{auction.seller_username}}</a></h5>
                                 <h5><b>Location:</b> {{auction.location}}</h5>
                             </div>
                             <div class="col-sm-3 text-left">
-                                <h5><b>Seller:</b> <a href="" ng-click="sellerProfile(auction.seller_id)" style= "color: rgb(251, 130, 13)">{{auction.seller_username}}</a></h5>
                                 <h5><b>Rating:</b> {{auction.rating}}</h5>
                             </div>
                             <div class="col-sm-4 text-left">

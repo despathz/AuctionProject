@@ -33,9 +33,9 @@
 						<h5><b>Location:</b> {{auction.location}}</h5>
                     </div>
                     <div class="col-sm-3 text-left">
+						<h5><b>Rating:</b> {{auction.rating}}</h5>
                         <h5 ng-show="auction.status"><b>Status:</b> <span style= "color: rgb(251, 130, 13)">active</span></h5>
                         <h5 ng-hide="auction.status"><b>Status:</b> <span>inactive</span></h5>
-						<h5><b>Rating:</b> {{auction.rating}}</h5>
                     </div>
                     <div class="col-sm-4 text-left">
                         <h5 style= "font-size: 120%" ng-hide="auction.buy_price == 0"><b>Buy price:</b> {{auction.buy_price}}$</h5>
