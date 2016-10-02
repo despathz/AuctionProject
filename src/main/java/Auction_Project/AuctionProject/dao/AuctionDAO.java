@@ -47,4 +47,9 @@ public interface AuctionDAO extends CrudRepository<Auction, Long>{
 			+ "FROM AUCTION a", nativeQuery = true)
 	public Integer countAuctions();
 	
+	
+	@Query(value = "SELECT * "
+			+ "FROM AUCTION a "
+			+ "WHERE a.id = ?1 OR a.id = ?2 OR a.id = ?3 OR a.id = ?4 OR a.id = ?5", nativeQuery = true)
+	public List<Auction> suggestions(BigInteger id1, BigInteger id2, BigInteger id3, BigInteger id4, BigInteger id5);
 }

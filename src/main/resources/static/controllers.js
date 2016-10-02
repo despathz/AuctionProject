@@ -4,7 +4,7 @@ myApp.controller('navCtrl', ['$rootScope', '$scope', '$stateParams', 'notify', '
     }, 5);
 }]);
 
-myApp.controller('mainCtrl', ['$rootScope', '$scope', '$state', '$stateParams', function($rootScope, $scope, $state, $stateParams) {
+myApp.controller('mainCtrl', ['$rootScope', '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $state, $http, $stateParams) {
     $scope.isAdmin = false;
 	$scope.user_id = parseInt($stateParams.id);
 	if ($scope.user_id == 1)
@@ -15,6 +15,13 @@ myApp.controller('mainCtrl', ['$rootScope', '$scope', '$state', '$stateParams', 
         if ($scope.keywords !== "")
             $state.go('app.results', {keywords: $scope.keywords, page: 1, category: 1});
     };
+    
+    if ($rootScope.session.loggedIn) {
+        $http.get('/ws/knn/getSuggestions/1')
+        .success(function(response) {
+            $scope.results = response;
+        });
+    }
     
 }]);
 

@@ -1,6 +1,7 @@
 package Auction_Project.AuctionProject.ws.knn;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,8 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import Auction_Project.AuctionProject.dao.UserDAO;
+import Auction_Project.AuctionProject.ws.auction.Auction;
+import Auction_Project.AuctionProject.ws.category.Category;
+import Auction_Project.AuctionProject.ws.image.AuctionImage;
 import Auction_Project.AuctionProject.ws.user.User;
 import Auction_Project.AuctionProject.dao.AuctionDAO;
+import Auction_Project.AuctionProject.dao.ImageDAO;
+import Auction_Project.AuctionProject.dto.auction.AuctionSearchResponse;
+import Auction_Project.AuctionProject.dto.category.CategoryResponse;
+
 @EnableScheduling
 @RestController
 @RequestMapping("/ws/knn")
@@ -31,6 +39,9 @@ public class KnnController {
 	
 	@Autowired
 	private AuctionDAO auctionDAO;
+	
+	@Autowired
+	private ImageDAO imageDAO;
 	
 	private Map<BigInteger, List<BigInteger>> userArray;
 
@@ -55,8 +66,9 @@ public class KnnController {
 	}
 	
 	@RequestMapping(value = "/getSuggestions/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public BigInteger[] getSuggestions(@PathVariable long id) {
+	public List<AuctionSearchResponse> getSuggestions(@PathVariable long id) {
 		
+		List<AuctionSearchResponse> returnList = new ArrayList<AuctionSearchResponse>();
 		BigInteger[] recommendedItems =  {BigInteger.valueOf(10),BigInteger.valueOf(11),BigInteger.valueOf(12), BigInteger.valueOf(13), BigInteger.valueOf(14)};
 		BigInteger[] neighbor =  new BigInteger[20];
 		Double[] neighborCos =  new Double[20];
@@ -79,7 +91,40 @@ public class KnnController {
 					}
 				}
 			}
-			return recommendedItems;
+			
+			List<Auction> auctionList = auctionDAO.suggestions(recommendedItems[0], recommendedItems[1], recommendedItems[2], recommendedItems[3], recommendedItems[4]);
+			for (int i = 0; i < 5; i++) {
+				Auction tempAuction = auctionList.get(i);
+				AuctionSearchResponse temp2Auction = new AuctionSearchResponse();
+				temp2Auction.setId(tempAuction.getId());
+				temp2Auction.setName(tempAuction.getName());
+				temp2Auction.setLocation(tempAuction.getLocation());
+				temp2Auction.setCurrently(tempAuction.getCurrently());
+				temp2Auction.setBuy_price(tempAuction.getBuy_price());
+				temp2Auction.setSeller_id(tempAuction.getUser_seller_id().getId());
+				temp2Auction.setRating(tempAuction.getUser_seller_id().getSellerRating());
+				temp2Auction.setSeller_username(tempAuction.getUser_seller_id().getUsername());
+				temp2Auction.setStatus(true);
+				
+				List<Category> catList = tempAuction.getCategories();
+				List<CategoryResponse> catRes = new ArrayList<CategoryResponse>();
+				for (int j = 0; j < catList.size(); j++) {
+					CategoryResponse cat = new CategoryResponse();
+					cat.setId(catList.get(j).getId());
+					cat.setName(catList.get(j).getName());
+					catRes.add(cat);
+				}
+				temp2Auction.setCategories(catRes);
+				
+				List<AuctionImage> imgs = imageDAO.findByAuctionId(tempAuction);
+				if (imgs.get(0).getImgPath().equals(""))
+					temp2Auction.setImg(imgs.get(1).getImgPath());
+				else
+					temp2Auction.setImg(imgs.get(0).getImgPath());
+				
+				returnList.add(temp2Auction);
+			}
+			return returnList;
 		}
 		
 		try {//calculate top 20 neighbors of user
@@ -118,6 +163,20 @@ public class KnnController {
 					neighborCos[position] = cos_similarity;
 					neighbor[position] = i;
 					position++;
+					if (position == 20) {
+						for (int pos_i = 0; pos_i < 20; pos_i++) { //sort list with cosine similarity
+							for (int pos_j = 0; pos_j < 20; pos_j++) {
+								if (neighborCos[pos_i] > neighborCos[pos_j]) {
+									double temp = neighborCos[pos_i];
+									BigInteger btemp = neighbor[pos_i];
+									neighborCos[pos_i] = neighborCos[pos_j];
+									neighbor[pos_i] = neighbor[pos_j];
+									neighborCos[pos_j] = temp;
+									neighbor[pos_j] = btemp;
+								}
+							}
+						}
+					}
 				}
 			}
 			//find top 5 items to suggest
@@ -190,12 +249,43 @@ public class KnnController {
 				}
 			}
 			
+			List<Auction> auctionList = auctionDAO.suggestions(recommendedItems[0], recommendedItems[1], recommendedItems[2], recommendedItems[3], recommendedItems[4]);
+			for (int i = 0; i < 5; i++) {
+				Auction tempAuction = auctionList.get(i);
+				AuctionSearchResponse temp2Auction = new AuctionSearchResponse();
+				temp2Auction.setId(tempAuction.getId());
+				temp2Auction.setName(tempAuction.getName());
+				temp2Auction.setLocation(tempAuction.getLocation());
+				temp2Auction.setCurrently(tempAuction.getCurrently());
+				temp2Auction.setBuy_price(tempAuction.getBuy_price());
+				temp2Auction.setSeller_id(tempAuction.getUser_seller_id().getId());
+				temp2Auction.setRating(tempAuction.getUser_seller_id().getSellerRating());
+				temp2Auction.setSeller_username(tempAuction.getUser_seller_id().getUsername());
+				temp2Auction.setStatus(true);
+				
+				List<Category> catList = tempAuction.getCategories();
+				List<CategoryResponse> catRes = new ArrayList<CategoryResponse>();
+				for (int j = 0; j < catList.size(); j++) {
+					CategoryResponse cat = new CategoryResponse();
+					cat.setId(catList.get(j).getId());
+					cat.setName(catList.get(j).getName());
+					catRes.add(cat);
+				}
+				temp2Auction.setCategories(catRes);
+				
+				List<AuctionImage> imgs = imageDAO.findByAuctionId(tempAuction);
+				if (imgs.get(0).getImgPath().equals(""))
+					temp2Auction.setImg(imgs.get(1).getImgPath());
+				else
+					temp2Auction.setImg(imgs.get(0).getImgPath());
+				
+				returnList.add(temp2Auction);
+			}
 		}
 		catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
-		
-		return recommendedItems;
+		return returnList;
 	}
 
 	
