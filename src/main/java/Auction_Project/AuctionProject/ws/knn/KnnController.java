@@ -76,7 +76,6 @@ public class KnnController {
 		Arrays.fill(neighborCos, 0.0);
 		
 		BigInteger userA = BigInteger.valueOf(id); 
-		
 		if (getUserArray().get(userA).size() == 0) //if the user hasn't bids to any auctions
 		{
 			Integer totalAuctions = auctionDAO.countAuctions();
@@ -146,16 +145,16 @@ public class KnnController {
 					neighborCos[19] = cos_similarity;
 					neighbor[19] = i;
 					
-					for (int pos_i = 0; pos_i < 20; pos_i++) { //sort list with cosine similarity
-						for (int pos_j = 0; pos_j < 20; pos_j++) {
-							if (neighborCos[pos_i] > neighborCos[pos_j]) {
-								double temp = neighborCos[pos_i];
-								BigInteger btemp = neighbor[pos_i];
-								neighborCos[pos_i] = neighborCos[pos_j];
-								neighbor[pos_i] = neighbor[pos_j];
-								neighborCos[pos_j] = temp;
-								neighbor[pos_j] = btemp;
-							}
+					int cur_pos = 19;
+					for (int pos_i = 18; pos_i >= 0; pos_i--) { //sort list with cosine similarity
+						if (neighborCos[pos_i] < neighborCos[cur_pos]) {
+							double temp = neighborCos[pos_i];
+							BigInteger btemp = neighbor[pos_i];
+							neighborCos[pos_i] = neighborCos[cur_pos];
+							neighbor[pos_i] = neighbor[cur_pos];
+							neighborCos[cur_pos] = temp;
+							neighbor[cur_pos] = btemp;
+							cur_pos = pos_i;
 						}
 					}
 				}
@@ -182,6 +181,8 @@ public class KnnController {
 			//find top 5 items to suggest
 			Map<BigInteger, List<BigInteger>> itemHaveBidders = new HashMap<BigInteger, List<BigInteger>>();
 			for (BigInteger nearNeighbor: neighbor)  { //get all the items of the neighbors
+				if (nearNeighbor == BigInteger.ZERO)
+					break;
 				for (BigInteger item: userArray.get(nearNeighbor)) {
 					if (!itemHaveBidders.containsKey(item)) {
 						List<BigInteger> curNeighborList = new LinkedList<BigInteger>();
@@ -204,28 +205,34 @@ public class KnnController {
 			}
 
 			int total = itemHaveBidders.keySet().size();
+			if (total < 5)
+				total = 5;
 			BigInteger[] sortedItems =  new BigInteger[total];
 			Integer[] popularItems = new Integer[total];
 			Arrays.fill(sortedItems, BigInteger.ZERO);
 			Arrays.fill(popularItems, 0);
-			total = 0;
+			int posA = 0;
 			for (BigInteger key : itemHaveBidders.keySet()) {
 				int size = itemHaveBidders.get(key).size();
-				popularItems[total] = size;
-				sortedItems[total]= key;
-				total++;
+				popularItems[posA] = size;
+				sortedItems[posA]= key;
+				posA++;
 			}
 			
 			//sort items according to the amount of nearest neighbors that have bids on the item
-			for (int pos_i = 0; pos_i < 20; pos_i++) { //sort list with cosine similarity
-				for (int pos_j = 0; pos_j < 20; pos_j++) {
-					if (popularItems[pos_i] > popularItems[pos_j]) {
-						int temp = popularItems[pos_i];
-						BigInteger btemp = sortedItems[pos_i];
-						popularItems[pos_i] = popularItems[pos_j];
-						sortedItems[pos_i] = sortedItems[pos_j];
-						popularItems[pos_j] = temp;
-						sortedItems[pos_j] = btemp;
+			
+			if (sortedItems[0] != BigInteger.ZERO)  //in case the only common item with the neighbors is already recommended
+			{
+				for (int pos_i = 0; pos_i < sortedItems.length; pos_i++) { //sort list 
+					for (int pos_j = 0; pos_j < sortedItems.length; pos_j++) {
+						if (popularItems[pos_i] > popularItems[pos_j]) {
+							int temp = popularItems[pos_i];
+							BigInteger btemp = sortedItems[pos_i];
+							popularItems[pos_i] = popularItems[pos_j];
+							sortedItems[pos_i] = sortedItems[pos_j];
+							popularItems[pos_j] = temp;
+							sortedItems[pos_j] = btemp;
+						}
 					}
 				}
 			}

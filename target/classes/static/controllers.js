@@ -4,7 +4,7 @@ myApp.controller('navCtrl', ['$rootScope', '$scope', '$stateParams', 'notify', '
     }, 5);
 }]);
 
-myApp.controller('mainCtrl', ['$rootScope', '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $state, $http, $stateParams) {
+myApp.controller('mainCtrl', ['$rootScope', '$scope', '$http', '$state', '$stateParams', function($rootScope, $scope, $http, $state, $stateParams) {
     $scope.isAdmin = false;
 	$scope.user_id = parseInt($stateParams.id);
 	if ($scope.user_id == 1)
@@ -17,11 +17,37 @@ myApp.controller('mainCtrl', ['$rootScope', '$scope', '$http', '$state', '$state
     };
     
     if ($rootScope.session.loggedIn) {
-        $http.get('/ws/knn/getSuggestions/1')
+        $http.get('/ws/knn/getSuggestions/' + $rootScope.session.id)
         .success(function(response) {
             $scope.results = response;
+            $scope.auction = $scope.results[0];
+            $scope.counter = 1;
         });
     }
+    
+    $scope.sellerProfile = function(user_id) {
+        $state.go('app.profile', {id: user_id});
+    };
+    
+    $scope.auctionPage = function(auction_id) {
+        $state.go('app.auction.display', {id: auction_id});
+    };
+    
+    $scope.next = function() {
+        if ($scope.counter == 5)
+            $scope.counter = 1;
+        else
+            $scope.counter += 1;
+        $scope.auction = $scope.results[$scope.counter-1];
+    };
+    
+     $scope.prev = function() {
+        if ($scope.counter == 1)
+            $scope.counter = 5;
+        else
+            $scope.counter -= 1;
+        $scope.auction = $scope.results[$scope.counter-1];
+    };
     
 }]);
 
