@@ -1,13 +1,13 @@
 package Auction_Project.AuctionProject.ws.knn;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -66,7 +66,22 @@ public class KnnController {
 		BigInteger userA = BigInteger.valueOf(id); 
 		
 		if (getUserArray().get(userA).size() == 0) //if the user hasn't bids to any auctions
+		{
+			Integer totalAuctions = auctionDAO.countAuctions();
+			for (int x = 0; x < 5; x++) {
+				while (true) {
+					Random rand = new Random();
+					int  n = rand.nextInt(totalAuctions) + 1;
+					if (!userArray.get(userA).contains(BigInteger.valueOf(n)))
+					{
+						recommendedItems[x] = BigInteger.valueOf(n);
+						break;
+					}
+				}
+			}
 			return recommendedItems;
+		}
+		
 		try {//calculate top 20 neighbors of user
 			int position = 0;
 			for(BigInteger i: getUserArray().keySet()) {
@@ -107,10 +122,8 @@ public class KnnController {
 			}
 			//find top 5 items to suggest
 			Map<BigInteger, List<BigInteger>> itemHaveBidders = new HashMap<BigInteger, List<BigInteger>>();
-			System.out.println("Regina <3");
 			for (BigInteger nearNeighbor: neighbor)  { //get all the items of the neighbors
 				for (BigInteger item: userArray.get(nearNeighbor)) {
-					System.out.println("neig " + nearNeighbor + " item " + item);
 					if (!itemHaveBidders.containsKey(item)) {
 						List<BigInteger> curNeighborList = new LinkedList<BigInteger>();
 						curNeighborList.add(nearNeighbor);
@@ -134,6 +147,8 @@ public class KnnController {
 			int total = itemHaveBidders.keySet().size();
 			BigInteger[] sortedItems =  new BigInteger[total];
 			Integer[] popularItems = new Integer[total];
+			Arrays.fill(sortedItems, BigInteger.ZERO);
+			Arrays.fill(popularItems, 0);
 			total = 0;
 			for (BigInteger key : itemHaveBidders.keySet()) {
 				int size = itemHaveBidders.get(key).size();
@@ -141,8 +156,6 @@ public class KnnController {
 				sortedItems[total]= key;
 				total++;
 			}
-			System.out.println(Arrays.toString(sortedItems));
-			System.out.println(Arrays.toString(popularItems));
 			
 			//sort items according to the amount of nearest neighbors that have bids on the item
 			for (int pos_i = 0; pos_i < 20; pos_i++) { //sort list with cosine similarity
@@ -159,8 +172,23 @@ public class KnnController {
 			}
 			
 			for (int x = 0; x < 5; x++)
-				recommendedItems[x] = sortedItems[x];
-			System.out.println(Arrays.toString(recommendedItems));
+			{
+				if (sortedItems[x] != BigInteger.ZERO)
+					recommendedItems[x] = sortedItems[x];
+				else
+				{
+					Integer totalAuctions = auctionDAO.countAuctions();
+					while (true) {
+						Random rand = new Random();
+						int  n = rand.nextInt(totalAuctions) + 1;
+						if (!Arrays.asList(sortedItems).contains(BigInteger.valueOf(n)) && !userArray.get(userA).contains(BigInteger.valueOf(n)))
+						{
+							recommendedItems[x] = BigInteger.valueOf(n);
+							break;
+						}
+					}
+				}
+			}
 			
 		}
 		catch (Exception ex) {

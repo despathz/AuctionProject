@@ -42,4 +42,9 @@ public interface AuctionDAO extends CrudRepository<Auction, Long>{
 	public List<Auction> findBySellerOrderByCreatedDesc(User user_seller_id);
 	public Long countByIdAndStarted(long id, Date started);
 	public List<Auction> findAll();
+	
+	@Query(value = "SELECT COUNT(*)"
+			+ "FROM AUCTION a", nativeQuery = true)
+	public Integer countAuctions();
+	
 }
