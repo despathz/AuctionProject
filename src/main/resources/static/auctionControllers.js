@@ -126,14 +126,6 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
         }
     });
     
-    $scope.getXML = function() {
-        var res = $http.get('/ws/xml/produce/' + $stateParams.id);
-        res.success(function(response) {
-            $scope.xmlFile = response + ".xml";
-            $scope.XMLcreated = true;
-        });
-    };
-    
     $scope.creatorProfile = function() {
         $state.go("app.profile", {id: $scope.auction.user_id});
     };
@@ -214,6 +206,10 @@ myApp.controller('displayAuctionCtrl', ['$rootScope', '$scope', '$state', '$stat
 		});
     };
     
+    $scope.viewBids = function() {
+        $state.go("app.auction.history", {id: $stateParams.id});
+    };
+    
 }]);
 
 myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
@@ -241,7 +237,7 @@ myApp.controller('createAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
     
     $scope.categoryPath = "";
     $scope.categoryPathList = [];
-    $scope.categoryPathList.push({name: "General", id: 1});
+    $scope.categoryPathList.push({name: "All", id: 1});
     var res = $http.get('/ws/category/parent/1');
     res.success(function(response) {
         $scope.categoryList = response;
@@ -577,4 +573,21 @@ myApp.controller('manageAuctionCtrl', ['$rootScope', '$scope', '$state', '$state
 		});
     };
     
+}]);
+
+myApp.controller('historyAuctionCtrl', ['$rootScope', '$scope', '$state', '$stateParams', '$http', '$cookies', function($rootScope, $scope, $state, $stateParams, $http, $cookies) {
+    $http.get('/ws/auction/history/' + $stateParams.id)
+    .success(function(response) {
+        $scope.bidList = response;
+        for (b in $scope.bidList) {
+            $scope.bidList[b].bid_time = new Date($scope.bidList[b].bid_time);
+            var dateA = $scope.bidList[b].bid_time.getFullYear() + "-" + ('0' + ($scope.bidList[b].bid_time.getMonth()+1)).slice(-2) + "-" + ('0' + $scope.bidList[b].bid_time.getDate()).slice(-2);
+			var dateB = ('0' + $scope.bidList[b].bid_time.getHours()).slice(-2) + ":" + ('0' + $scope.bidList[b].bid_time.getMinutes()).slice(-2) + ":" + ('0' + $scope.bidList[b].bid_time.getSeconds()).slice(-2);
+			$scope.bidList[b].bid_time = dateA + " " + dateB;
+        }
+    });
+    
+    $scope.bidderProfile = function(user_id) {
+        $state.go("app.profile", {id: user_id});
+    };
 }]);

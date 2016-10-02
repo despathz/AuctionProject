@@ -15,4 +15,5 @@ public interface BidDAO extends CrudRepository<Bid, Long>{
 	public Bid findTopBidForAuction(Auction auction_id);
 	public Long countByAuctionId(Auction auction_id);
 	public List<Bid> findByAuctionIdOrderByAmountAsc(Auction auction_id);
+	public List<Bid> findByAuctionIdOrderByAmountDesc(Auction auction_id);
 }

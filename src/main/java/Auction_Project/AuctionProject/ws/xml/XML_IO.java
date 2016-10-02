@@ -55,8 +55,8 @@ public class XML_IO {
 	@Autowired
 	private ImageDAO imageDAO;
 	
-	@RequestMapping(value = "/produce/{auction_id}", method = RequestMethod.GET)
-	public String create(@PathVariable long auction_id) {
+	@RequestMapping(value = "/produce/{cat_id}", method = RequestMethod.GET)
+	public String create(@PathVariable long cat_id) {
 		Auction auction = new Auction();
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -74,77 +74,119 @@ public class XML_IO {
 			monthMap.put(9, "Sep");	monthMap.put(10, "Oct");
 			monthMap.put(11, "Nov");	monthMap.put(12, "Dec");
 			
-			auction = auctionDAO.findById(auction_id);
+			Element Rroot = doc.createElement("Items");
+			doc.appendChild(Rroot);
 			
-			//root element
-			Element rootElement = doc.createElement("Item");
-			doc.appendChild(rootElement);
+			List<Auction> auctionList = categoryDAO.findAuctionsNoPage(cat_id);
 			
-			//set itemID
-			rootElement.setAttribute("ItemID", Long.toString(auction.getId()));
-			
-			//set name
-			Element nameElement = doc.createElement("Name");
-			rootElement.appendChild(nameElement);
-			nameElement.appendChild(doc.createTextNode(auction.getName()));
-			
-			List<Category> cat = auction.getCategories();
-			
-			for (int i = 0; i < cat.size(); i++) {
-				if (cat.get(i).getId() == 1)
-					continue;
-				Element categoryElement = doc.createElement("Category");
-				rootElement.appendChild(categoryElement);
-				categoryElement.appendChild(doc.createTextNode(cat.get(i).getName()));
-			}
-			
-			//set currently
-			Element currentlyElement = doc.createElement("Currently");
-			rootElement.appendChild(currentlyElement);
-			currentlyElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getCurrently())));
-			
-			//set buy price
-			if (auction.getBuy_price() != 0) {
-				Element buypriceElement = doc.createElement("Buy_Price");
-				rootElement.appendChild(buypriceElement);
-				buypriceElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getBuy_price())));
-			}
-			
-			//set first_bid
-			Element first_bidElement = doc.createElement("First_Bid");
-			rootElement.appendChild(first_bidElement);
-			first_bidElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getFirst_bid())));
-			
-			//set number of bids
-			long bidNumber = bidDAO.countByAuctionId(auction);
-			Element bidNumberElement = doc.createElement("Number_of_Bids");
-			rootElement.appendChild(bidNumberElement);
-			bidNumberElement.appendChild(doc.createTextNode(Long.toString(bidNumber)));
-			
-			//set bids
-			Element bidsElement = doc.createElement("Bids");
-			rootElement.appendChild(bidsElement);
-			
-			//set bid
-			List<Bid> bidList = bidDAO.findByAuctionIdOrderByAmountAsc(auction);
-			for (int i = 0; i < bidList.size(); i++) {
-				Element bidElement = doc.createElement("Bid");
-				bidsElement.appendChild(bidElement);
-				Element bidderElement = doc.createElement("Bidder");
-				bidElement.appendChild(bidderElement);
-				bidderElement.setAttribute("UserID", bidList.get(i).getBidder().getUsername());
-				bidderElement.setAttribute("Rating", Integer.toString(bidList.get(i).getBidder().getBidderRating()));
-				Element bidderLocationElement = doc.createElement("Location");
-				bidderElement.appendChild(bidderLocationElement);
-				bidderLocationElement.appendChild(doc.createTextNode(bidList.get(i).getBidder().getLocation()));
-				Element bidderCountryElement = doc.createElement("Country");
-				bidderElement.appendChild(bidderCountryElement);
-				bidderCountryElement.appendChild(doc.createTextNode(bidList.get(i).getBidder().getCountry()));
-				Element bidTimeElement = doc.createElement("Time");
-				bidElement.appendChild(bidTimeElement);
+			for (int counter = 0; counter < auctionList.size(); counter++) {
+				auction = auctionList.get(counter);
+				//root element
+				Element rootElement = doc.createElement("Item");
+				Rroot.appendChild(rootElement);
 				
-				String bidTime = auction.getStarted().toString();
-				parts = bidTime.split("-");
+				//set itemID
+				rootElement.setAttribute("ItemID", Long.toString(auction.getId()));
+				
+				//set name
+				Element nameElement = doc.createElement("Name");
+				rootElement.appendChild(nameElement);
+				nameElement.appendChild(doc.createTextNode(auction.getName()));
+				
+				List<Category> cat = auction.getCategories();
+				
+				for (int i = 0; i < cat.size(); i++) {
+					if (cat.get(i).getId() == 1)
+						continue;
+					Element categoryElement = doc.createElement("Category");
+					rootElement.appendChild(categoryElement);
+					categoryElement.appendChild(doc.createTextNode(cat.get(i).getName()));
+				}
+				
+				//set currently
+				Element currentlyElement = doc.createElement("Currently");
+				rootElement.appendChild(currentlyElement);
+				currentlyElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getCurrently())));
+				
+				//set buy price
+				if (auction.getBuy_price() != 0) {
+					Element buypriceElement = doc.createElement("Buy_Price");
+					rootElement.appendChild(buypriceElement);
+					buypriceElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getBuy_price())));
+				}
+				
+				//set first_bid
+				Element first_bidElement = doc.createElement("First_Bid");
+				rootElement.appendChild(first_bidElement);
+				first_bidElement.appendChild(doc.createTextNode("$" + Float.toString(auction.getFirst_bid())));
+				
+				//set number of bids
+				long bidNumber = bidDAO.countByAuctionId(auction);
+				Element bidNumberElement = doc.createElement("Number_of_Bids");
+				rootElement.appendChild(bidNumberElement);
+				bidNumberElement.appendChild(doc.createTextNode(Long.toString(bidNumber)));
+				
+				//set bids
+				Element bidsElement = doc.createElement("Bids");
+				rootElement.appendChild(bidsElement);
+				
+				//set bid
+				List<Bid> bidList = bidDAO.findByAuctionIdOrderByAmountAsc(auction);
+				for (int i = 0; i < bidList.size(); i++) {
+					Element bidElement = doc.createElement("Bid");
+					bidsElement.appendChild(bidElement);
+					Element bidderElement = doc.createElement("Bidder");
+					bidElement.appendChild(bidderElement);
+					bidderElement.setAttribute("UserID", bidList.get(i).getBidder().getUsername());
+					bidderElement.setAttribute("Rating", Integer.toString(bidList.get(i).getBidder().getBidderRating()));
+					Element bidderLocationElement = doc.createElement("Location");
+					bidderElement.appendChild(bidderLocationElement);
+					bidderLocationElement.appendChild(doc.createTextNode(bidList.get(i).getBidder().getLocation()));
+					Element bidderCountryElement = doc.createElement("Country");
+					bidderElement.appendChild(bidderCountryElement);
+					bidderCountryElement.appendChild(doc.createTextNode(bidList.get(i).getBidder().getCountry()));
+					Element bidTimeElement = doc.createElement("Time");
+					bidElement.appendChild(bidTimeElement);
+					
+					String bidTime = bidList.get(i).getBid_time().toString();
+					parts = bidTime.split("-");
+					year = parts[0].substring(2, 4);
+					month = Integer.parseInt(parts[1]);
+					parts = parts[2].split(" ");
+					day = parts[0];
+					t = parts[1].replace(".", " ");
+					parts = t.split(" ");
+					t = parts[0];
+					bidTime = monthMap.get(month) + "-" + day + "-" + year + " " + t;
+					bidTimeElement.appendChild(doc.createTextNode(bidTime));
+					
+					Element amountElement = doc.createElement("Amount");
+					bidElement.appendChild(amountElement);
+					amountElement.appendChild(doc.createTextNode("$" + Float.toString(bidList.get(i).getAmount())));
+				}
+				
+				//set location
+				Element locationElement = doc.createElement("Location");
+				rootElement.appendChild(locationElement);
+				locationElement.appendChild(doc.createTextNode(auction.getLocation()));
+				
+				String latitude = auction.getLatitude();
+				String longitude = auction.getLongitude();
+				if (!longitude.equals("0"))
+					locationElement.setAttribute("Longitude", longitude);
+				if (!latitude.equals("0"))
+					locationElement.setAttribute("Latitude", latitude);
+				
+				//set country
+				Element countryElement = doc.createElement("Country");
+				rootElement.appendChild(countryElement);
+				countryElement.appendChild(doc.createTextNode(auction.getCountry()));
+				
+				//set start date
+				Element startElement = doc.createElement("Started");
+				rootElement.appendChild(startElement);
+				String started = auction.getStarted().toString();
+				parts = started.split("-");
 				year = parts[0].substring(2, 4);
 				month = Integer.parseInt(parts[1]);
 				parts = parts[2].split(" ");
@@ -152,84 +194,48 @@ public class XML_IO {
 				t = parts[1].replace(".", " ");
 				parts = t.split(" ");
 				t = parts[0];
-				bidTime = monthMap.get(month) + "-" + day + "-" + year + " " + t;
-				bidTimeElement.appendChild(doc.createTextNode(bidTime));
+				started = monthMap.get(month) + "-" + day + "-" + year + " " + t;
+				startElement.appendChild(doc.createTextNode(started));
 				
-				Element amountElement = doc.createElement("Amount");
-				bidElement.appendChild(amountElement);
-				amountElement.appendChild(doc.createTextNode("$" + Float.toString(bidList.get(i).getAmount())));
+				
+				//set end date
+				Element endElement = doc.createElement("Ends");
+				rootElement.appendChild(endElement);
+				String ends = auction.getEnds().toString();
+				parts = ends.split("-");
+				year = parts[0].substring(2, 4);
+				month = Integer.parseInt(parts[1]);
+				parts = parts[2].split(" ");
+				day = parts[0];
+				t = parts[1].replace(".", " ");
+				parts = t.split(" ");
+				t = parts[0];
+				ends = monthMap.get(month) + "-" + day + "-" + year + " " + t;
+				endElement.appendChild(doc.createTextNode(ends));
+				
+				//seller id and rating
+				Element sellerElement = doc.createElement("Seller");
+				rootElement.appendChild(sellerElement);
+				sellerElement.setAttribute("UserID", auction.getUser_seller_id().getUsername());
+				sellerElement.setAttribute("Rating", Integer.toString(auction.getUser_seller_id().getSellerRating()));
+				
+				//set description
+				Element descElement = doc.createElement("Description");
+				rootElement.appendChild(descElement);
+				descElement.appendChild(doc.createTextNode(auction.getDescription()));
 			}
-			
-			//set location
-			Element locationElement = doc.createElement("Location");
-			rootElement.appendChild(locationElement);
-			locationElement.appendChild(doc.createTextNode(auction.getLocation()));
-			
-			String latitude = auction.getLatitude();
-			String longitude = auction.getLongitude();
-			if (!longitude.equals("0"))
-				locationElement.setAttribute("Longitude", longitude);
-			if (!latitude.equals("0"))
-				locationElement.setAttribute("Latitude", latitude);
-			
-			//set country
-			Element countryElement = doc.createElement("Country");
-			rootElement.appendChild(countryElement);
-			countryElement.appendChild(doc.createTextNode(auction.getCountry()));
-			
-			//set start date
-			Element startElement = doc.createElement("Started");
-			rootElement.appendChild(startElement);
-			String started = auction.getStarted().toString();
-			parts = started.split("-");
-			year = parts[0].substring(2, 4);
-			month = Integer.parseInt(parts[1]);
-			parts = parts[2].split(" ");
-			day = parts[0];
-			t = parts[1].replace(".", " ");
-			parts = t.split(" ");
-			t = parts[0];
-			started = monthMap.get(month) + "-" + day + "-" + year + " " + t;
-			startElement.appendChild(doc.createTextNode(started));
-			
-			
-			//set end date
-			Element endElement = doc.createElement("Ends");
-			rootElement.appendChild(endElement);
-			String ends = auction.getEnds().toString();
-			parts = ends.split("-");
-			year = parts[0].substring(2, 4);
-			month = Integer.parseInt(parts[1]);
-			parts = parts[2].split(" ");
-			day = parts[0];
-			t = parts[1].replace(".", " ");
-			parts = t.split(" ");
-			t = parts[0];
-			ends = monthMap.get(month) + "-" + day + "-" + year + " " + t;
-			endElement.appendChild(doc.createTextNode(ends));
-			
-			//seller id and rating
-			Element sellerElement = doc.createElement("Seller");
-			rootElement.appendChild(sellerElement);
-			sellerElement.setAttribute("UserID", auction.getUser_seller_id().getUsername());
-			sellerElement.setAttribute("Rating", Integer.toString(auction.getUser_seller_id().getSellerRating()));
-			
-			//set description
-			Element descElement = doc.createElement("Description");
-			rootElement.appendChild(descElement);
-			descElement.appendChild(doc.createTextNode(auction.getDescription()));
 			
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("./src/main/resources/static/" + auction.getId() + ".xml"));
+			StreamResult result = new StreamResult(new File("./src/main/resources/static/" + cat_id + ".xml"));
 			transformer.transform(source, result);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Long.toString(auction.getId());
+		return Long.toString(cat_id);
 	}
 	
 	@RequestMapping(value = "/load/{filename}", method = RequestMethod.GET)

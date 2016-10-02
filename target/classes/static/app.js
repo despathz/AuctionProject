@@ -63,6 +63,16 @@ myApp.config(function ($stateProvider) {
         }
     })
     
+    .state('app.adminPage2', {
+        url: '/adminPage2',
+        templateUrl: './views/adminPage2.html',
+        controller: 'adminPage2Ctrl',
+        params: {
+            title: 'Export Auctions to XML',
+            requireLogin: 1
+        }
+    })
+    
     .state('app.profile', {
         url: '/profile/:id',
         templateUrl: './views/profile.html',
@@ -206,6 +216,16 @@ myApp.config(function ($stateProvider) {
         params: {
             title: 'My auctions',
             requireLogin: 1
+        }
+    })
+    
+    .state('app.auction.history', {
+        url: '/history/:id',
+        templateUrl: './views/auction/history.html',
+        controller: 'historyAuctionCtrl',
+        params: {
+            title: 'Bid history',
+            requireLogin: 2
         }
     })
 

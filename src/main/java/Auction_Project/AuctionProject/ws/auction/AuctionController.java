@@ -19,7 +19,9 @@ import Auction_Project.AuctionProject.dao.UserDAO;
 import Auction_Project.AuctionProject.dto.auction.AuctionDisplayResponse;
 import Auction_Project.AuctionProject.dto.auction.AuctionSaveResponse;
 import Auction_Project.AuctionProject.dto.auction.UserAuctionsListResponse;
+import Auction_Project.AuctionProject.dto.bid.BidResponse;
 import Auction_Project.AuctionProject.dto.category.CategoryResponse;
+import Auction_Project.AuctionProject.ws.bid.Bid;
 import Auction_Project.AuctionProject.ws.category.Category;
 import Auction_Project.AuctionProject.ws.user.User;
 
@@ -152,6 +154,28 @@ public class AuctionController {
 			System.out.println(ex.getMessage());
 		}
 		return auctionResponseList;
+	}
+	
+	@RequestMapping(value = "/history/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<BidResponse> historyAuction(@PathVariable long id) {
+		List<BidResponse> returnList = new ArrayList<BidResponse>();
+		try {
+			List<Bid> bidList = bidDAO.findByAuctionIdOrderByAmountDesc(auctionDAO.findById(id));
+			for (int i = 0; i < bidList.size(); i++) {
+				Bid bid = bidList.get(i);
+				BidResponse resBid = new BidResponse();
+				resBid.setBid_id(bid.getId());
+				resBid.setAmount(bid.getAmount());
+				resBid.setBid_time(bid.getBid_time());
+				resBid.setBidder_id(bid.getBidder().getId());
+				resBid.setBidder_username(bid.getBidder().getUsername());
+				returnList.add(resBid);
+			}
+		}
+		catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return returnList;
 	}
 	
 	

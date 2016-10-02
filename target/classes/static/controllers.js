@@ -61,6 +61,45 @@ myApp.controller('adminPageCtrl', ['$scope', '$http', '$state', function($scope,
     };
 }]);
 
+myApp.controller('adminPage2Ctrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
+    $scope.categoryPath = "";
+    $scope.categoryPathList = [];
+    $scope.categoryPathList.push({name: "All", id: 1});
+    var res = $http.get('/ws/category/parent/1');
+    res.success(function(response) {
+        $scope.categoryList = response;
+    });
+    
+    $scope.findSubCat = function(name, id) {
+        var pos = -1, i = 0;
+        while (i < $scope.categoryPathList.length) {
+            if ($scope.categoryPathList[i].id == id){
+                pos = i;
+                break;
+            }
+            i++;
+        }
+        if (pos == -1)
+            $scope.categoryPathList.push({name, id});
+        else {
+            while ($scope.categoryPathList.length > pos + 1)
+                $scope.categoryPathList.pop();
+        }
+        var res = $http.get('/ws/category/parent/' + id);
+        res.success(function(response) {
+            $scope.categoryList = response;
+        });
+    };
+    
+    $scope.getXML = function() {
+        var res = $http.get('/ws/xml/produce/' + $scope.categoryPathList[$scope.categoryPathList.length-1].id);
+        res.success(function(response) {
+            $scope.xmlFile = response + ".xml";
+            $scope.XMLcreated = true;
+        });
+    };
+}]);
+
 myApp.controller('searchCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
     $scope.currentTab = "search";
     $scope.data = {keywords: "", from: "", to: "", location: ""};

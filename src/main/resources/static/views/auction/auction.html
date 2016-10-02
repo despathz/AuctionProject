@@ -79,14 +79,6 @@
     </div>
 </div>
 
-<div class="row text-left" ng-show="session.isAdmin">
-    <br>
-    <div class="col-sm-8 col-sm-offset-2">
-        <button ng-hide="XMLcreated" ng-click="getXML()" class="btn btn-primary" type="button">Create XML</button>
-        <a ng-show="XMLcreated" ng-href="{{xmlFile}}" download><button ng-click="XMLcreated=false" class="btn btn-primary" type="button">Download XML</button></a>
-    </div>
-</div>
-
 <div class="row text-left" ng-show="auction.user_id == session.id">
     <br>
     <div class="col-sm-8 col-sm-offset-2">
